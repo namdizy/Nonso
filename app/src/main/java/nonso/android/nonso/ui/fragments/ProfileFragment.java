@@ -1,4 +1,5 @@
 package nonso.android.nonso.ui.fragments;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -61,7 +62,6 @@ public class ProfileFragment extends Fragment {
 
 
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -139,7 +139,7 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.profile_image)
     public void profileImageOnclick(View view){
-
+        //TODO: Make this a task so when lifecycle events occur this fragment can be recreated with this process still running
         startPickImageActivity();
     }
 
@@ -155,7 +155,7 @@ public class ProfileFragment extends Fragment {
                 .setOnPickCancel(new IPickCancel() {
                     @Override
                     public void onCancelClick() {
-                        //TODO: do what you have to if user clicked cancel
+                        //TODO: Handle cancel: most likely do nothing
                     }
                 }).show(getFragmentManager());
     }
@@ -224,7 +224,7 @@ public class ProfileFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
+                        // TODO: Handle failure
                         // ...
                     }
                 });
