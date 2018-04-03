@@ -9,7 +9,7 @@
     <Button
         android:id="@+id/btn_from_gallery"
         android:layout_marginTop="@dimen/image_dialog_margin"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/from_gallery"
         android:drawableLeft="@drawable/ic_photo_dark"
@@ -19,7 +19,7 @@
 
     <Button
         android:layout_marginTop="@dimen/image_dialog_margin"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/from_camera"
         android:drawableLeft="@drawable/ic_camera_dark"

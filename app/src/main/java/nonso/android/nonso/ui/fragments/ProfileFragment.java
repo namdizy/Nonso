@@ -21,6 +21,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.listeners.IPickCancel;
+import com.vansuita.pickimage.listeners.IPickResult;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -90,9 +97,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
         ButterKnife.bind(this, view);
-
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
@@ -124,56 +129,55 @@ public class ProfileFragment extends Fragment {
     }
 
     public void startPickImageActivity(){
-        MaterialDialog dialog = new MaterialDialog.Builder(getContext())
-                .title(R.string.profile_select_image)
-                .customView(R.layout.select_image_source_dialog, true)
-                .show();
-
-        View view = dialog.getCustomView();
+        PickImageDialog.build(new PickSetup())
+                .setOnPickResult(new IPickResult() {
+                    @Override
+                    public void onPickResult(PickResult r) {
+                        Uri uri = r.getUri();
+                        startCropImageActivity(uri);
+                    }
+                })
+                .setOnPickCancel(new IPickCancel() {
+                    @Override
+                    public void onCancelClick() {
+                        //TODO: do what you have to if user clicked cancel
+                    }
+                }).show(getFragmentManager());
     }
 
-
-    @OnClick(R.id.btn_from_gallery)
-    public void onlick(View v){
-        Toast.makeText(getContext(), "Cancelling,from gallery", Toast.LENGTH_LONG).show();
-    }
 
 
     @Override
     @SuppressLint("NewApi")
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-//        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-//
-//            Uri imageUri = CropImage.getPickImageResultUri(getContext(), data);
-//
-//            if(CropImage.isReadExternalStoragePermissionsRequired(getContext(), imageUri)){
-//                mCropImageUri = imageUri;
-//                requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE );
-//            }else{
-//                Log.v("Profile Fragment pick", "imageurl"+ imageUri);
-//                startCropImageActivity(mCropImageUri);
-//            }
-//
-//        }
-//        else if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
-//
-//        }
-    }
+        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK){
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],@NonNull int[] grantResults) {
-//        if (requestCode == CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE) {
-//            if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // required permissions granted, start crop image activity
-//                startCropImageActivity(mCropImageUri);
-//            } else {
-//                Toast.makeText(getContext(), "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show();
-//            }
-//        }
+            Uri imageUri = CropImage.getPickImageResultUri(getContext(), data);
+
+            if(CropImage.isReadExternalStoragePermissionsRequired(getContext(), imageUri)){
+                mCropImageUri = imageUri;
+                requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE );
+            }else{
+                Log.v("Profile Fragment pick", "imageurl"+ imageUri);
+                startCropImageActivity(mCropImageUri);
+            }
+        }
+        else if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
+
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == Activity.RESULT_OK) {
+                Uri resultUri = result.getUri();
+                mUserProfileImage.setImageURI(resultUri);
+            }
+
+        }
     }
 
 
     private void startCropImageActivity(Uri imageUri) {
-//        CropImage.activity(imageUri)
-//                .start(getContext(), this);
+        CropImage.activity(imageUri)
+                .start(getContext(), this);
     }
 }
