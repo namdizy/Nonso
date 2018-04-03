@@ -2,7 +2,6 @@ package nonso.android.nonso.ui.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,12 +14,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -28,6 +32,7 @@ import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
+import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,9 +51,13 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private FirebaseStorage mStorage;
+    private StorageReference mStorageRef;
+    private StorageReference mProfileImageRef;
+
+    private static final String STORAGE_IMAGE_BUCKET = "images/profilePicture.jpg";
 
     private Uri mCropImageUri;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -102,8 +111,13 @@ public class ProfileFragment extends Fragment {
         mUser = mAuth.getCurrentUser();
 
         mUsernameText.setText(mUser.getDisplayName());
+        if(mUser.getPhotoUrl() != null){
+            mUserProfileImage.setImageURI(mUser.getPhotoUrl());
+        }
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET);
 
-
+        setRetainInstance(true);
         return view;
     }
 
@@ -125,6 +139,7 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.profile_image)
     public void profileImageOnclick(View view){
+
         startPickImageActivity();
     }
 
@@ -164,11 +179,11 @@ public class ProfileFragment extends Fragment {
         }
         else if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
 
-
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
+                uploadToFirebase(resultUri);
                 mUserProfileImage.setImageURI(resultUri);
             }
 
@@ -179,5 +194,39 @@ public class ProfileFragment extends Fragment {
     private void startCropImageActivity(Uri imageUri) {
         CropImage.activity(imageUri)
                 .start(getContext(), this);
+    }
+
+    private void uploadToFirebase(Uri uri){
+
+        Uri file = Uri.fromFile(new File(uri.getPath()));
+
+        mProfileImageRef.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setPhotoUri(downloadUrl)
+                                .build();
+                        mUser.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d("FragmentProfile", "User profile updated.");
+                                        }
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
     }
 }
