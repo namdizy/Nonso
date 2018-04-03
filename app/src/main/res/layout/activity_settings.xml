@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nonso.android.nonso.ui.activities.SettingsActivity"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingRight="6dp"
+        app:layout_collapseMode="pin"
+        android:background="@drawable/grey_border_bottom_light">
+
+            <ImageButton
+                android:id="@+id/btn_settings_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_chevron_left"
+                android:background="@android:color/transparent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_header"
+                android:layout_marginLeft="@dimen/settings_toolbar_h1_margin"
+                android:layout_marginStart="@dimen/settings_toolbar_h1_margin"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/settings_h1_text_size" />
+
+    </android.support.v7.widget.Toolbar>
+    
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/settings_scroll_margin"
+        android:layout_marginLeft="@dimen/settings_scroll_margin"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/settings_h1_text_size"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"
+                android:text="@string/settings_account_header"
+                android:textColor="@color/colorPrimary"
+                android:background="@drawable/primary_border_bottom"/>
+
+            <LinearLayout
+                android:id="@+id/settings_username_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/grey_border_bottom_light">
+                <TextView
+                    android:id="@+id/tv_settings_username_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/settings_h2_text_size"
+                    android:padding="@dimen/settings_item_padding_1"
+                    android:text="@string/username_hint"/>
+                <TextView
+                    android:id="@+id/tv_settings_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/settings_item_padding_1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/settings_email_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/grey_border_bottom_light">
+                <TextView
+                    android:id="@+id/tv_settings_email_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/settings_h2_text_size"
+                    android:padding="@dimen/settings_item_padding_1"
+                    android:text="@string/email_hint"/>
+                <TextView
+                    android:id="@+id/tv_settings_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/settings_item_padding_1"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_settings_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/password_hint"
+                android:textSize="@dimen/settings_h2_text_size"
+                android:background="@drawable/grey_border_bottom_light"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"/>
+
+            <TextView
+                android:id="@+id/tv_settings_payments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_payments"
+                android:textSize="@dimen/settings_h2_text_size"
+                android:background="@drawable/grey_border_bottom_light"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"/>
+
+            <TextView
+                android:id="@+id/tv_settings_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/log_out"
+                android:textSize="@dimen/settings_h2_text_size"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/settings_h1_text_size"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"
+                android:text="@string/settings_about_header"
+                android:textColor="@color/colorPrimary"
+                android:background="@drawable/primary_border_bottom"/>
+            <TextView
+                android:id="@+id/tv_settings_content_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_content_policy"
+                android:textSize="@dimen/settings_h2_text_size"
+                android:background="@drawable/grey_border_bottom_light"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"/>
+            <TextView
+                android:id="@+id/tv_settings_privacy_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_privacy_policy"
+                android:textSize="@dimen/settings_h2_text_size"
+                android:background="@drawable/grey_border_bottom_light"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"/>
+            <TextView
+                android:id="@+id/tv_settings_user_agreement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_user_agreement"
+                android:textSize="@dimen/settings_h2_text_size"
+                android:background="@drawable/grey_border_bottom_light"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"/>
+            <TextView
+                android:id="@+id/tv_settings_acknowledgement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_acknowledgement"
+                android:textSize="@dimen/settings_h2_text_size"
+                android:background="@drawable/grey_border_bottom_light"
+                android:paddingTop="@dimen/settings_item_padding"
+                android:paddingLeft="@dimen/settings_item_padding_1"
+                android:paddingBottom="@dimen/settings_item_padding"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

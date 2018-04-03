@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nonso.android.nonso.ui.activities.CreateJourneyActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/create_journey_appbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/grey_border_bottom_light">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/create_journey_toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:background="@color/white">
+
+            <ImageButton
+                android:id="@+id/btn_create_journeys_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_chevron_left"
+                android:background="@android:color/transparent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_journeys_header"
+                android:layout_marginLeft="@dimen/settings_toolbar_h1_margin"
+                android:layout_marginStart="@dimen/settings_toolbar_h1_margin"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/settings_h1_text_size" />
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+</android.support.design.widget.CoordinatorLayout>
