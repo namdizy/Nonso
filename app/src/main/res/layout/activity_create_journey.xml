@@ -1,42 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
     tools:context="nonso.android.nonso.ui.activities.CreateJourneyActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/create_journey_appbar_container"
-        android:layout_width="match_parent"
+    <android.support.v7.widget.Toolbar
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/create_journey_toolbar"
+        app:layout_scrollFlags="scroll|enterAlways"
         android:background="@drawable/grey_border_bottom_light">
 
-        <android.support.v7.widget.Toolbar
+        <ImageButton
+            android:id="@+id/btn_create_journeys_back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_chevron_left"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_journeys_header"
+            android:layout_marginLeft="@dimen/settings_toolbar_h1_margin"
+            android:layout_marginStart="@dimen/settings_toolbar_h1_margin"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/settings_h1_text_size" />
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:id="@+id/create_journey_toolbar"
-            app:layout_scrollFlags="scroll|enterAlways"
-            android:background="@color/white">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-            <ImageButton
-                android:id="@+id/btn_create_journeys_back"
-                android:layout_width="wrap_content"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/create_journey_page_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/asser"
+                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_width="2dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/create_journey_input_name"
+                android:layout_width ="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_chevron_left"
-                android:background="@android:color/transparent"/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="@dimen/create_journeys_page_margin"
+                android:layout_marginRight="@dimen/create_journeys_page_margin"
+                android:layout_marginStart="@dimen/create_journeys_page_margin"
+                android:layout_marginLeft="@dimen/create_journeys_page_margin"
+                >
 
-            <TextView
-                android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/tv_create_journeys_input_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/create_journey_name"
+                    android:inputType="text"
+                    android:textColor="@color/colorGrayDark"
+                    android:textColorHint="@color/colorGrayDark"
+                    android:layout_marginEnd="@dimen/create_journeys_page_margin"
+                    android:layout_marginRight="@dimen/create_journeys_page_margin"
+                    android:layout_marginStart="@dimen/create_journeys_page_margin"
+                    android:layout_marginLeft="@dimen/create_journeys_page_margin"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tv_create_journeys_description_container"
+                android:layout_width ="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_journeys_header"
-                android:layout_marginLeft="@dimen/settings_toolbar_h1_margin"
-                android:layout_marginStart="@dimen/settings_toolbar_h1_margin"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/settings_h1_text_size" />
-        </android.support.v7.widget.Toolbar>
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="@dimen/create_journeys_page_margin"
+                android:layout_marginRight="@dimen/create_journeys_page_margin"
+                android:layout_marginStart="@dimen/create_journeys_page_margin"
+                android:layout_marginLeft="@dimen/create_journeys_page_margin"
 
-    </android.support.design.widget.AppBarLayout>
+                android:hint="Journey Description"
+                >
 
-</android.support.design.widget.CoordinatorLayout>
+                <EditText
+                    android:id="@+id/tv_create_journeys_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:isScrollContainer="true"
+                    android:minHeight="120dp"
+                    android:textColorHint="@color/colorGrayDark"
+                    android:textColor="@color/colorGrayDark"
+                    android:inputType="textMultiLine"
+                    android:layout_marginEnd="@dimen/create_journeys_page_margin"
+                    android:layout_marginRight="@dimen/create_journeys_page_margin"
+                    android:layout_marginStart="@dimen/create_journeys_page_margin"
+                    android:layout_marginLeft="@dimen/create_journeys_page_margin"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginEnd="@dimen/create_journeys_page_margin"
+                android:layout_marginRight="@dimen/create_journeys_page_margin"
+                android:layout_marginStart="@dimen/create_journeys_page_margin"
+                android:layout_marginLeft="@dimen/create_journeys_page_margin"
+                android:background="@drawable/grey_border_light"
+                >
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="upload video description"
+                    android:drawableLeft="@drawable/ic_upload_dark"
+                    android:layout_gravity="center"
+                    style="?android:attr/borderlessButtonStyle"
+                    />
+
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

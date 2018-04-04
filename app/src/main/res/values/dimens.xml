@@ -46,7 +46,9 @@
 
 
     <!-- Image dialog -->
-
     <dimen name="image_dialog_margin">5dp</dimen>
     <dimen name="image_dialog_text_size">18sp</dimen>
+
+    <!-- Create Journeys Page-->
+    <dimen name="create_journeys_page_margin">20dp</dimen>
 </resources>

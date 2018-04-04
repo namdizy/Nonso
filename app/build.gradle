@@ -34,31 +34,31 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compile "com.google.firebase:firebase-core:$firebaseVersion"
-    compile "com.google.firebase:firebase-auth:$firebaseVersion"
-    compile "com.google.firebase:firebase-storage:$firebaseVersion"
-    compile "com.android.support:design:$supportLibVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseVersion"
+    implementation "com.google.firebase:firebase-auth:$firebaseVersion"
+    implementation "com.google.firebase:firebase-storage:$firebaseVersion"
+    implementation "com.android.support:design:$supportLibVersion"
 
-    compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
     annotationProcessor "net.simonvt.schematic:schematic-compiler:$schematicVersion"
-    compile "net.simonvt.schematic:schematic:$schematicVersion"
+    implementation "net.simonvt.schematic:schematic:$schematicVersion"
 
-    testCompile 'junit:junit:4.12'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.code.gson:gson:2.8.0'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
 
-    compile "com.android.support:design:$supportLibVersion"
-    compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+    implementation "com.android.support:design:$supportLibVersion"
+    implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
 
-    compile 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
 
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 
-    compile 'com.github.jrvansuita:PickImage:+'
+    implementation 'com.github.jrvansuita:PickImage:+'
 }
 
 

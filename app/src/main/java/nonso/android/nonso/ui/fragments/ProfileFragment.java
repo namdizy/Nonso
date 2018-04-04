@@ -26,6 +26,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
@@ -56,6 +57,7 @@ public class ProfileFragment extends Fragment {
     private StorageReference mProfileImageRef;
 
     private static final String STORAGE_IMAGE_BUCKET = "images/profilePicture.jpg";
+    private static final String TAG = "ProfileFragment";
 
     private Uri mCropImageUri;
 
@@ -111,8 +113,9 @@ public class ProfileFragment extends Fragment {
         mUser = mAuth.getCurrentUser();
 
         mUsernameText.setText(mUser.getDisplayName());
+
         if(mUser.getPhotoUrl() != null){
-            mUserProfileImage.setImageURI(mUser.getPhotoUrl());
+            Picasso.with(getContext()).load(mUser.getPhotoUrl()).into(mUserProfileImage);
         }
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET);
@@ -199,6 +202,8 @@ public class ProfileFragment extends Fragment {
     private void uploadToFirebase(Uri uri){
 
         Uri file = Uri.fromFile(new File(uri.getPath()));
+
+        Log.d("FragmentProfile", "User profile update beginning: " + uri);
 
         mProfileImageRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
