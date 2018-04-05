@@ -59,6 +59,7 @@
     <!-- Create Journeys Activity -->
     <string name="create_journeys_header">Go on a journey</string>
     <string name="create_journey_name">Name</string>
+    <string name="create_journey_description_hint">Journey description</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

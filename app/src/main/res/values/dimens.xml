@@ -50,5 +50,7 @@
     <dimen name="image_dialog_text_size">18sp</dimen>
 
     <!-- Create Journeys Page-->
-    <dimen name="create_journeys_page_margin">20dp</dimen>
+    <dimen name="create_journeys_page_margin">40dp</dimen>
+    <dimen name="create_journey_video_box_height">200dp</dimen>
+    <dimen name="create_journey_description_min_height">120dp</dimen>
 </resources>

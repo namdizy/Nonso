@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -58,6 +60,7 @@ public class ProfileFragment extends Fragment {
 
     private static final String STORAGE_IMAGE_BUCKET = "images/profilePicture.jpg";
     private static final String TAG = "ProfileFragment";
+    private static final String METADATA_KEY = "userID";
 
     private Uri mCropImageUri;
 
@@ -147,7 +150,9 @@ public class ProfileFragment extends Fragment {
     }
 
     public void startPickImageActivity(){
-        PickImageDialog.build(new PickSetup())
+        PickImageDialog.build(new PickSetup()
+                .setSystemDialog(true)
+                .setButtonOrientation(LinearLayoutCompat.HORIZONTAL))
                 .setOnPickResult(new IPickResult() {
                     @Override
                     public void onPickResult(PickResult r) {
@@ -203,35 +208,58 @@ public class ProfileFragment extends Fragment {
 
         Uri file = Uri.fromFile(new File(uri.getPath()));
 
-        Log.d("FragmentProfile", "User profile update beginning: " + uri);
+        upLoadImage(file);
 
-        mProfileImageRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+    }
 
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setPhotoUri(downloadUrl)
-                                .build();
-                        mUser.updateProfile(profileUpdates)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("FragmentProfile", "User profile updated.");
-                                        }
-                                    }
-                                });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // TODO: Handle failure
-                        // ...
-                    }
-                });
+    private void upLoadImage(Uri file){
+        mProfileImageRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Get a URL to the uploaded content
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setPhotoUri(downloadUrl)
+                    .build();
+                mUser.updateProfile(profileUpdates)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("FragmentProfile", "User profile updated.");
+                                updateMetaData();
+                            }
+                        }
+                    });
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // TODO: Handle failure
+                // ...
+            }
+        });
+    }
+
+    private void updateMetaData(){
+
+        StorageMetadata metadata = new StorageMetadata.Builder()
+            .setCustomMetadata(METADATA_KEY, mUser.getUid())
+            .build();
+        mProfileImageRef.updateMetadata(metadata)
+            .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                @Override
+                public void onSuccess(StorageMetadata storageMetadata) {
+                    Log.d(TAG, "User profile metadata updated.");
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Metadata update failed.");
+                }
+            });
     }
 }
