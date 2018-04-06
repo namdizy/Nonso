@@ -171,29 +171,14 @@ public class ProfileFragment extends Fragment {
 
 
     @Override
-    @SuppressLint("NewApi")
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-
-            Uri imageUri = CropImage.getPickImageResultUri(getContext(), data);
-
-            if(CropImage.isReadExternalStoragePermissionsRequired(getContext(), imageUri)){
-                mCropImageUri = imageUri;
-                requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE );
-            }else{
-                Log.v("Profile Fragment pick", "imageurl"+ imageUri);
-                startCropImageActivity(mCropImageUri);
-            }
-        }
-        else if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
-            if (resultCode == Activity.RESULT_OK) {
-                Uri resultUri = result.getUri();
-                uploadToFirebase(resultUri);
-                mUserProfileImage.setImageURI(resultUri);
-            }
+            Uri resultUri = result.getUri();
+            uploadToFirebase(resultUri);
+            mUserProfileImage.setImageURI(resultUri);
 
         }
     }
