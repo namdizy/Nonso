@@ -43,20 +43,30 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.stepstone.stepper.StepperLayout;
+import com.stepstone.stepper.VerificationError;
 
 import java.util.BitSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import nonso.android.nonso.Manifest;
+
 import nonso.android.nonso.R;
+import nonso.android.nonso.ui.adapters.StepperAdapter;
+import nonso.android.nonso.ui.fragments.DescriptionStepFragment;
+import nonso.android.nonso.ui.fragments.MediaStepFragment;
+import nonso.android.nonso.ui.fragments.SettingsStepFragment;
 
-public class CreateJourneyActivity extends AppCompatActivity {
+public class CreateJourneyActivity extends AppCompatActivity implements DescriptionStepFragment.OnDescriptionStepListener,
+        MediaStepFragment.OnMediaStepListener, SettingsStepFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
 
-    @BindView(R.id.btn_create_journeys_back) ImageButton mBack;
-    @BindView(R.id.btn_create_journey_pick_video) Button mPickVideo;
-    @BindView(R.id.create_journey_player_view) SimpleExoPlayerView mPlayerView;
+//    @BindView(R.id.btn_create_journeys_back) ImageButton mBack;
+//    @BindView(R.id.btn_create_journey_pick_video) Button mPickVideo;
+//    @BindView(R.id.create_journey_player_view) SimpleExoPlayerView mPlayerView;
+
+
+    @BindView(R.id.stepperLayout) StepperLayout mStepperLayout;
     
 
     private FirebaseAuth mAuth;
@@ -64,6 +74,7 @@ public class CreateJourneyActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     private StorageReference mProfileImageRef;
     private StorageReference mVideoDescriptionRef;
+
 
     private SimpleExoPlayer mExoPlayer;
     private long playerPosition;
@@ -88,11 +99,13 @@ public class CreateJourneyActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
+        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
+        mStepperLayout.setListener(this);
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
 
-    @OnClick(R.id.btn_create_journeys_back)
     public void backOnClick(View view){
 
         Intent intent = new Intent(this, MainActivity.class);
@@ -100,7 +113,6 @@ public class CreateJourneyActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.btn_create_journey_pick_video)
     public void pickVideoOnClick(View view){
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("video/*");
@@ -135,39 +147,39 @@ public class CreateJourneyActivity extends AppCompatActivity {
     }
 
     public void initializePlayer(Uri mediaUri){
-
-        Log.v(TAG, "This is the video url: "+ mediaUri);
-
-        if(mExoPlayer == null){
-
-            mPlayerView.setVisibility(View.VISIBLE);
-
-            Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mediaUri.getPath(),
-                    MediaStore.Images.Thumbnails.MINI_KIND);
-            BitmapDrawable bitmapDrawable = new BitmapDrawable(thumbnail);
-
-            mPlayerView.setBackgroundDrawable(bitmapDrawable);
-
-            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-            TrackSelection.Factory videoTrackSelectionFactory =
-                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
-            TrackSelector trackSelector =
-                    new DefaultTrackSelector(videoTrackSelectionFactory);
-
-            mExoPlayer =
-                    ExoPlayerFactory.newSimpleInstance(this, trackSelector);
-            mPlayerView.setPlayer(mExoPlayer);
-
-            DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
-                    Util.getUserAgent(this, "BakingApp"), defaultBandwidthMeter);
-            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(mediaUri);
-
-            mExoPlayer.seekTo(playerPosition);
-            mExoPlayer.prepare(videoSource);
-            mExoPlayer.setPlayWhenReady(true);
-        }
+//
+//        Log.v(TAG, "This is the video url: "+ mediaUri);
+//
+//        if(mExoPlayer == null){
+//
+//            mPlayerView.setVisibility(View.VISIBLE);
+//
+//            Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mediaUri.getPath(),
+//                    MediaStore.Images.Thumbnails.MINI_KIND);
+//            BitmapDrawable bitmapDrawable = new BitmapDrawable(thumbnail);
+//
+//            mPlayerView.setBackgroundDrawable(bitmapDrawable);
+//
+//            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//            TrackSelection.Factory videoTrackSelectionFactory =
+//                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+//            TrackSelector trackSelector =
+//                    new DefaultTrackSelector(videoTrackSelectionFactory);
+//
+//            mExoPlayer =
+//                    ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+//            mPlayerView.setPlayer(mExoPlayer);
+//
+//            DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
+//            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
+//                    Util.getUserAgent(this, "BakingApp"), defaultBandwidthMeter);
+//            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+//                    .createMediaSource(mediaUri);
+//
+//            mExoPlayer.seekTo(playerPosition);
+//            mExoPlayer.prepare(videoSource);
+//            mExoPlayer.setPlayWhenReady(true);
+//        }
     }
 
     public String getPath(Uri uri) {
@@ -241,5 +253,40 @@ public class CreateJourneyActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    @Override
+    public void OnDescriptionStepListener(Uri uri) {
+
+    }
+
+    @Override
+    public void OnMediaStepListener(Uri uri) {
+
+    }
+
+    @Override
+    public void OnSettingsStepListener(Uri uri) {
+
+    }
+
+    @Override
+    public void onCompleted(View completeButton) {
+        Toast.makeText(this, "onCompleted!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onError(VerificationError verificationError) {
+        Toast.makeText(this, "onError! -> " + verificationError.getErrorMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStepSelected(int newStepPosition) {
+
+    }
+
+    @Override
+    public void onReturn() {
+        finish();
     }
 }

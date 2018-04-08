@@ -51,7 +51,8 @@
 
     <!-- Create Journeys Page-->
     <dimen name="create_journeys_page_margin">40dp</dimen>
-    <dimen name="create_journeys_item_margin">10dp</dimen>
+    <dimen name="create_journeys_item_margin">40dp</dimen>
     <dimen name="create_journey_video_box_height">200dp</dimen>
     <dimen name="create_journey_description_min_height">120dp</dimen>
+    <dimen name="create_journey_description_header_margin">60dp</dimen>
 </resources>
