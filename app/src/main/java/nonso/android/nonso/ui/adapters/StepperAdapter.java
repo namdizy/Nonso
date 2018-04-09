@@ -8,13 +8,14 @@ import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
 import com.stepstone.stepper.viewmodel.StepViewModel;
 
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.fragments.DescriptionStepFragment;
 import nonso.android.nonso.ui.fragments.MediaStepFragment;
 import nonso.android.nonso.ui.fragments.SettingsStepFragment;
 
 public class StepperAdapter extends AbstractFragmentStepAdapter {
 
-
+    private Journey journey = new Journey();
 
     public StepperAdapter(FragmentManager fm, Context context){
         super(fm, context);
@@ -30,13 +31,13 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
 
         switch (position){
             case 0:
-                final DescriptionStepFragment descriptionStepFragment = new DescriptionStepFragment().newInstance(position, "temp");
+                final DescriptionStepFragment descriptionStepFragment = new DescriptionStepFragment().newInstance(position, journey);
                 return descriptionStepFragment;
             case 1:
-                final SettingsStepFragment settingsStepFragment = new SettingsStepFragment().newInstance(position, "temp");
+                final SettingsStepFragment settingsStepFragment = new SettingsStepFragment().newInstance(position, journey);
                 return  settingsStepFragment;
             case 2:
-                final MediaStepFragment mediaStepFragment = new MediaStepFragment().newInstance(position, "temp");
+                final MediaStepFragment mediaStepFragment = new MediaStepFragment().newInstance(position, journey);
                 return mediaStepFragment;
         }
         return null;

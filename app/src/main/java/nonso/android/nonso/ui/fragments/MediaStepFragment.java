@@ -14,6 +14,7 @@ import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Journey;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,10 +27,10 @@ import nonso.android.nonso.R;
 public class MediaStepFragment extends Fragment implements Step{
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_JOURNEY = "journey_object";
 
-    private String mStepPosition;
-    private String mParam2;
+    private int mStepPosition;
+    private Journey mJourney;
 
     private OnMediaStepListener mListener;
 
@@ -38,14 +39,14 @@ public class MediaStepFragment extends Fragment implements Step{
      * this fragment using the provided parameters.
      *
      * @param position Position of step.
-     * @param param2 Parameter 2.
+     * @param journey Current journey.
      * @return A new instance of fragment MediaStepFragment.
      */
-    public MediaStepFragment newInstance(int position, String param2) {
+    public MediaStepFragment newInstance(int position, Journey journey) {
         MediaStepFragment fragment = new MediaStepFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_STEP_POSITION_KEY, position);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_JOURNEY, journey);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,8 +58,8 @@ public class MediaStepFragment extends Fragment implements Step{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mStepPosition = getArguments().getString(ARG_STEP_POSITION_KEY);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mStepPosition = getArguments().getInt(ARG_STEP_POSITION_KEY);
+            mJourney = getArguments().getParcelable(ARG_JOURNEY);
         }
     }
 

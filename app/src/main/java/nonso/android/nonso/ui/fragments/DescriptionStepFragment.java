@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Journey;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,10 +37,12 @@ public class DescriptionStepFragment extends Fragment implements Step {
 
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_JOURNEY = "journey_object";
 
-    private String mStepPosition;
-    private String mParam2;
+    private int mStepPosition;
+    private Journey mJourney;
+
+
 
     private OnDescriptionStepListener mListener;
 
@@ -47,15 +51,15 @@ public class DescriptionStepFragment extends Fragment implements Step {
      * this fragment using the provided parameters.
      *
      * @param position Position of this step.
-     * @param param2 Parameter 2.
+     * @param journey Journey being created.
      * @return A new instance of fragment DescriptionStepFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public DescriptionStepFragment newInstance(int position, String param2) {
+    public DescriptionStepFragment newInstance(int position, Journey journey) {
         DescriptionStepFragment fragment = new DescriptionStepFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_STEP_POSITION_KEY, position);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_JOURNEY, journey);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,9 +70,13 @@ public class DescriptionStepFragment extends Fragment implements Step {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
-            mStepPosition = getArguments().getString(ARG_STEP_POSITION_KEY);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mStepPosition = getArguments().getInt(ARG_STEP_POSITION_KEY);
+            mJourney = getArguments().getParcelable(ARG_JOURNEY);
+            if(mJourney == null){
+                mJourney = new Journey();
+            }
         }
     }
 
@@ -82,19 +90,23 @@ public class DescriptionStepFragment extends Fragment implements Step {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.OnDescriptionStepListener(uri);
+
+    @OnTextChanged(value = R.id.edit_create_journeys_input_name,
+            callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void onNameTextChange(Editable editable){
+
+        mJourney.setName(editable.toString());
+        if(mListener != null){
+            mListener.OnDescriptionStepListener(mJourney);
         }
     }
 
-    @OnTextChanged({R.id.edit_create_journeys_input_name, R.id.edit_create_journeys_input_description})
-    public void onNameTextChange(View view){
-        if(view.getId() == R.id.edit_create_journeys_input_name){
-
-        }else if(view.getId() == R.id.edit_create_journeys_input_description){
-
+    @OnTextChanged(value = R.id.edit_create_journeys_input_description,
+            callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void onDescriptionTextChange(Editable editable){
+        mJourney.setDescription(editable.toString());
+        if(mListener != null){
+            mListener.OnDescriptionStepListener(mJourney);
         }
     }
 
@@ -143,6 +155,6 @@ public class DescriptionStepFragment extends Fragment implements Step {
      */
     public interface OnDescriptionStepListener {
         // TODO: Update argument type and name
-        void OnDescriptionStepListener(Uri uri);
+        void OnDescriptionStepListener(Journey journey);
     }
 }

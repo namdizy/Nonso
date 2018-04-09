@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     private void fragmentSelect(MenuItem item){
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        SharedPreferences.Editor editor = pref.edit();
 
+        SharedPreferences.Editor editor = pref.edit();
         int index = mBottomNavigationView.getMenuItemPosition(item);
         editor.putInt(ITEM_PREFERENCE_KEY, index);
         editor.apply();

@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +38,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.User;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -42,13 +52,18 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.progressBarSignUpContainer) LinearLayout mProgressBarContainer;
 
     private final String TAG = SignUpActivity.this.getClass().getSimpleName();
+    private final String COLLECTION_NAME = "users";
+    private final String USER_ID = "user_id";
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     private String username;
     private String email;
     private String password;
     private String retypePassword;
+
+    private SharedPreferences pref;
 
 
     @Override
@@ -59,6 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     @OnTextChanged(value = {
@@ -147,12 +163,12 @@ public class SignUpActivity extends AppCompatActivity {
                                 .setDisplayName(username).build();
 
                         user.updateProfile(profileUpdates);
+                        createUser(user);
 
-                        onSignUpSuccess(user);
                     }else{
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         mProgressBarContainer.setVisibility(View.INVISIBLE);
-                        Toast.makeText(SignUpActivity.this, "Sign up failed.",
+                        Toast.makeText(SignUpActivity.this, "Sign up failed. " + task.getException(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -189,9 +205,31 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 }
             });
-        }else{
-            return;
         }
     }
+    public void onSignUpFailed(){
+        //TODO: add functionality for signup failed
+    }
 
+    public void createUser(final FirebaseUser user){
+        User newUser = new User();
+        newUser.setName(user.getDisplayName());
+        newUser.setEmail(user.getEmail());
+        newUser.setUserId(user.getUid());
+
+        db.collection(COLLECTION_NAME).add(newUser)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        onSignUpSuccess(user);
+                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
 }

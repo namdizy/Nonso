@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment {
     private StorageReference mStorageRef;
     private StorageReference mProfileImageRef;
 
-    private static final String STORAGE_IMAGE_BUCKET = "images/profilePicture.jpg";
+    private static final String STORAGE_IMAGE_BUCKET = "images/";
     private static final String TAG = "ProfileFragment";
     private static final String METADATA_KEY = "userID";
 
@@ -114,14 +114,13 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, view);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-
         mUsernameText.setText(mUser.getDisplayName());
 
         if(mUser.getPhotoUrl() != null){
             Picasso.with(getContext()).load(mUser.getPhotoUrl()).into(mUserProfileImage);
         }
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET);
+        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid()+ ".jpg");
 
         setRetainInstance(true);
         return view;

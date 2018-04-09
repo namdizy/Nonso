@@ -53,6 +53,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
 import nonso.android.nonso.ui.fragments.DescriptionStepFragment;
 import nonso.android.nonso.ui.fragments.MediaStepFragment;
@@ -79,6 +80,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     private SimpleExoPlayer mExoPlayer;
     private long playerPosition;
     private String mSelectedVideoPath;
+    private Journey mJourney;
 
     private static final String STORAGE_VIDEO_BUCKET = "videos/";
     private static final String STORAGE_IMAGE_BUCKET = "images/";
@@ -103,6 +105,8 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         mStepperLayout.setListener(this);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        mJourney = new Journey();
     }
 
 
@@ -256,8 +260,14 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     }
 
     @Override
-    public void OnDescriptionStepListener(Uri uri) {
+    public void OnDescriptionStepListener(Journey journey) {
+        if(journey.getName() != null){
+            mJourney.setName(journey.getName());
+        }else if(journey.getDescription() != null){
+            mJourney.setDescription(journey.getDescription());
+        }
 
+        Log.v(TAG, "this is a journey: name: " + journey.getName() + "| description: " +journey.getDescription());
     }
 
     @Override
