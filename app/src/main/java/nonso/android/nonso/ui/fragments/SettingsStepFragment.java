@@ -9,10 +9,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 
@@ -28,6 +37,17 @@ public class SettingsStepFragment extends Fragment implements Step {
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
     private static final String ARG_JOURNEY = "journey_object";
+
+
+    @BindView(R.id.switch_create_journeys_settings_permissions) Switch mPermissionsSwitch;
+    @BindView(R.id.switch_create_journeys_settings_subscriptions) Switch mSubscriptionsSwitch;
+    @BindView(R.id.cbx_create_journey_subscription_tier1) CheckBox mTier1Cbx;
+    @BindView(R.id.cbx_create_journey_subscription_tier2) CheckBox mTier2Cbx;
+    @BindView(R.id.cbx_create_journey_subscription_tier3) CheckBox mTier3Cbx;
+    @BindView(R.id.tv_create_journeys_description_tier1_title) TextView mTier1TitleTV;
+    @BindView(R.id.tv_create_journeys_description_tier2_title) TextView mTier2TitleTv;
+    @BindView(R.id.tv_create_journeys_description_tier3_title) TextView mTier3TitleTV;
+
 
     private String mStepPosition;
     private Journey mJourney;
@@ -67,13 +87,53 @@ public class SettingsStepFragment extends Fragment implements Step {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings_step, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings_step, container, false);
+
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @OnCheckedChanged(R.id.switch_create_journeys_settings_permissions)
+    public void onPermissionChange(CompoundButton button, boolean checked){
+        if(checked){
+            mJourney.setPermissions(true);
+        }else{
+            mJourney.setPermissions(false);
+        }
+
+        mListener.OnSettingsStepListener(mJourney);
+    }
+
+    @OnCheckedChanged(R.id.switch_create_journeys_settings_subscriptions)
+    public void onSubscriptionChange(CompoundButton button, boolean checked){
+        if(checked){
+            mJourney.setSubscriptions(true);
+            mTier1Cbx.setVisibility(View.VISIBLE);
+            mTier2Cbx.setVisibility(View.VISIBLE);
+            mTier3Cbx.setVisibility(View.VISIBLE);
+            mTier1TitleTV.setVisibility(View.VISIBLE);
+            mTier2TitleTv.setVisibility(View.VISIBLE);
+            mTier3TitleTV.setVisibility(View.VISIBLE);
+        }else{
+            mJourney.setSubscriptions(true);
+
+            mJourney.setTeir3(false);
+            mJourney.setTier1(false);
+            mJourney.setTier2(false);
+
+            mTier1Cbx.setVisibility(View.GONE);
+            mTier2Cbx.setVisibility(View.GONE);
+            mTier3Cbx.setVisibility(View.GONE);
+            mTier1TitleTV.setVisibility(View.GONE);
+            mTier2TitleTv.setVisibility(View.GONE);
+            mTier3TitleTV.setVisibility(View.GONE);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(Journey journey) {
         if (mListener != null) {
-            mListener.OnSettingsStepListener(uri);
+            mListener.OnSettingsStepListener(journey);
         }
     }
 
@@ -122,6 +182,6 @@ public class SettingsStepFragment extends Fragment implements Step {
      */
     public interface OnSettingsStepListener {
         // TODO: Update argument type and name
-        void OnSettingsStepListener(Uri uri);
+        void OnSettingsStepListener(Journey journey);
     }
 }

@@ -276,7 +276,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     }
 
     @Override
-    public void OnSettingsStepListener(Uri uri) {
+    public void OnSettingsStepListener(Journey journey) {
 
     }
 

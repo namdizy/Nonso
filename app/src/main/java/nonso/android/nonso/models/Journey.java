@@ -9,6 +9,53 @@ public class Journey implements Parcelable {
     private String name;
     private String description;
 
+    private boolean permissions;
+    private boolean subscriptions;
+    private boolean tier1;
+    private boolean tier2;
+    private boolean tier3;
+
+
+    public boolean isPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(boolean permissions) {
+        this.permissions = permissions;
+    }
+
+    public boolean isSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(boolean subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public boolean isTier1() {
+        return tier1;
+    }
+
+    public void setTier1(boolean tier1) {
+        this.tier1 = tier1;
+    }
+
+    public boolean isTier2() {
+        return tier2;
+    }
+
+    public void setTier2(boolean tier2) {
+        this.tier2 = tier2;
+    }
+
+    public boolean isTeir3() {
+        return tier3;
+    }
+
+    public void setTeir3(boolean teir3) {
+        this.tier3 = teir3;
+    }
+
     public Journey(){
 
     }
@@ -30,11 +77,6 @@ public class Journey implements Parcelable {
     }
 
 
-    protected Journey(Parcel in){
-        this.name = in.readString();
-        this.description = in.readString();
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -44,6 +86,21 @@ public class Journey implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
         dest.writeString(this.description);
+        dest.writeByte(this.permissions ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.subscriptions ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.tier1 ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.tier2 ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.tier3 ? (byte) 1 : (byte) 0);
+    }
+
+    protected Journey(Parcel in) {
+        this.name = in.readString();
+        this.description = in.readString();
+        this.permissions = in.readByte() != 0;
+        this.subscriptions = in.readByte() != 0;
+        this.tier1 = in.readByte() != 0;
+        this.tier2 = in.readByte() != 0;
+        this.tier3 = in.readByte() != 0;
     }
 
     public static final Creator<Journey> CREATOR = new Creator<Journey>() {
