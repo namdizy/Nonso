@@ -55,4 +55,12 @@
     <dimen name="create_journey_video_box_height">200dp</dimen>
     <dimen name="create_journey_description_min_height">120dp</dimen>
     <dimen name="create_journey_description_header_margin">60dp</dimen>
+    <dimen name="create_journey_settings_margin">10dp</dimen>
+    <dimen name="create_journey_settings_margin_top">30dp</dimen>
+    <dimen name="create_journey_settings_item_margin">10dp</dimen>
+    <dimen name="create_journey_settings_item_margin_top">5dp</dimen>
+    <dimen name="create_journey_setting_title_text_size">16sp</dimen>
+    <dimen name="crate_journey_settings_disclaimer">9sp</dimen>
+    <dimen name="create_journeys_settings_subscriptions_tier_header_text_size">12sp</dimen>
+
 </resources>

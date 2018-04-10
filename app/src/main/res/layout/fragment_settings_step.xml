@@ -6,187 +6,283 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.SettingsStepFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
-        <RelativeLayout
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:background="@drawable/banner_image">
+
+        </FrameLayout>
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginLeft="@dimen/create_journey_settings_margin"
+            android:layout_marginRight="@dimen/create_journey_settings_margin"
+            android:layout_marginTop="@dimen/create_journey_settings_margin_top">
 
-            <TextView
-                android:id="@+id/tv_create_journeys_settings_title"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textSize="16sp"
-                android:text="Decide how friends join this journey"
-                android:layout_alignParentTop="true"
-                />
+                android:layout_marginBottom="@dimen/create_journey_settings_item_margin"
+                android:layout_marginTop="@dimen/create_journey_settings_item_margin">
 
-            <include layout="@layout/divider_light"
-                android:layout_below="@id/tv_create_journeys_settings_title"
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:text="@string/create_journey_settings_title"
+                    android:textSize="@dimen/create_journey_setting_title_text_size" />
+
+                <include
+                    layout="@layout/divider_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_create_journeys_settings_title" />
+
+                <!--PERMISSIONS SECTIONS-->
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_label_permissions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/switch_create_journeys_settings_permissions"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_create_journeys_settings_title"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginTop="@dimen/create_journey_settings_item_margin_top"
+                    android:gravity="center_vertical"
+                    android:text="@string/create_journey_settings_permission"
+                    android:textSize="@dimen/create_journey_setting_title_text_size" />
+
+                <Switch
+                    android:id="@+id/switch_create_journeys_settings_permissions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tv_create_journeys_settings_title"
+                    android:layout_marginTop="@dimen/create_journey_settings_item_margin_top"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_permissions_disclaimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/switch_create_journeys_settings_permissions"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:text="@string/create_journey_settings_permission_disclaimer"
+                    android:textSize="@dimen/crate_journey_settings_disclaimer" />
+
+                <include
+                    layout="@layout/divider_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_create_journeys_settings_permissions_disclaimer" />
+
+                <!--SUBSCRIPTION SECTION-->
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_label_subscriptions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/switch_create_journeys_settings_subscriptions"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_create_journeys_settings_permissions_disclaimer"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginTop="@dimen/create_journey_settings_item_margin_top"
+                    android:gravity="center_vertical"
+                    android:text="@string/create_journey_settings_subscription"
+                    android:textSize="@dimen/create_journey_setting_title_text_size" />
+
+                <Switch
+
+                    android:id="@+id/switch_create_journeys_settings_subscriptions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tv_create_journeys_settings_permissions_disclaimer"
+                    android:layout_marginTop="@dimen/create_journey_settings_item_margin_top" />
+
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_subscriptions_disclaimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_create_journeys_settings_label_subscriptions"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:text="@string/create_journey_settings_subscription_disclaimer"
+                    android:textSize="@dimen/crate_journey_settings_disclaimer" />
+
+                <include
+                    layout="@layout/divider_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer" />
+
+                <!-- SUBSCRIPTION CHOICES -->
+
+                <TextView
+                    android:id="@+id/create_journeys_settings_subscriptions_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/create_journeys_settings_subscriptions_tier_header"
+                    android:textSize="@dimen/create_journeys_settings_subscriptions_tier_header_text_size"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_create_journeys_description_tier1_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/cbx_create_journey_subscription_tier1"
+                    android:layout_below="@id/create_journeys_settings_subscriptions_header"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:gravity="center_vertical"
+                    android:text="@string/create_journey_settings_subscriptions_tier1"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/cbx_create_journey_subscription_tier1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/create_journeys_settings_subscriptions_header"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_create_journeys_description_tier2_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/cbx_create_journey_subscription_tier2"
+                    android:layout_below="@id/cbx_create_journey_subscription_tier1"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:gravity="center_vertical"
+                    android:text="@string/create_journey_settings_subscriptions_tier2"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/cbx_create_journey_subscription_tier2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/cbx_create_journey_subscription_tier1"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_create_journeys_description_tier3_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/cbx_create_journey_subscription_tier3"
+                    android:layout_below="@id/cbx_create_journey_subscription_tier2"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:gravity="center_vertical"
+                    android:text="@string/create_journey_settings_subscriptions_tier3"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/cbx_create_journey_subscription_tier3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/cbx_create_journey_subscription_tier2"
+                    android:visibility="gone" />
+
+                <!-- SHOW HOW MANY FRIENDS IN JOURNEY CHOICE -->
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/create_journey_settings_margin">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
 
-            <!--PERMISSIONS SECTIONS-->
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:gravity="center_vertical"
+                    android:layout_alignBottom="@id/switch_create_journeys_settings_discoveries"
+                    android:text="@string/create_journey_settings_discoverers"
+                    android:textSize="@dimen/create_journey_setting_title_text_size" />
+
+                <Switch
+
+                    android:id="@+id/switch_create_journeys_settings_discoveries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true" />
+
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_discoveries_disclaimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_create_journeys_settings_label"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:text="@string/create_journey_setting_discoverers_disclaimer"
+                    android:textSize="@dimen/crate_journey_settings_disclaimer" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/create_journey_settings_margin"
+            android:layout_marginRight="@dimen/create_journey_settings_margin"
+            android:layout_marginBottom="@dimen/create_journey_settings_margin">
+
             <TextView
-                android:layout_marginTop="5dp"
-                android:id="@+id/tv_create_journeys_settings_label_permissions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Permissions"
-                android:layout_marginLeft="10dp"
-                android:textSize="16sp"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/tv_create_journeys_settings_title"
-                android:layout_alignBottom="@id/switch_create_journeys_settings_permissions"
-                android:gravity="center_vertical"
-               />
-
-            <Switch
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/switch_create_journeys_settings_permissions"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/tv_create_journeys_settings_title"
-
-                />
-
-            <TextView
-                android:id="@+id/tv_create_journeys_settings_permissions_disclaimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="9sp"
-                android:layout_marginLeft="10dp"
-                android:text="Require permission to join this journey. If disabled you will get only a notification when a new friend joins."
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/switch_create_journeys_settings_permissions"/>
-
-            <include layout="@layout/divider_light"
-               android:layout_below="@id/tv_create_journeys_settings_permissions_disclaimer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_margin="10dp"
+                android:textSize="@dimen/crate_journey_settings_disclaimer"
+                android:text="@string/create_journey_settings_disclaimer"/>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
 
-            <!--SUBSCRIPTION SECTION-->
-            <TextView
-                android:id="@+id/tv_create_journeys_settings_label_subscriptions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subscriptions"
-                android:layout_marginLeft="10dp"
-                android:textSize="16sp"
-                android:layout_marginTop="5dp"
-                android:layout_alignParentLeft="true"
-                android:gravity="center_vertical"
-                android:layout_below="@id/tv_create_journeys_settings_permissions_disclaimer"
-                android:layout_alignBottom="@id/switch_create_journeys_settings_subscriptions"/>
-
-            <Switch
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:id="@+id/switch_create_journeys_settings_subscriptions"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/tv_create_journeys_settings_permissions_disclaimer"
-                />
-
-            <TextView
-                android:id="@+id/tv_create_journeys_settings_subscriptions_disclaimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="9sp"
-                android:layout_marginLeft="10dp"
-                android:text="Require subscriptions to join this journey. If disabled you will not be able to monetize your journey."
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/tv_create_journeys_settings_label_subscriptions"/>
-
-            <include layout="@layout/divider_light"
-                android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!-- SUBSCRIPTION CHOICES -->
-
-            <TextView
-                android:id="@+id/create_journeys_settings_subscriptions_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select subscription tiers "
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_alignParentLeft="true"
-                android:visibility="gone"
-                android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer"
-                />
-            <TextView
-                android:id="@+id/tv_create_journeys_description_tier1_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tier 1: $4.99"
-                android:gravity="center_vertical"
-                android:layout_alignBottom="@id/cbx_create_journey_subscription_tier1"
-                android:layout_marginLeft="10dp"
-                android:layout_below="@id/create_journeys_settings_subscriptions_header"
-                android:visibility="gone"
-                />
-            <CheckBox
-                android:id="@+id/cbx_create_journey_subscription_tier1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/create_journeys_settings_subscriptions_header"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/tv_create_journeys_description_tier2_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tier 2: $11.99"
-                android:gravity="center_vertical"
-                android:layout_alignBottom="@id/cbx_create_journey_subscription_tier2"
-                android:layout_marginLeft="10dp"
-                android:layout_below="@id/cbx_create_journey_subscription_tier1"
-                android:visibility="gone"
-                />
-            <CheckBox
-                android:id="@+id/cbx_create_journey_subscription_tier2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/cbx_create_journey_subscription_tier1"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/tv_create_journeys_description_tier3_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tier 2: $23.99"
-                android:gravity="center_vertical"
-                android:layout_alignBottom="@id/cbx_create_journey_subscription_tier3"
-                android:layout_marginLeft="10dp"
-                android:layout_below="@id/cbx_create_journey_subscription_tier2"
-                android:visibility="gone"
-                />
-            <CheckBox
-                android:id="@+id/cbx_create_journey_subscription_tier3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/cbx_create_journey_subscription_tier2"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
 
 </ScrollView>
