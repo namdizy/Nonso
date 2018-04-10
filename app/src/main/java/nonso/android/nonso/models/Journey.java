@@ -48,11 +48,11 @@ public class Journey implements Parcelable {
         this.tier2 = tier2;
     }
 
-    public boolean isTeir3() {
+    public boolean isTier3() {
         return tier3;
     }
 
-    public void setTeir3(boolean teir3) {
+    public void setTier3(boolean teir3) {
         this.tier3 = teir3;
     }
 

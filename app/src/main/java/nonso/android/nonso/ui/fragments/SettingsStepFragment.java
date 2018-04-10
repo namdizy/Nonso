@@ -49,7 +49,7 @@ public class SettingsStepFragment extends Fragment implements Step {
     @BindView(R.id.tv_create_journeys_description_tier3_title) TextView mTier3TitleTV;
 
 
-    private String mStepPosition;
+    private int mStepPosition;
     private Journey mJourney;
 
     private OnSettingsStepListener mListener;
@@ -78,7 +78,7 @@ public class SettingsStepFragment extends Fragment implements Step {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mStepPosition = getArguments().getString(ARG_STEP_POSITION_KEY);
+            mStepPosition = getArguments().getInt(ARG_STEP_POSITION_KEY);
             mJourney = getArguments().getParcelable(ARG_JOURNEY);
         }
     }
@@ -117,9 +117,13 @@ public class SettingsStepFragment extends Fragment implements Step {
         }else{
             mJourney.setSubscriptions(true);
 
-            mJourney.setTeir3(false);
+            mJourney.setTier3(false);
             mJourney.setTier1(false);
             mJourney.setTier2(false);
+
+            mTier1Cbx.setChecked(false);
+            mTier2Cbx.setChecked(false);
+            mTier3Cbx.setChecked(false);
 
             mTier1Cbx.setVisibility(View.GONE);
             mTier2Cbx.setVisibility(View.GONE);
@@ -128,13 +132,22 @@ public class SettingsStepFragment extends Fragment implements Step {
             mTier2TitleTv.setVisibility(View.GONE);
             mTier3TitleTV.setVisibility(View.GONE);
         }
+
+        mListener.OnSettingsStepListener(mJourney);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Journey journey) {
-        if (mListener != null) {
-            mListener.OnSettingsStepListener(journey);
+    @OnCheckedChanged({R.id.cbx_create_journey_subscription_tier1, R.id.cbx_create_journey_subscription_tier2,
+                        R.id.cbx_create_journey_subscription_tier3})
+    public void onTierCheckChanged(CompoundButton button, boolean checked){
+        switch (button.getId()){
+            case R.id.cbx_create_journey_subscription_tier1:
+                mJourney.setTier1(checked);
+            case R.id.cbx_create_journey_subscription_tier2:
+                mJourney.setTier2(checked);
+            case R.id.cbx_create_journey_subscription_tier3:
+                mJourney.setTier3(checked);
         }
+        mListener.OnSettingsStepListener(mJourney);
     }
 
     @Override
