@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -51,6 +52,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.tv_profile_username) TextView mUsernameText;
     @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
     @BindView(R.id.profile_image) ImageView mUserProfileImage;
+    @BindView(R.id.profile_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
 
 
     private FirebaseAuth mAuth;
@@ -115,6 +117,8 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mUsernameText.setText(mUser.getDisplayName());
+
+        //mCollapsingToolbar.setTitle(mUser.getDisplayName());
 
         if(mUser.getPhotoUrl() != null){
             Picasso.with(getContext()).load(mUser.getPhotoUrl()).into(mUserProfileImage);

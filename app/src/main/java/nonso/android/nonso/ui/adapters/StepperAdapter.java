@@ -23,7 +23,7 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -36,9 +36,6 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
             case 1:
                 final SettingsStepFragment settingsStepFragment = new SettingsStepFragment().newInstance(position, journey);
                 return  settingsStepFragment;
-            case 2:
-                final MediaStepFragment mediaStepFragment = new MediaStepFragment().newInstance(position, journey);
-                return mediaStepFragment;
         }
         return null;
     }

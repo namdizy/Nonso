@@ -60,7 +60,7 @@ import nonso.android.nonso.ui.fragments.MediaStepFragment;
 import nonso.android.nonso.ui.fragments.SettingsStepFragment;
 
 public class CreateJourneyActivity extends AppCompatActivity implements DescriptionStepFragment.OnDescriptionStepListener,
-        MediaStepFragment.OnMediaStepListener, SettingsStepFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
+        SettingsStepFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
 
 //    @BindView(R.id.btn_create_journeys_back) ImageButton mBack;
 //    @BindView(R.id.btn_create_journey_pick_video) Button mPickVideo;
@@ -270,10 +270,6 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         Log.v(TAG, "this is a journey: name: " + journey.getName() + "| description: " +journey.getDescription());
     }
 
-    @Override
-    public void OnMediaStepListener(Uri uri) {
-
-    }
 
     @Override
     public void OnSettingsStepListener(Journey journey) {
