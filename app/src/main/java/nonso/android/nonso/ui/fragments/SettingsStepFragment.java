@@ -104,6 +104,7 @@ public class SettingsStepFragment extends Fragment implements Step {
         mListener.OnSettingsStepListener(mJourney);
     }
 
+
     @OnCheckedChanged(R.id.switch_create_journeys_settings_subscriptions)
     public void onSubscriptionChange(CompoundButton button, boolean checked){
         if(checked){
@@ -147,6 +148,12 @@ public class SettingsStepFragment extends Fragment implements Step {
             case R.id.cbx_create_journey_subscription_tier3:
                 mJourney.setTier3(checked);
         }
+        mListener.OnSettingsStepListener(mJourney);
+    }
+
+    @OnCheckedChanged(R.id.switch_create_journeys_settings_discoverers)
+    public void onDiscoverersCheck(CompoundButton compoundButton, boolean checked){
+        mJourney.setDisplayFollowers(checked);
         mListener.OnSettingsStepListener(mJourney);
     }
 

@@ -72,6 +72,7 @@
     <string name="create_journey_settings_discoverers">Discoverers</string>
     <string name="create_journey_setting_discoverers_disclaimer">Show how many friends are currently in this journey. If disabled the number of friends in this journey will be hidden</string>
     <string name="create_journey_settings_disclaimer">These settings can be changed at any time after creating this journey</string>
+    <string name="create_journey_progress_bar_string">Taking the first step..</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

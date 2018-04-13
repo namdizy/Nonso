@@ -1,36 +1,20 @@
 package nonso.android.nonso.ui.fragments;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.stepstone.stepper.BlockingStep;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
-import com.vansuita.pickimage.bean.PickResult;
-import com.vansuita.pickimage.bundle.PickSetup;
-import com.vansuita.pickimage.dialog.PickImageDialog;
-import com.vansuita.pickimage.listeners.IPickCancel;
-import com.vansuita.pickimage.listeners.IPickResult;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
@@ -165,7 +149,6 @@ public class DescriptionStepFragment extends Fragment implements Step {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnDescriptionStepListener {
-        // TODO: Update argument type and name
         void OnDescriptionStepListener(Journey journey);
     }
 }
