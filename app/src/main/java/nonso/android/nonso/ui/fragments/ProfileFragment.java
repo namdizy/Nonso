@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -59,10 +61,13 @@ public class ProfileFragment extends Fragment {
     private FirebaseUser mUser;
     private StorageReference mStorageRef;
     private StorageReference mProfileImageRef;
+    private DocumentReference mUserRef;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
     private static final String TAG = "ProfileFragment";
-    private static final String METADATA_KEY = "userID";
+    private static final String METADATA_KEY = "creator_id";
+    private static final String DATABASE_COLLECTION_USERS = "users/";
 
     private Uri mCropImageUri;
 
@@ -119,6 +124,8 @@ public class ProfileFragment extends Fragment {
         mUsernameText.setText(mUser.getDisplayName());
 
         //mCollapsingToolbar.setTitle(mUser.getDisplayName());
+
+        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
 
         if(mUser.getPhotoUrl() != null){
             Picasso.with(getContext()).load(mUser.getPhotoUrl()).into(mUserProfileImage);
@@ -229,6 +236,23 @@ public class ProfileFragment extends Fragment {
                 // ...
             }
         });
+    }
+
+    private void updateUser(Uri uri){
+
+        mUserRef.update("imageUri", uri.toString())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 
     private void updateMetaData(){

@@ -3,6 +3,9 @@ package nonso.android.nonso.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Journey implements Parcelable {
 
 
@@ -15,6 +18,24 @@ public class Journey implements Parcelable {
     private boolean tier2;
     private boolean tier3;
     private boolean displayFollowers;
+    private Map<String, Boolean> subscribers;
+    private Map<String, Boolean> blockedList;
+
+    public Map<String, Boolean> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(Map<String, Boolean> subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    public Map<String, Boolean> getBlockedList() {
+        return blockedList;
+    }
+
+    public void setBlockedList(Map<String, Boolean> blockedList) {
+        this.blockedList = blockedList;
+    }
 
     public String getUserId() {
         return userId;
@@ -109,6 +130,16 @@ public class Journey implements Parcelable {
         dest.writeByte(this.tier2 ? (byte) 1 : (byte) 0);
         dest.writeByte(this.tier3 ? (byte) 1 : (byte) 0);
         dest.writeByte(this.displayFollowers ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.subscribers.size());
+        for (Map.Entry<String, Boolean> entry : this.subscribers.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeValue(entry.getValue());
+        }
+        dest.writeInt(this.blockedList.size());
+        for (Map.Entry<String, Boolean> entry : this.blockedList.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeValue(entry.getValue());
+        }
     }
 
     protected Journey(Parcel in) {
@@ -121,6 +152,20 @@ public class Journey implements Parcelable {
         this.tier2 = in.readByte() != 0;
         this.tier3 = in.readByte() != 0;
         this.displayFollowers = in.readByte() != 0;
+        int subscribersSize = in.readInt();
+        this.subscribers = new HashMap<String, Boolean>(subscribersSize);
+        for (int i = 0; i < subscribersSize; i++) {
+            String key = in.readString();
+            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
+            this.subscribers.put(key, value);
+        }
+        int blockedListSize = in.readInt();
+        this.blockedList = new HashMap<String, Boolean>(blockedListSize);
+        for (int i = 0; i < blockedListSize; i++) {
+            String key = in.readString();
+            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
+            this.blockedList.put(key, value);
+        }
     }
 
     public static final Creator<Journey> CREATOR = new Creator<Journey>() {

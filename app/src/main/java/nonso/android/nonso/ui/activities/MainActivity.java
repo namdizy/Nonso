@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
 
     private static final String TAG = "MainActivity";
     private SharedPreferences pref;
-    private final String ITEM_PREFERENCE_KEY = "meny_item_key";
+    private final String ITEM_PREFERENCE_KEY = "menu_item_key";
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
 
@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         int index = mBottomNavigationView.getMenuItemPosition(item);
         editor.putInt(ITEM_PREFERENCE_KEY, index);
         editor.apply();
-
-
 
         switch (item.getItemId()){
             case R.id.menu_home:

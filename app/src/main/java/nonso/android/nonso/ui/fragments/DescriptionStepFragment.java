@@ -89,7 +89,6 @@ public class DescriptionStepFragment extends Fragment implements Step {
     @OnTextChanged(value = R.id.edit_create_journeys_input_name,
             callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void onNameTextChange(Editable editable){
-
         mJourney.setName(editable.toString());
         if(mListener != null){
             mListener.OnDescriptionStepListener(mJourney);

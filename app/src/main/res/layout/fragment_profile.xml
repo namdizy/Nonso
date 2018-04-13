@@ -49,14 +49,14 @@
                         android:id="@+id/profile_image"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:src="@drawable/asser"
+                        android:src="@drawable/profile_image_placeholder"
                         app:civ_border_color="@color/colorWhite"
                         app:civ_border_width="2dp"
                         />
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/ic_editor_primary"
                         app:civ_border_color="@color/colorWhite"
                         app:civ_border_width="2dp"

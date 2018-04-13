@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageMetadata;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +49,8 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.progressBarSignUpContainer) LinearLayout mProgressBarContainer;
 
     private final String TAG = SignUpActivity.this.getClass().getSimpleName();
-    private final String COLLECTION_NAME = "users";
-    private final String USER_ID = "user_id";
+    private final String COLLECTION_NAME = "users/";
+    private final String METADATA_KEY = "user_id";
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -213,12 +214,11 @@ public class SignUpActivity extends AppCompatActivity {
         newUser.setEmail(user.getEmail());
         newUser.setUserId(user.getUid());
 
-        db.collection(COLLECTION_NAME).add(newUser)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection(COLLECTION_NAME).document(user.getEmail()).set(newUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void aVoid) {
                         onSignUpSuccess(user);
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -228,4 +228,5 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

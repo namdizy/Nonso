@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -30,11 +31,14 @@ import com.google.firebase.storage.UploadTask;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
 import nonso.android.nonso.ui.fragments.DescriptionStepFragment;
 import nonso.android.nonso.ui.fragments.SettingsStepFragment;
@@ -55,6 +59,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     private StorageReference mStorageRef;
     private StorageReference mProfileImageRef;
     private StorageReference mVideoDescriptionRef;
+    private DocumentReference mUserRef;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -66,6 +71,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     private static final String STORAGE_VIDEO_BUCKET = "videos/";
     private static final String STORAGE_IMAGE_BUCKET = "images/";
     private static final String DATABASE_JOURNEYS = "journeys";
+    private static final String DATABASE_COLLECTION_USERS = "users/";
     private final String TAG = CreateJourneyActivity.this.getClass().getSimpleName();
 
 
@@ -85,6 +91,8 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
         mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
         mStepperLayout.setListener(this);
+
+        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -271,21 +279,41 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         final LinearLayout mProgressbar = (LinearLayout) findViewById(R.id.create_journey_progress_bar_container);
         mProgressbar.setVisibility(View.VISIBLE);
 
-        mJourney.setUserId(mUser.getUid());
+        mJourney.setUserId(mUserRef.getId());
         db.collection(DATABASE_JOURNEYS)
                 .add(mJourney)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         mProgressbar.setVisibility(View.GONE);
+                        String journeyid = documentReference.getId();
 
-
-                        documentReference.getId();
+                        updateUser(journeyid);
 
                         Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(intent);
                     }
                 });
+    }
+
+    private void updateUser(final String journeyId){
+        mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+
+                ArrayList<String> userJourneys = user.getCreatedJourneys();
+                if(userJourneys == null){
+                    userJourneys = new ArrayList<>();
+                    userJourneys.add(journeyId);
+                }else{
+                    userJourneys.add(journeyId);
+                }
+
+                mUserRef.update("createdJourneys", userJourneys);
+            }
+        });
+
     }
 
     @Override
