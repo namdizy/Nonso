@@ -26,7 +26,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -40,10 +44,13 @@ import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 
@@ -70,7 +77,8 @@ public class ProfileFragment extends Fragment {
     private static final String DATABASE_COLLECTION_USERS = "users/";
 
     private Uri mCropImageUri;
-
+    private ListenerRegistration registration;
+    private User mUserData;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -122,19 +130,54 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mUsernameText.setText(mUser.getDisplayName());
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid()+ ".jpg");
 
         //mCollapsingToolbar.setTitle(mUser.getDisplayName());
 
         mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
 
+        getUserData();
+        registration = addListenerUserListener();
+
         if(mUser.getPhotoUrl() != null){
             Picasso.with(getContext()).load(mUser.getPhotoUrl()).into(mUserProfileImage);
+        }else{
+            //TODO: load default image
         }
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid()+ ".jpg");
 
         setRetainInstance(true);
         return view;
+    }
+
+    private ListenerRegistration addListenerUserListener(){
+        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.w(TAG, "Listen failed,", e);
+                }
+
+                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
+                        ? "Local" : "Server";
+                if(snapshot != null && snapshot.exists()){
+                    Log.d(TAG, source + " data: " + snapshot.getData());
+
+                }else{
+
+                }
+            }
+        });
+    }
+
+    private void getUserData(){
+        mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mUserData = documentSnapshot.toObject(User.class);
+            }
+        });
+
     }
 
     @OnClick(R.id.btn_profile_settings)
@@ -144,7 +187,6 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
     }
 
-
     @OnClick(R.id.fab_profile_create)
     public void fabOnClick(View view){
 
@@ -153,7 +195,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.profile_image)
+    @OnClick(R.id.profile_image_container)
     public void profileImageOnclick(View view){
         //TODO: Make this a task so when lifecycle events occur this fragment can be recreated with this process still running
         startPickImageActivity();
@@ -273,5 +315,12 @@ public class ProfileFragment extends Fragment {
                     Log.d(TAG, "Metadata update failed.");
                 }
             });
+    }
+
+    @Override
+    public void onDestroy() {
+
+        registration.remove();
+        super.onDestroy();
     }
 }

@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +34,8 @@ import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -289,28 +293,54 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                         String journeyid = documentReference.getId();
 
                         updateUser(journeyid);
-
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                        startActivity(intent);
                     }
                 });
     }
 
     private void updateUser(final String journeyId){
+        final Context context = this;
         mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
 
-                ArrayList<String> userJourneys = user.getCreatedJourneys();
-                if(userJourneys == null){
-                    userJourneys = new ArrayList<>();
-                    userJourneys.add(journeyId);
-                }else{
-                    userJourneys.add(journeyId);
+                if(user.getCreatedJourneys() != null){
+                    Map<String, Boolean> userJourneys = user.getCreatedJourneys();
+                    userJourneys.put(journeyId, true);
+                    mUserRef.update("createdJourneys", userJourneys).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                            Intent intent = new Intent(context, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error updating document", e);
+                        }
+                    });
                 }
-
-                mUserRef.update("createdJourneys", userJourneys);
+                else
+                {
+                    Map<String, Boolean> userJourneys =new HashMap<>();
+                    userJourneys.put(journeyId, true);
+                    mUserRef.update("createdJourneys", userJourneys).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                            Intent intent = new Intent(context, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error updating document", e);
+                                }
+                            });;
+                }
             }
         });
 

@@ -3,6 +3,7 @@ package nonso.android.nonso.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,24 @@ public class User implements Parcelable {
     private Map<String, Boolean> subscribedJourneys;
     private Map<String, Boolean> followingUsers;
     private Map<String, Boolean> followersUsers;
+    private Time createdAt;
+    private Time updatedAt;
+
+    public Time getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Time createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Time getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Time updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     public Map<String, Boolean> getCreatedJourneys() {
         return createdJourneys;
@@ -61,7 +80,11 @@ public class User implements Parcelable {
     }
 
     public User(){
-
+        this.createdJourneys = new HashMap<>();
+        this.followersUsers = new HashMap<>();
+        this.followingJourneys = new HashMap<>();
+        this.followingUsers = new HashMap<>();
+        this.subscribedJourneys = new HashMap<>();
     }
 
     public String getImageUri() {
@@ -144,6 +167,8 @@ public class User implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
+        dest.writeSerializable(this.createdAt);
+        dest.writeSerializable(this.updatedAt);
     }
 
     protected User(Parcel in) {
@@ -187,6 +212,8 @@ public class User implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.followersUsers.put(key, value);
         }
+        this.createdAt = (Time) in.readSerializable();
+        this.updatedAt = (Time) in.readSerializable();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

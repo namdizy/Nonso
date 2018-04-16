@@ -3,6 +3,7 @@ package nonso.android.nonso.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public class Journey implements Parcelable {
     private boolean displayFollowers;
     private Map<String, Boolean> subscribers;
     private Map<String, Boolean> blockedList;
+    private Time createdAt;
 
     public Map<String, Boolean> getSubscribers() {
         return subscribers;
@@ -94,7 +96,8 @@ public class Journey implements Parcelable {
     }
 
     public Journey(){
-
+        this.subscribers = new HashMap<>();
+        this.blockedList = new HashMap<>();
     }
 
     public String getName() {
