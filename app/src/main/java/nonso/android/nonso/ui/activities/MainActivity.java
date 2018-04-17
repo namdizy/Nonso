@@ -16,13 +16,16 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.fragments.JourneysFragment;
+import nonso.android.nonso.ui.fragments.JourneysListFragment;
 import nonso.android.nonso.ui.fragments.NotificationsFragment;
 import nonso.android.nonso.ui.fragments.ProfileFragment;
 import nonso.android.nonso.ui.fragments.SearchFragment;
 
 public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener,
-        JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener{
+        JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener,
+        JourneysListFragment.OnJourneysListFragmentListener{
 
     private static final String TAG = "MainActivity";
     private SharedPreferences pref;
@@ -110,6 +113,11 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onJourneysListInteraction(Journey journey) {
 
     }
 }

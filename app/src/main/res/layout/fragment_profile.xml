@@ -126,7 +126,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_anchorGravity="bottom|right|end"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/profile_recycler_view_journeys"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_profile_create"

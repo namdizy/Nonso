@@ -1,7 +1,7 @@
 package nonso.android.nonso.ui.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +9,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,6 +35,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -44,24 +50,29 @@ import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
-import java.util.Map;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
+import nonso.android.nonso.ui.adapters.JourneysAdapter;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements JourneysAdapter.JourneysAdapterOnClickHandler {
 
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
     @BindView(R.id.tv_profile_username) TextView mUsernameText;
     @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
     @BindView(R.id.profile_image) ImageView mUserProfileImage;
     @BindView(R.id.profile_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
+
+    @BindView(R.id.profile_recycler_view_journeys)
+    RecyclerView journeysRecyclerView;
 
 
     private FirebaseAuth mAuth;
@@ -75,15 +86,22 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final String METADATA_KEY = "creator_id";
     private static final String DATABASE_COLLECTION_USERS = "users/";
+    private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
 
     private Uri mCropImageUri;
     private ListenerRegistration registration;
     private User mUserData;
+    private ArrayList<Journey> mJourneys;
 
+
+    private Context mContext;
 
     // TODO: Rename parameter arguments, choose names that match
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private JourneysAdapter journeysAdapter;
+    private RecyclerView.LayoutManager journeysLayoutManager;
 
 
     // TODO: Rename and change types of parameters
@@ -136,8 +154,12 @@ public class ProfileFragment extends Fragment {
         //mCollapsingToolbar.setTitle(mUser.getDisplayName());
 
         mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
+        mJourneys = new ArrayList<>();
 
         getUserData();
+
+        mContext = getContext();
+
         registration = addListenerUserListener();
 
         if(mUser.getPhotoUrl() != null){
@@ -145,6 +167,14 @@ public class ProfileFragment extends Fragment {
         }else{
             //TODO: load default image
         }
+
+
+        journeysLayoutManager = new LinearLayoutManager(getContext());
+        journeysRecyclerView.setLayoutManager(journeysLayoutManager);
+        journeysRecyclerView.setHasFixedSize(true);
+
+        journeysAdapter = new JourneysAdapter(this);
+        journeysRecyclerView.setAdapter(journeysAdapter);
 
         setRetainInstance(true);
         return view;
@@ -175,9 +205,40 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 mUserData = documentSnapshot.toObject(User.class);
+                getUserJourneys();
             }
         });
 
+    }
+
+    private void getUserJourneys(){
+
+        if(mUserData != null){
+            db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+
+                            mJourneys.add(document.toObject(Journey.class));
+                        }
+                        Log.d(TAG, "mJourneys => " + mJourneys.size());
+//
+//                        if (!isAdded()) return;
+//                        JourneysListFragment journeysListFragment = new JourneysListFragment().newInstance(mJourneys);
+//                        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+//                        fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commit();
+                        journeysAdapter.setJourneysData(mJourneys);
+
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                    }
+                });
+        }
     }
 
     @OnClick(R.id.btn_profile_settings)
@@ -322,5 +383,15 @@ public class ProfileFragment extends Fragment {
 
         registration.remove();
         super.onDestroy();
+    }
+
+//    @Override
+//    public void onJourneysListInteraction(Journey journey) {
+//        Toast.makeText(getContext(), "Journey clicked ", Toast.LENGTH_LONG).show();
+//    }
+
+    @Override
+    public void onJourneyItemClick(Journey journey) {
+
     }
 }
