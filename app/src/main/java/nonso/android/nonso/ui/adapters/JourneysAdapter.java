@@ -51,7 +51,8 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
     @Override
     public int getItemCount() {
-        return 0;
+        if(mJourneys == null) return 0;
+        else return mJourneys.size();
     }
 
     public class JourneysViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

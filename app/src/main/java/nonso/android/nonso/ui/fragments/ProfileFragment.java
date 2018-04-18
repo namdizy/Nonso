@@ -11,8 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,19 +58,15 @@ import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
-import nonso.android.nonso.ui.adapters.JourneysAdapter;
 
 
-public class ProfileFragment extends Fragment implements JourneysAdapter.JourneysAdapterOnClickHandler {
+public class ProfileFragment extends Fragment implements JourneysListFragment.OnJourneysListFragmentListener {
 
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
     @BindView(R.id.tv_profile_username) TextView mUsernameText;
     @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
     @BindView(R.id.profile_image) ImageView mUserProfileImage;
     @BindView(R.id.profile_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
-
-    @BindView(R.id.profile_recycler_view_journeys)
-    RecyclerView journeysRecyclerView;
 
 
     private FirebaseAuth mAuth;
@@ -99,9 +93,6 @@ public class ProfileFragment extends Fragment implements JourneysAdapter.Journey
     // TODO: Rename parameter arguments, choose names that match
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private JourneysAdapter journeysAdapter;
-    private RecyclerView.LayoutManager journeysLayoutManager;
 
 
     // TODO: Rename and change types of parameters
@@ -168,14 +159,6 @@ public class ProfileFragment extends Fragment implements JourneysAdapter.Journey
             //TODO: load default image
         }
 
-
-        journeysLayoutManager = new LinearLayoutManager(getContext());
-        journeysRecyclerView.setLayoutManager(journeysLayoutManager);
-        journeysRecyclerView.setHasFixedSize(true);
-
-        journeysAdapter = new JourneysAdapter(this);
-        journeysRecyclerView.setAdapter(journeysAdapter);
-
         setRetainInstance(true);
         return view;
     }
@@ -226,12 +209,12 @@ public class ProfileFragment extends Fragment implements JourneysAdapter.Journey
                             mJourneys.add(document.toObject(Journey.class));
                         }
                         Log.d(TAG, "mJourneys => " + mJourneys.size());
-//
-//                        if (!isAdded()) return;
-//                        JourneysListFragment journeysListFragment = new JourneysListFragment().newInstance(mJourneys);
-//                        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-//                        fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commit();
-                        journeysAdapter.setJourneysData(mJourneys);
+
+                        if (!isAdded()) return;
+                        JourneysListFragment journeysListFragment = new JourneysListFragment().newInstance(mJourneys);
+                        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                        fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commit();
+
 
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
@@ -385,13 +368,8 @@ public class ProfileFragment extends Fragment implements JourneysAdapter.Journey
         super.onDestroy();
     }
 
-//    @Override
-//    public void onJourneysListInteraction(Journey journey) {
-//        Toast.makeText(getContext(), "Journey clicked ", Toast.LENGTH_LONG).show();
-//    }
-
     @Override
-    public void onJourneyItemClick(Journey journey) {
-
+    public void onJourneysListInteraction(Journey journey) {
+        Toast.makeText(getContext(), "Journey clicked ", Toast.LENGTH_LONG).show();
     }
 }

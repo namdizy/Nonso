@@ -123,7 +123,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
         if(requestCode == PICK_VIDEO_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
             Uri selectedVideoUri = data.getData();
-            String userId = mUser.getUid();
+//            String userId = mUser.getUid();
 
 //            mVideoDescriptionRef = mStorageRef.child(STORAGE_VIDEO_BUCKET + userId);
             String selectedImagePath = getPath(selectedVideoUri);
@@ -290,9 +290,9 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         mProgressbar.setVisibility(View.GONE);
-                        String journeyid = documentReference.getId();
+                        String journeyId = documentReference.getId();
 
-                        updateUser(journeyid);
+                        updateUser(journeyId);
                     }
                 });
     }
@@ -321,25 +321,6 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                             Log.w(TAG, "Error updating document", e);
                         }
                     });
-                }
-                else
-                {
-                    Map<String, Boolean> userJourneys =new HashMap<>();
-                    userJourneys.put(journeyId, true);
-                    mUserRef.update("createdJourneys", userJourneys).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully updated!");
-                            Intent intent = new Intent(context, MainActivity.class);
-                            startActivity(intent);
-                        }
-                    })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error updating document", e);
-                                }
-                            });;
                 }
             }
         });

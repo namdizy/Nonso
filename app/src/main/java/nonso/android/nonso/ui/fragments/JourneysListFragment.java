@@ -42,7 +42,7 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
 
     private OnJourneysListFragmentListener mListener;
     private JourneysAdapter journeysAdapter;
-    private RecyclerView.LayoutManager journeysLayutManager;
+    private RecyclerView.LayoutManager journeysLayoutManager;
 
     public JourneysListFragment() {
         // Required empty public constructor
@@ -82,8 +82,8 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
         Log.v(TAG, "starting list fragment: " +mJourneysData);
 
         if(mJourneysData != null){
-            journeysLayutManager = new LinearLayoutManager(getContext());
-            journeysRecyclerView.setLayoutManager(journeysLayutManager);
+            journeysLayoutManager = new LinearLayoutManager(getContext());
+            journeysRecyclerView.setLayoutManager(journeysLayoutManager);
             journeysRecyclerView.setHasFixedSize(true);
 
             journeysAdapter = new JourneysAdapter(this);

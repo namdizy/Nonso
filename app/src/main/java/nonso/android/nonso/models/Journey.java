@@ -91,13 +91,13 @@ public class Journey implements Parcelable {
         return tier3;
     }
 
-    public void setTier3(boolean teir3) {
-        this.tier3 = teir3;
+    public void setTier3(boolean tier3) {
+        this.tier3 = tier3;
     }
 
     public Journey(){
-        this.subscribers = new HashMap<>();
-        this.blockedList = new HashMap<>();
+        //this.subscribers = new HashMap<>();
+        //this.blockedList = new HashMap<>();
     }
 
     public String getName() {
