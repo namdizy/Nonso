@@ -49,7 +49,6 @@ public class DescriptionStepFragment extends Fragment implements Step {
      * @param journey Journey being created.
      * @return A new instance of fragment DescriptionStepFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public DescriptionStepFragment newInstance(int position, Journey journey) {
         DescriptionStepFragment fragment = new DescriptionStepFragment();
         Bundle args = new Bundle();

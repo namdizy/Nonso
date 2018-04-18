@@ -87,9 +87,6 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
     private User mUserData;
     private ArrayList<Journey> mJourneys;
 
-
-    private Context mContext;
-
     // TODO: Rename parameter arguments, choose names that match
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -148,8 +145,7 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
         mJourneys = new ArrayList<>();
 
         getUserData();
-
-        mContext = getContext();
+        getUserJourneys();
 
         registration = addListenerUserListener();
 
@@ -159,7 +155,7 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
             //TODO: load default image
         }
 
-        setRetainInstance(true);
+        //setRetainInstance(true);
         return view;
     }
 
@@ -188,7 +184,6 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 mUserData = documentSnapshot.toObject(User.class);
-                getUserJourneys();
             }
         });
 
@@ -196,32 +191,29 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
 
     private void getUserJourneys(){
 
-        if(mUserData != null){
-            db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
+        db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
 
-                            mJourneys.add(document.toObject(Journey.class));
-                        }
-                        Log.d(TAG, "mJourneys => " + mJourneys.size());
-
-                        if (!isAdded()) return;
-                        JourneysListFragment journeysListFragment = new JourneysListFragment().newInstance(mJourneys);
-                        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                        fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commit();
-
-
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
+                        mJourneys.add(document.toObject(Journey.class));
                     }
-                    }
-                });
-        }
+                    Log.d(TAG, "mJourneys => " + mJourneys.size());
+
+                    if (!isAdded()) return;
+                    JourneysListFragment journeysListFragment = new JourneysListFragment().newInstance(mJourneys);
+                    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                    fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commit();
+
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+                }
+            });
     }
 
     @OnClick(R.id.btn_profile_settings)
