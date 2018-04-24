@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -131,5 +132,10 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
     public interface OnJourneysListFragmentListener {
         // TODO: Update argument type and name
         void onJourneysListInteraction(Journey journey);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        //super.onSaveInstanceState(outState);
     }
 }

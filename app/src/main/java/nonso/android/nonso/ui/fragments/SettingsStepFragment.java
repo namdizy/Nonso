@@ -204,4 +204,9 @@ public class SettingsStepFragment extends Fragment implements Step {
         // TODO: Update argument type and name
         void OnSettingsStepListener(Journey journey);
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        //super.onSaveInstanceState(outState);
+    }
 }

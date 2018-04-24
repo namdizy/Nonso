@@ -46,6 +46,7 @@ import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
 import nonso.android.nonso.ui.fragments.DescriptionStepFragment;
 import nonso.android.nonso.ui.fragments.SettingsStepFragment;
+import nonso.android.nonso.utils.MultiSelectionSpinner;
 
 public class CreateJourneyActivity extends AppCompatActivity implements DescriptionStepFragment.OnDescriptionStepListener,
         SettingsStepFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
@@ -53,7 +54,6 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 //    @BindView(R.id.btn_create_journeys_back) ImageButton mBack;
 //    @BindView(R.id.btn_create_journey_pick_video) Button mPickVideo;
 //    @BindView(R.id.create_journey_player_view) SimpleExoPlayerView mPlayerView;
-
 
     @BindView(R.id.stepperLayout) StepperLayout mStepperLayout;
     

@@ -19,6 +19,7 @@
             android:background="@drawable/grey_border"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/image_view_placeholder"
+            android:alpha="0.3"
             />
 
         <android.support.design.widget.TextInputLayout
@@ -27,7 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            >
 
             <EditText
                 android:id="@+id/edit_create_journeys_input_name"
@@ -38,18 +40,43 @@
                 android:inputType="text"
                 />
         </android.support.design.widget.TextInputLayout>
-        <com.nonso.android.nonso.utils.MultiSelectionSpinner
-            android:id="@+id/spinner_admin_message_to"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-        </com.nonso.android.nonso.utils.MultiSelectionSpinner>
 
-        <Button
-            android:id="@+id/getSelected"
+        <include layout="@layout/divider_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Check"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:text="Categories" />
+
+        <nonso.android.nonso.utils.MultiSelectionSpinner
+            android:id="@+id/create_journey_description_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            >
+        </nonso.android.nonso.utils.MultiSelectionSpinner>
+
+
+        <include layout="@layout/divider_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/create_journey_input_description"
@@ -57,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="20dp">
 
             <EditText
                 android:id="@+id/edit_create_journeys_input_description"
@@ -66,7 +93,8 @@
                 android:layout_centerHorizontal="true"
                 android:hint="@string/create_journey_description_hint"
                 android:inputType="textMultiLine"
-                android:lines="6"
+                android:lines="4"
+                android:maxLength="140"
                 android:gravity="top|start"
                 />
         </android.support.design.widget.TextInputLayout>

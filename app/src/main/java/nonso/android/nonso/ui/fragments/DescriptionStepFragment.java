@@ -1,19 +1,31 @@
 package nonso.android.nonso.ui.fragments;
 
 import android.content.Context;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.android.exoplayer2.metadata.id3.ApicFrame;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,6 +33,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.utils.MultiSelectionSpinner;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,18 +43,29 @@ import nonso.android.nonso.models.Journey;
  * Use the {@link DescriptionStepFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DescriptionStepFragment extends Fragment implements Step {
+public class DescriptionStepFragment extends Fragment implements Step, MultiSelectionSpinner.OnMultipleItemsSelectedListener {
 
     @BindView(R.id.edit_create_journeys_input_description) EditText mJourneysDescription;
     @BindView(R.id.edit_create_journeys_input_name) EditText mJourneysName;
     @BindView(R.id.create_journey_description_image) ImageView mJourneysImage;
+    @BindView(R.id.create_journey_description_spinner) MultiSelectionSpinner mMultiSelectionSpinner;
 
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
     private static final String ARG_JOURNEY = "journey_object";
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String DATABASE_COLLECTION_CATEGORIES = "categories";
+    private static final String DATABASE_DOCUMENT_CATEGORIES = "categories";
+
+    private static String TAG = DescriptionStepFragment.class.getName();
+
     private int mStepPosition;
     private Journey mJourney;
+    private Map<String, Object> mCategories;
+    private String[] mCategoriesList;
+    private Context mContext;
+    DocumentReference mCategoriesRef;
 
     private OnDescriptionStepListener mListener;
 
@@ -85,8 +109,52 @@ public class DescriptionStepFragment extends Fragment implements Step {
         View view = inflater.inflate(R.layout.fragment_description_step, container, false);
         ButterKnife.bind(this, view);
 
+        mCategoriesRef  = db.collection(DATABASE_COLLECTION_CATEGORIES).document(DATABASE_DOCUMENT_CATEGORIES);
+
+        getCategories();
+        mMultiSelectionSpinner.setListener(this);
         return view;
     }
+
+    public void getCategories(){
+
+        Log.v(TAG, "===========  getCategories: ===============");
+
+        mCategoriesRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mCategories =  documentSnapshot.getData();
+                Log.v(TAG, "===========  retrieved categories: ===============");
+                Log.v(TAG, "retrieved categories: " + documentSnapshot.getData());
+
+                mCategoriesList = mCategories.keySet().toArray(new String[mCategories.keySet().size()]);
+                mMultiSelectionSpinner.setItems(mCategoriesList);
+
+            }
+        });
+
+    }
+
+    /**
+     * Implements function from MultiSelectionSpinner.OnMultipleItemsSelectedListener
+     * @param indices the indexes of selected items
+     */
+    @Override
+    public void selectedIndices(List<Integer> indices) {
+
+    }
+
+    /**
+     *  Implements function from MultiSelectionSpinner.OnMultipleItemsSelectedListener
+     * @param strings Strings object of selected items
+     */
+
+    @Override
+    public void selectedStrings(List<String> strings) {
+        Log.v(TAG, "the strings: " + strings);
+    }
+
+
 
 
     @OnTextChanged(value = R.id.edit_create_journeys_input_name,
@@ -157,5 +225,10 @@ public class DescriptionStepFragment extends Fragment implements Step {
      */
     public interface OnDescriptionStepListener {
         void OnDescriptionStepListener(Journey journey);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        //super.onSaveInstanceState(outState);
     }
 }

@@ -361,4 +361,9 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
     public void onJourneysListInteraction(Journey journey) {
         Toast.makeText(getContext(), "Journey clicked ", Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        //super.onSaveInstanceState(outState);
+    }
 }
