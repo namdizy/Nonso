@@ -59,7 +59,7 @@
     <!-- Create Journeys Activity -->
     <string name="create_journeys_header">Go on a journey</string>
     <string name="create_journey_name">Name</string>
-    <string name="create_journey_description_hint">Journey description</string>
+    <string name="create_journey_description_hint">Short description</string>
     <string name="create_journey_settings_title">Decide how friends join this journey</string>
     <string name="create_journey_settings_permission">Permissions</string>
     <string name="create_journey_settings_permission_disclaimer">Require permission to join this journey. If disabled you will get only a notification when a new friend joins.</string>

@@ -10,11 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
@@ -31,6 +34,7 @@ public class DescriptionStepFragment extends Fragment implements Step {
 
     @BindView(R.id.edit_create_journeys_input_description) EditText mJourneysDescription;
     @BindView(R.id.edit_create_journeys_input_name) EditText mJourneysName;
+    @BindView(R.id.create_journey_description_image) ImageView mJourneysImage;
 
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
@@ -101,6 +105,11 @@ public class DescriptionStepFragment extends Fragment implements Step {
         if(mListener != null){
             mListener.OnDescriptionStepListener(mJourney);
         }
+    }
+
+    @OnClick(R.id.create_journey_description_image)
+    public void onJourneyImageClick(View view){
+
     }
 
     @Override

@@ -148,12 +148,9 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
         getUserJourneys();
 
         registration = addListenerUserListener();
+        Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
 
-        if(mUser.getPhotoUrl() != null){
-            Picasso.with(getContext()).load(mUser.getPhotoUrl()).into(mUserProfileImage);
-        }else{
-            //TODO: load default image
-        }
 
         //setRetainInstance(true);
         return view;
