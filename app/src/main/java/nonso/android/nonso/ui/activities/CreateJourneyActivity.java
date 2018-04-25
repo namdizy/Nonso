@@ -20,8 +20,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -56,7 +58,6 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 //    @BindView(R.id.create_journey_player_view) SimpleExoPlayerView mPlayerView;
 
     @BindView(R.id.stepperLayout) StepperLayout mStepperLayout;
-    
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -255,13 +256,15 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
     @Override
     public void OnDescriptionStepListener(Journey journey) {
-        if(journey.getName() != null){
-            mJourney.setName(journey.getName());
-        }else if(journey.getDescription() != null){
-            mJourney.setDescription(journey.getDescription());
-        }
+        mJourney.setName(journey.getName());
+        mJourney.setDescription(journey.getDescription());
+        mJourney.setCategories(journey.getCategories());
+        mJourney.setProfileImage(journey.getProfileImage());
+
 
         Log.v(TAG, "this is a journey: name: " + journey.getName() + "| description: " +journey.getDescription());
+        Log.v(TAG, "this is a journey: name: " + journey.getName() + "| categories: " +journey.getCategories());
+        Log.v(TAG, "this is a journey: name: " + journey.getName() + "| categories: " +journey.getProfileImage());
     }
 
 
@@ -292,11 +295,44 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                         mProgressbar.setVisibility(View.GONE);
                         String journeyId = documentReference.getId();
 
+                        if(mJourney.getProfileImage() != null){
+                            uploadImage(journeyId, mProgressbar);
+                        }
                         updateUser(journeyId);
                     }
                 });
     }
 
+    private void uploadImage(final String journeyId, final LinearLayout progressbar){
+
+        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET  +journeyId+ "_journey_profile_image"+ ".jpg");
+        mProfileImageRef.putFile(Uri.parse(mJourney.getProfileImage()))
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                    DocumentReference journeyRef = db.collection(DATABASE_JOURNEYS).document(journeyId);
+                    journeyRef.update("profileImage", downloadUrl.toString())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                progressbar.setVisibility(View.GONE);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error updating document", e);
+                            }
+                        });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(TAG, "Error adding file to document", e);
+                }
+            });
+    }
     private void updateUser(final String journeyId){
         final Context context = this;
         mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -304,24 +340,27 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
 
-                if(user.getCreatedJourneys() != null){
-                    Map<String, Boolean> userJourneys = user.getCreatedJourneys();
-                    userJourneys.put(journeyId, true);
-                    mUserRef.update("createdJourneys", userJourneys).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully updated!");
-                            Intent intent = new Intent(context, MainActivity.class);
-                            startActivity(intent);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error updating document", e);
-                        }
-                    });
-                }
+                Map<String, Boolean> userJourneys = user.getCreatedJourneys();
+                userJourneys.put(journeyId, true);
+                mUserRef.update("createdJourneys", userJourneys).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                        Intent intent = new Intent(context, MainActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error getting document", e);
             }
         });
 

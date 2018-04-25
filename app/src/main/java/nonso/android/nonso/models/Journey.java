@@ -22,8 +22,16 @@ public class Journey implements Parcelable {
     private boolean displayFollowers;
     private Map<String, Boolean> subscribers;
     private Map<String, Boolean> blockedList;
+    private Map<String, Boolean> categories;
     private Time createdAt;
 
+    public Map<String, Boolean> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Map<String, Boolean> categories) {
+        this.categories = categories;
+    }
 
     public String getProfileImage() {
         return profileImage;
@@ -108,6 +116,7 @@ public class Journey implements Parcelable {
     public Journey(){
         this.subscribers = new HashMap<>();
         this.blockedList = new HashMap<>();
+        this.categories = new HashMap<>();
     }
 
     public String getName() {
@@ -154,6 +163,11 @@ public class Journey implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
+        dest.writeInt(this.categories.size());
+        for (Map.Entry<String, Boolean> entry : this.categories.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeValue(entry.getValue());
+        }
         dest.writeSerializable(this.createdAt);
     }
 
@@ -181,6 +195,13 @@ public class Journey implements Parcelable {
             String key = in.readString();
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.blockedList.put(key, value);
+        }
+        int categoriesSize = in.readInt();
+        this.categories = new HashMap<String, Boolean>(categoriesSize);
+        for (int i = 0; i < categoriesSize; i++) {
+            String key = in.readString();
+            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
+            this.categories.put(key, value);
         }
         this.createdAt = (Time) in.readSerializable();
     }

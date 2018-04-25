@@ -204,7 +204,7 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
                     if (!isAdded()) return;
                     JourneysListFragment journeysListFragment = new JourneysListFragment().newInstance(mJourneys);
                     FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                    fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commit();
+                    fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commitAllowingStateLoss();
 
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());

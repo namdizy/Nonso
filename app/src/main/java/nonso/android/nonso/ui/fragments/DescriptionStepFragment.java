@@ -76,7 +76,6 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
 
     private static final String DATABASE_COLLECTION_CATEGORIES = "categories";
     private static final String DATABASE_DOCUMENT_CATEGORIES = "categories";
-    private static final String DATABASE_IMAGE_BUCKET = "images/";
 
     private static String TAG = DescriptionStepFragment.class.getName();
 
@@ -85,8 +84,6 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
     private Map<String, Object> mCategories;
     private String[] mCategoriesList;
     DocumentReference mCategoriesRef;
-    StorageReference mJourneyProfileImageRef;
-    private StorageReference mStorageRef;
 
     private OnDescriptionStepListener mListener;
 
@@ -130,9 +127,7 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
         View view = inflater.inflate(R.layout.fragment_description_step, container, false);
         ButterKnife.bind(this, view);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
         mCategoriesRef  = db.collection(DATABASE_COLLECTION_CATEGORIES).document(DATABASE_DOCUMENT_CATEGORIES);
-        mJourneyProfileImageRef = mStorageRef.child(DATABASE_IMAGE_BUCKET  + "_journey_profile_image"+ ".jpg");
 
         getCategories();
         mMultiSelectionSpinner.setListener(this);
@@ -167,10 +162,18 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
 
     @Override
     public void selectedStrings(List<String> strings) {
+
         Log.v(TAG, "the strings: " + strings);
+
+        Map<String, Boolean> map= new HashMap<>();
+        for(String st: strings){
+            map.put(st, true);
+        }
+        mJourney.setCategories(map);
+        if(mListener != null){
+            mListener.OnDescriptionStepListener(mJourney);
+        }
     }
-
-
 
 
     @OnTextChanged(value = R.id.edit_create_journeys_input_name,
@@ -228,33 +231,14 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
             Uri resultUri = result.getUri();
-            uploadToFirebase(resultUri);
             mJourneysImage.setImageURI(resultUri);
+            mJourney.setProfileImage(resultUri.toString());
 
+
+            if(mListener != null){
+                mListener.OnDescriptionStepListener(mJourney);
+            }
         }
-    }
-
-    public void uploadToFirebase(Uri uri){
-        Uri file = Uri.fromFile(new File(uri.getPath()));
-        upLoadImage(file);
-    }
-
-    public void upLoadImage(Uri uri){
-        mJourneyProfileImageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Get a URL to the uploaded content
-            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-            //mJourney.set
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // TODO: Handle failure
-                // ...
-            }
-        });
     }
 
     @Override
