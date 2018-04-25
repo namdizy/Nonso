@@ -13,6 +13,7 @@ public class Journey implements Parcelable {
     private String name;
     private String description;
     private String userId;
+    private String profileImage;
     private boolean permissions;
     private boolean subscriptions;
     private boolean tier1;
@@ -22,6 +23,15 @@ public class Journey implements Parcelable {
     private Map<String, Boolean> subscribers;
     private Map<String, Boolean> blockedList;
     private Time createdAt;
+
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 
     public Map<String, Boolean> getSubscribers() {
         return subscribers;
@@ -127,6 +137,7 @@ public class Journey implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.description);
         dest.writeString(this.userId);
+        dest.writeString(this.profileImage);
         dest.writeByte(this.permissions ? (byte) 1 : (byte) 0);
         dest.writeByte(this.subscriptions ? (byte) 1 : (byte) 0);
         dest.writeByte(this.tier1 ? (byte) 1 : (byte) 0);
@@ -143,12 +154,14 @@ public class Journey implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
+        dest.writeSerializable(this.createdAt);
     }
 
     protected Journey(Parcel in) {
         this.name = in.readString();
         this.description = in.readString();
         this.userId = in.readString();
+        this.profileImage = in.readString();
         this.permissions = in.readByte() != 0;
         this.subscriptions = in.readByte() != 0;
         this.tier1 = in.readByte() != 0;
@@ -169,6 +182,7 @@ public class Journey implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.blockedList.put(key, value);
         }
+        this.createdAt = (Time) in.readSerializable();
     }
 
     public static final Creator<Journey> CREATOR = new Creator<Journey>() {

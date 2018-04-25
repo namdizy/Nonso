@@ -1,11 +1,15 @@
 package nonso.android.nonso.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,14 +19,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.android.exoplayer2.metadata.id3.ApicFrame;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.listeners.IPickCancel;
+import com.vansuita.pickimage.listeners.IPickResult;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +73,10 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
     private static final String ARG_JOURNEY = "journey_object";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     private static final String DATABASE_COLLECTION_CATEGORIES = "categories";
     private static final String DATABASE_DOCUMENT_CATEGORIES = "categories";
+    private static final String DATABASE_IMAGE_BUCKET = "images/";
 
     private static String TAG = DescriptionStepFragment.class.getName();
 
@@ -64,8 +84,9 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
     private Journey mJourney;
     private Map<String, Object> mCategories;
     private String[] mCategoriesList;
-    private Context mContext;
     DocumentReference mCategoriesRef;
+    StorageReference mJourneyProfileImageRef;
+    private StorageReference mStorageRef;
 
     private OnDescriptionStepListener mListener;
 
@@ -109,7 +130,9 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
         View view = inflater.inflate(R.layout.fragment_description_step, container, false);
         ButterKnife.bind(this, view);
 
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         mCategoriesRef  = db.collection(DATABASE_COLLECTION_CATEGORIES).document(DATABASE_DOCUMENT_CATEGORIES);
+        mJourneyProfileImageRef = mStorageRef.child(DATABASE_IMAGE_BUCKET  + "_journey_profile_image"+ ".jpg");
 
         getCategories();
         mMultiSelectionSpinner.setListener(this);
@@ -117,19 +140,12 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
     }
 
     public void getCategories(){
-
-        Log.v(TAG, "===========  getCategories: ===============");
-
         mCategoriesRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 mCategories =  documentSnapshot.getData();
-                Log.v(TAG, "===========  retrieved categories: ===============");
-                Log.v(TAG, "retrieved categories: " + documentSnapshot.getData());
-
                 mCategoriesList = mCategories.keySet().toArray(new String[mCategories.keySet().size()]);
                 mMultiSelectionSpinner.setItems(mCategoriesList);
-
             }
         });
 
@@ -177,7 +193,68 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
 
     @OnClick(R.id.create_journey_description_image)
     public void onJourneyImageClick(View view){
+        startPickImageActivity();
+    }
 
+    public void startPickImageActivity(){
+        PickImageDialog.build(new PickSetup()
+                .setSystemDialog(true)
+                .setButtonOrientation(LinearLayoutCompat.HORIZONTAL))
+                .setOnPickResult(new IPickResult() {
+                    @Override
+                    public void onPickResult(PickResult r) {
+                        Uri uri = r.getUri();
+                        startCropImageActivity(uri);
+                    }
+                })
+                .setOnPickCancel(new IPickCancel() {
+                    @Override
+                    public void onCancelClick() {
+                        //TODO: Handle cancel: most likely do nothing
+                    }
+                }).show(getFragmentManager());
+    }
+
+    public void startCropImageActivity(Uri uri){
+        CropImage.activity(uri)
+                .start(getContext(), this);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            Uri resultUri = result.getUri();
+            uploadToFirebase(resultUri);
+            mJourneysImage.setImageURI(resultUri);
+
+        }
+    }
+
+    public void uploadToFirebase(Uri uri){
+        Uri file = Uri.fromFile(new File(uri.getPath()));
+        upLoadImage(file);
+    }
+
+    public void upLoadImage(Uri uri){
+        mJourneyProfileImageRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Get a URL to the uploaded content
+            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            //mJourney.set
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // TODO: Handle failure
+                // ...
+            }
+        });
     }
 
     @Override

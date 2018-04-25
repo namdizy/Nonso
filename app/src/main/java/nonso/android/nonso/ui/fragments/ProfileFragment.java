@@ -137,7 +137,7 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
         mUser = mAuth.getCurrentUser();
         mUsernameText.setText(mUser.getDisplayName());
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid()+ ".jpg");
+        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid() + "_user_profile_image"+ ".jpg");
 
         //mCollapsingToolbar.setTitle(mUser.getDisplayName());
 
