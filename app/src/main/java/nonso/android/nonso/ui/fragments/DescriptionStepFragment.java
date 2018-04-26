@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.android.exoplayer2.metadata.id3.ApicFrame;
@@ -47,10 +48,14 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.ui.activities.LoginActivity;
+import nonso.android.nonso.ui.activities.MainActivity;
+import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.utils.MultiSelectionSpinner;
 
 /**
@@ -67,6 +72,7 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
     @BindView(R.id.edit_create_journeys_input_name) EditText mJourneysName;
     @BindView(R.id.create_journey_description_image) ImageView mJourneysImage;
     @BindView(R.id.create_journey_description_spinner) MultiSelectionSpinner mMultiSelectionSpinner;
+    @BindView(R.id.create_journey_description_close) ImageButton mCloseButton;
 
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
@@ -192,6 +198,13 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
         if(mListener != null){
             mListener.OnDescriptionStepListener(mJourney);
         }
+    }
+
+    @OnClick(R.id.create_journey_description_close)
+    public void onCloseClick(View view){
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @OnClick(R.id.create_journey_description_image)

@@ -10,12 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/create_journey_description_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close_dark"
+            android:background="@null"
+            android:layout_margin="10dp"
+            />
 
         <ImageView
             android:id="@+id/create_journey_description_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="60dp"
             android:background="@drawable/grey_border"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/image_view_placeholder"
