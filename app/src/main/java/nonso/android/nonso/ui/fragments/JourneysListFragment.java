@@ -87,7 +87,7 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
             journeysRecyclerView.setLayoutManager(journeysLayoutManager);
             journeysRecyclerView.setHasFixedSize(true);
 
-            journeysAdapter = new JourneysAdapter(getContext(), this);
+            journeysAdapter = new JourneysAdapter(this);
             journeysRecyclerView.setAdapter(journeysAdapter);
             journeysAdapter.setJourneysData(mJourneysData);
         }
