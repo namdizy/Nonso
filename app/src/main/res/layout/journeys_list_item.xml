@@ -22,21 +22,26 @@
             android:textSize="24sp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginRight="16dp"/>
 
         <TextView
+            android:id="@+id/profile_journey_item_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Some temp journey description"
             android:layout_below="@id/profile_journey_item_title"
+            android:layout_toLeftOf="@id/profile_journey_item_image"
+            android:layout_toStartOf="@id/profile_journey_item_image"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:textSize="14sp"/>
 
         <ImageView
+            android:id="@+id/profile_journey_item_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_alignRight="@id/profile_journey_item_title"

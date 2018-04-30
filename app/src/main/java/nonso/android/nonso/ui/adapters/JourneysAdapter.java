@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -20,6 +22,7 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
     private ArrayList<Journey> mJourneys;
     private final JourneysAdapterOnClickHandler mOnClickListener;
+    private Context mContext;
 
     private final String TAG = JourneysAdapter.class.getName();
 
@@ -28,7 +31,8 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
     }
 
 
-    public JourneysAdapter(JourneysAdapterOnClickHandler clickHandler){
+    public JourneysAdapter(Context context, JourneysAdapterOnClickHandler clickHandler){
+        mContext = context;
         mOnClickListener = clickHandler;
     }
 
@@ -47,6 +51,10 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
     public void onBindViewHolder(@NonNull JourneysViewHolder holder, int position) {
         Journey journey = mJourneys.get(position);
         holder.mJourneyTitle.setText(journey.getName());
+        holder.mJourneyDescription.setText(journey.getDescription());
+        Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(holder.mJourneyImage);
+
     }
 
     @Override
@@ -58,6 +66,8 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
     public class JourneysViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.profile_journey_item_title) TextView mJourneyTitle;
+        @BindView(R.id.profile_journey_item_image) ImageView mJourneyImage;
+        @BindView(R.id.profile_journey_item_description) TextView mJourneyDescription;
 
         public JourneysViewHolder(View view){
             super(view);
