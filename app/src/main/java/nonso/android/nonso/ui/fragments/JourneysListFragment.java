@@ -32,8 +32,7 @@ import nonso.android.nonso.ui.adapters.JourneysAdapter;
  */
 public class JourneysListFragment extends Fragment implements JourneysAdapter.JourneysAdapterOnClickHandler {
 
-    @BindView(R.id.profile_recycler_view_journeys)
-    RecyclerView journeysRecyclerView;
+    @BindView(R.id.profile_recycler_view_journeys) RecyclerView journeysRecyclerView;
 
     private final String TAG = JourneysListFragment.class.getName();
 
@@ -80,8 +79,6 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
         View view =  inflater.inflate(R.layout.fragment_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
-        Log.v(TAG, "starting list fragment: " +mJourneysData);
-
         if(mJourneysData != null){
             journeysLayoutManager = new LinearLayoutManager(getContext());
             journeysRecyclerView.setLayoutManager(journeysLayoutManager);
@@ -119,18 +116,7 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnJourneysListFragmentListener {
-        // TODO: Update argument type and name
         void onJourneysListInteraction(Journey journey);
     }
 

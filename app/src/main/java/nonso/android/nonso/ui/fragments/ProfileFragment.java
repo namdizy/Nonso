@@ -57,10 +57,11 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
+import nonso.android.nonso.ui.activities.JourneyActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 
 
-public class ProfileFragment extends Fragment implements JourneysListFragment.OnJourneysListFragmentListener {
+public class ProfileFragment extends Fragment {
 
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
     @BindView(R.id.tv_profile_username) TextView mUsernameText;
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
     private ListenerRegistration registration;
     private User mUserData;
     private ArrayList<Journey> mJourneys;
+    private JourneysListFragment mJourneyListFragment;
 
     // TODO: Rename parameter arguments, choose names that match
     private static final String ARG_PARAM1 = "param1";
@@ -151,7 +153,6 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
         Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
                 .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
 
-
         //setRetainInstance(true);
         return view;
     }
@@ -202,9 +203,9 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
                     Log.d(TAG, "mJourneys => " + mJourneys.size());
 
                     if (!isAdded()) return;
-                    JourneysListFragment journeysListFragment = new JourneysListFragment().newInstance(mJourneys);
+                    mJourneyListFragment = new JourneysListFragment().newInstance(mJourneys);
                     FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                    fragmentTransaction.add(R.id.profile_journeys_container, journeysListFragment).commitAllowingStateLoss();
+                    fragmentTransaction.add(R.id.profile_journeys_container, mJourneyListFragment).commitAllowingStateLoss();
 
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
@@ -297,7 +298,6 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Log.d("FragmentProfile", "User profile updated.");
                                 updateMetaData();
                             }
                         }
@@ -357,10 +357,6 @@ public class ProfileFragment extends Fragment implements JourneysListFragment.On
         super.onDestroy();
     }
 
-    @Override
-    public void onJourneysListInteraction(Journey journey) {
-        Toast.makeText(getContext(), "Journey clicked ", Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {

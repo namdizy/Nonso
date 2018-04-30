@@ -1,5 +1,6 @@
 package nonso.android.nonso.ui.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.PersistableBundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -118,6 +120,10 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
 
     @Override
     public void onJourneysListInteraction(Journey journey) {
+        Toast.makeText(MainActivity.this, "Journey clicked ", Toast.LENGTH_LONG).show();
 
+        Intent intent = new Intent(MainActivity.this, JourneyActivity.class);
+        intent.putExtra("journey", journey);
+        startActivity(intent);
     }
 }

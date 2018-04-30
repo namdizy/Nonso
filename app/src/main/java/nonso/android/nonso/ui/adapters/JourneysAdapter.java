@@ -72,15 +72,14 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         public JourneysViewHolder(View view){
             super(view);
             ButterKnife.bind(this, view);
-
-            Log.v(TAG, "starting the view holder: "+ mJourneys);
+            view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
             Journey journey = mJourneys.get(position);
-
+            mOnClickListener.onJourneyItemClick(journey);
         }
     }
 
