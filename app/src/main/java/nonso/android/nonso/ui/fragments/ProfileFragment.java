@@ -10,7 +10,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,8 +69,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.tv_profile_username) TextView mUsernameText;
     @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
     @BindView(R.id.profile_image) ImageView mUserProfileImage;
-    @BindView(R.id.profile_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
-
+    @BindView(R.id.profile_toolbar) Toolbar mToolbar;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -145,6 +146,10 @@ public class ProfileFragment extends Fragment {
 
         mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
         mJourneys = new ArrayList<>();
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(mToolbar);
+        activity.getSupportActionBar().setTitle("");
 
         getUserData();
         getUserJourneys();
