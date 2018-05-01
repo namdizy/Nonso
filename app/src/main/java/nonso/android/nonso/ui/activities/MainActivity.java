@@ -3,7 +3,6 @@ package nonso.android.nonso.ui.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     public void onJourneysListInteraction(Journey journey) {
         Toast.makeText(MainActivity.this, "Journey clicked ", Toast.LENGTH_LONG).show();
 
-        Intent intent = new Intent(MainActivity.this, JourneyActivity.class);
+        Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
         intent.putExtra("journey", journey);
         startActivity(intent);
     }

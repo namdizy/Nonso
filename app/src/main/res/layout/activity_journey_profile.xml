@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="nonso.android.nonso.ui.fragments.ProfileFragment">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/grey_border_bottom_light">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_collapseMode="parallax">
+
+                <ImageView
+                    android:id="@+id/journey_profile_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:background="@drawable/balloon_background"
+                    android:scaleType="centerCrop" />
+
+                <FrameLayout
+                    android:id="@+id/journey_profile_image_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="60dp"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.9">
+
+                    <ImageView
+                        android:id="@+id/journey_profile_image"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/image_view_placeholder"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_editor_primary"
+                        app:civ_border_color="@color/colorWhite"
+                        app:civ_border_width="2dp" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tv_journey_profile_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/journey_profile_image_container"
+                    android:layout_below="@id/journey_profile_banner"
+                    android:layout_marginLeft="120dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <include
+                    layout="@layout/divider_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/journey_profile_image_container"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:id="@+id/tv_journey_profile_short_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/journey_profile_image_container"
+                    android:layout_margin="10dp" />
+
+                <include
+                    layout="@layout/divider_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_journey_profile_short_description"
+                    android:layout_marginTop="5dp" />
+
+            </RelativeLayout>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/journey_profile_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="fixed"
+                app:tabGravity="fill"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/journey_profile_viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

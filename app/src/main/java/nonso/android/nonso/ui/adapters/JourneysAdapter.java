@@ -52,8 +52,8 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         Journey journey = mJourneys.get(position);
         holder.mJourneyTitle.setText(journey.getName());
         holder.mJourneyDescription.setText(journey.getDescription());
-        Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.profile_image_placeholder)
-                .error(R.drawable.profile_image_placeholder).into(holder.mJourneyImage);
+        Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.image_view_placeholder)
+                .error(R.drawable.image_view_placeholder).into(holder.mJourneyImage);
 
     }
 
