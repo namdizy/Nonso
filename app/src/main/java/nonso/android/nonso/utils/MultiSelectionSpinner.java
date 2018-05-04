@@ -14,12 +14,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-
-
 public class MultiSelectionSpinner extends AppCompatSpinner implements
         OnMultiChoiceClickListener {
-
-
 
     public interface OnMultipleItemsSelectedListener{
         void selectedIndices(List<Integer> indices);

@@ -1,29 +1,35 @@
 package nonso.android.nonso.ui.activities;
 
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.ui.adapters.SectionPagerAdapter;
+import nonso.android.nonso.ui.fragments.JourneyCommunityFragment;
 import nonso.android.nonso.ui.fragments.JourneyTimelineFragment;
+import nonso.android.nonso.ui.fragments.JourneyAboutFragment;
 
 
-public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnFragmentInteractionListener{
+public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnFragmentInteractionListener,
+        JourneyAboutFragment.OnFragmentInteractionListener, JourneyCommunityFragment.OnFragmentInteractionListener{
 
     @BindView(R.id.journey_profile_viewPager) ViewPager mViewPager;
     @BindView(R.id.tv_journey_profile_name) TextView mJourneyName;
     @BindView(R.id.tv_journey_profile_short_description) TextView mJourneyShortDescription;
     @BindView(R.id.journey_profile_tabs) TabLayout mTabLayout;
+    @BindView(R.id.journey_profile_image) ImageView mJourneyProfile;
 
     private Journey mJourney;
 
@@ -40,8 +46,12 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         mJourneyName.setText(mJourney.getName());
         mJourneyShortDescription.setText(mJourney.getDescription());
 
-        mViewPager.setAdapter(new SectionPagerAdapter(getSupportFragmentManager()));
+        mViewPager.setAdapter(new SectionPagerAdapter(getSupportFragmentManager(), this));
         mTabLayout.setupWithViewPager(mViewPager);
+
+        Picasso.with(this).load(mJourney.getProfileImage()).placeholder(R.drawable.image_view_placeholder)
+                .error(R.drawable.image_view_placeholder).into(mJourneyProfile);
+
     }
 
     @Override
@@ -50,40 +60,6 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
     }
 
 
-    public class SectionPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new JourneyTimelineFragment();
-                case 1:
-                    return new JourneyTimelineFragment();
-                default:
-                    return new JourneyTimelineFragment();
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "First Tab";
-                case 1:
-                    return "Second Tab";
-                default:
-                    return "Third Tab";
-            }
-        }
-    }
 
 }
