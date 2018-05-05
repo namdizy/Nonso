@@ -62,10 +62,10 @@ import nonso.android.nonso.ui.activities.SettingsActivity;
 public class ProfileFragment extends Fragment {
 
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
-    @BindView(R.id.tv_profile_username) TextView mUsernameText;
-    @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
-    @BindView(R.id.profile_image) ImageView mUserProfileImage;
-    @BindView(R.id.profile_toolbar) Toolbar mToolbar;
+    //@BindView(R.id.tv_profile_username) TextView mUsernameText;
+    //@BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
+    //@BindView(R.id.profile_image) ImageView mUserProfileImage;
+    //@BindView(R.id.profile_toolbar) Toolbar mToolbar;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -80,7 +80,6 @@ public class ProfileFragment extends Fragment {
     private static final String DATABASE_COLLECTION_USERS = "users/";
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
 
-    private Uri mCropImageUri;
     private ListenerRegistration registration;
     private User mUserData;
     private ArrayList<Journey> mJourneys;
@@ -134,7 +133,7 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, view);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        mUsernameText.setText(mUser.getDisplayName());
+        //mUsernameText.setText(mUser.getDisplayName());
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid() + "_user_profile_image"+ ".jpg");
 
@@ -143,40 +142,40 @@ public class ProfileFragment extends Fragment {
         mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
         mJourneys = new ArrayList<>();
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(mToolbar);
-        activity.getSupportActionBar().setTitle("");
+//        AppCompatActivity activity = (AppCompatActivity) getActivity();
+//        activity.setSupportActionBar(mToolbar);
+//        activity.getSupportActionBar().setTitle("");
 
         getUserData();
         getUserJourneys();
 
-        registration = addListenerUserListener();
-        Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
-                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
+        //registration = addListenerUserListener();
+//        Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
+//                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
 
         //setRetainInstance(true);
         return view;
     }
 
-    private ListenerRegistration addListenerUserListener(){
-        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
-                if(e != null){
-                    Log.w(TAG, "Listen failed,", e);
-                }
-
-                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
-                        ? "Local" : "Server";
-                if(snapshot != null && snapshot.exists()){
-                    Log.d(TAG, source + " data: " + snapshot.getData());
-
-                }else{
-
-                }
-            }
-        });
-    }
+//    private ListenerRegistration addListenerUserListener(){
+//        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
+//                if(e != null){
+//                    Log.w(TAG, "Listen failed,", e);
+//                }
+//
+//                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
+//                        ? "Local" : "Server";
+//                if(snapshot != null && snapshot.exists()){
+//                    Log.d(TAG, source + " data: " + snapshot.getData());
+//
+//                }else{
+//
+//                }
+//            }
+//        });
+//    }
 
     private void getUserData(){
         mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -222,19 +221,19 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
     }
 
-    @OnClick(R.id.fab_profile_create)
-    public void fabOnClick(View view){
+//    @OnClick(R.id.fab_profile_create)
+//    public void fabOnClick(View view){
+//
+//        Intent intent = new Intent(getContext(), CreateJourneyActivity.class);
+//        getActivity().startActivity(intent);
+//
+//    }
 
-        Intent intent = new Intent(getContext(), CreateJourneyActivity.class);
-        getActivity().startActivity(intent);
-
-    }
-
-    @OnClick(R.id.profile_image_container)
-    public void profileImageOnclick(View view){
-        //TODO: Make this a task so when lifecycle events occur this fragment can be recreated with this process still running
-        startPickImageActivity();
-    }
+//    @OnClick(R.id.profile_image_container)
+//    public void profileImageOnclick(View view){
+//        //TODO: Make this a task so when lifecycle events occur this fragment can be recreated with this process still running
+//        startPickImageActivity();
+//    }
 
     public void startPickImageActivity(){
         PickImageDialog.build(new PickSetup()
@@ -265,7 +264,7 @@ public class ProfileFragment extends Fragment {
 
             Uri resultUri = result.getUri();
             uploadToFirebase(resultUri);
-            mUserProfileImage.setImageURI(resultUri);
+            //mUserProfileImage.setImageURI(resultUri);
 
         }
     }
@@ -354,7 +353,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDestroy() {
 
-        registration.remove();
+        //registration.remove();
         super.onDestroy();
     }
 
