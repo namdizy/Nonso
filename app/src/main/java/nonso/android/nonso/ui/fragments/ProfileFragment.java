@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.supercharge.shimmerlayout.ShimmerLayout;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
@@ -62,10 +63,8 @@ import nonso.android.nonso.ui.activities.SettingsActivity;
 public class ProfileFragment extends Fragment {
 
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
-    //@BindView(R.id.tv_profile_username) TextView mUsernameText;
-    //@BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
-    //@BindView(R.id.profile_image) ImageView mUserProfileImage;
-    //@BindView(R.id.profile_toolbar) Toolbar mToolbar;
+    @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
+
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -81,77 +80,40 @@ public class ProfileFragment extends Fragment {
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
 
     private ListenerRegistration registration;
-    private User mUserData;
     private ArrayList<Journey> mJourneys;
     private JourneysListFragment mJourneyListFragment;
-
-    // TODO: Rename parameter arguments, choose names that match
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        //mUsernameText.setText(mUser.getDisplayName());
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid() + "_user_profile_image"+ ".jpg");
 
-        //mCollapsingToolbar.setTitle(mUser.getDisplayName());
 
         mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
         mJourneys = new ArrayList<>();
 
-//        AppCompatActivity activity = (AppCompatActivity) getActivity();
-//        activity.setSupportActionBar(mToolbar);
-//        activity.getSupportActionBar().setTitle("");
-
-        getUserData();
+        Log.w(TAG, "OnCreateView called: called!");
         getUserJourneys();
 
         //registration = addListenerUserListener();
-//        Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
-//                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
 
         //setRetainInstance(true);
         return view;
@@ -177,17 +139,10 @@ public class ProfileFragment extends Fragment {
 //        });
 //    }
 
-    private void getUserData(){
-        mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mUserData = documentSnapshot.toObject(User.class);
-            }
-        });
-
-    }
 
     private void getUserJourneys(){
+
+        Log.w(TAG, "getUserJourneys: called!");
 
         db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
             .get()
@@ -221,19 +176,13 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
     }
 
-//    @OnClick(R.id.fab_profile_create)
-//    public void fabOnClick(View view){
-//
-//        Intent intent = new Intent(getContext(), CreateJourneyActivity.class);
-//        getActivity().startActivity(intent);
-//
-//    }
+    @OnClick(R.id.fab_profile_create)
+    public void fabOnClick(View view){
 
-//    @OnClick(R.id.profile_image_container)
-//    public void profileImageOnclick(View view){
-//        //TODO: Make this a task so when lifecycle events occur this fragment can be recreated with this process still running
-//        startPickImageActivity();
-//    }
+        Intent intent = new Intent(getContext(), CreateJourneyActivity.class);
+        getActivity().startActivity(intent);
+
+    }
 
     public void startPickImageActivity(){
         PickImageDialog.build(new PickSetup()

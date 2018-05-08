@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
     private static final String TAG = "MainActivity";
     private SharedPreferences pref;
     private final String ITEM_PREFERENCE_KEY = "menu_item_key";
+    private final String JOURNEY_DATA = "journey";
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
 
@@ -47,8 +50,15 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                fragmentSelect(item);
+                pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, -1);
+
+                if(menuItem > -1){
+                    fragmentSelect(item);
+                }
+                Log.v(TAG, "=============  I am not sure  ==========");
                 return true;
+
             }
 
 
@@ -59,24 +69,32 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, -1);
 
-        if (savedInstanceState == null) {
 
-            if(menuItem==-1){
-                selectedItem = mBottomNavigationView.getMenu().getItem(0);
-                fragmentSelect(selectedItem);
-            }else{
-                mBottomNavigationView.setCurrentItem(menuItem);
-                selectedItem = mBottomNavigationView.getMenu().getItem(menuItem);
-                fragmentSelect(selectedItem);
-            }
-
-        }
+        //TODO: this caused the fragments to be created twice. Need to fix
+//        if (savedInstanceState == null) {
+//
+//            if(menuItem==-1){
+//                selectedItem = mBottomNavigationView.getMenu().getItem(0);
+//                fragmentSelect(selectedItem);
+//                Log.v(TAG, "=============this is the main activity==========");
+//
+//            }else{
+//                mBottomNavigationView.setCurrentItem(menuItem);
+//                selectedItem = mBottomNavigationView.getMenu().getItem(menuItem);
+//                fragmentSelect(selectedItem);
+//                Log.v(TAG, "=============  woooooot  ==========");
+//
+//            }
+//
+//        }
 
     }
 
     private void fragmentSelect(MenuItem item){
 
+
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = null;
 
         SharedPreferences.Editor editor = pref.edit();
         int index = mBottomNavigationView.getMenuItemPosition(item);
@@ -85,29 +103,34 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
 
         switch (item.getItemId()){
             case R.id.menu_home:
-                JourneysFragment journeysFragment = new JourneysFragment();
-                fragmentTransaction
-                        .replace(R.id.fragments_container, journeysFragment)
-                        .commit();
+                fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(index));
+                if(fragment == null){
+                    fragment = new JourneysFragment();
+                }
                 break;
             case R.id.menu_notifications:
-                NotificationsFragment notificationsFragment = new NotificationsFragment();
-                fragmentTransaction
-                        .replace(R.id.fragments_container, notificationsFragment)
-                        .commit();
+                fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(index));
+                if(fragment == null){
+                    fragment = new NotificationsFragment();
+                }
                 break;
             case R.id.menu_profile:
-                ProfileFragment profileFragment = new ProfileFragment();
-                fragmentTransaction
-                        .replace(R.id.fragments_container, profileFragment)
-                        .commit();
+                fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(index));
+                if(fragment == null){
+                    fragment = new ProfileFragment();
+                }
                 break;
             case R.id.menu_search:
-                SearchFragment searchFragment = new SearchFragment();
-                fragmentTransaction
-                        .replace(R.id.fragments_container, searchFragment)
-                        .commit();
+                fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(index));
+                if(fragment == null){
+                    fragment = new SearchFragment();
+                }
                 break;
+
+        }
+        if (fragment != null) {
+            fragmentTransaction.replace(R.id.fragments_container, fragment,
+                    String.valueOf(index)).commitAllowingStateLoss();
         }
     }
 
@@ -122,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
         Toast.makeText(MainActivity.this, "Journey clicked ", Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
-        intent.putExtra("journey", journey);
+        intent.putExtra(JOURNEY_DATA, journey);
         startActivity(intent);
     }
 }

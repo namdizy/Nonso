@@ -143,6 +143,31 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer" />
 
+                <TextView
+                    android:id="@+id/tv_create_journeys_settings_label_mature_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/switch_create_journeys_settings_subscriptions"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer"
+                    android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginStart="@dimen/create_journey_settings_item_margin"
+                    android:layout_marginTop="@dimen/create_journey_settings_item_margin_top"
+                    android:gravity="center_vertical"
+                    android:text="@string/create_journey_settings_subscription"
+                    android:textSize="@dimen/create_journey_setting_title_text_size" />
+
+                <Switch
+
+                    android:id="@+id/switch_create_journeys_settings_mature_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer"
+                    android:layout_marginTop="@dimen/create_journey_settings_item_margin_top" />
+
                 <!-- SUBSCRIPTION CHOICES -->
 
                 <TextView
@@ -151,7 +176,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@id/tv_create_journeys_settings_subscriptions_disclaimer"
+                    android:layout_below="@id/tv_create_journeys_settings_label_mature_content"
                     android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
                     android:layout_marginStart="@dimen/create_journey_settings_item_margin"
                     android:layout_marginTop="5dp"
@@ -165,7 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/cbx_create_journey_subscription_tier1"
-                    android:layout_below="@id/create_journeys_settings_subscriptions_header"
+                    android:layout_below="@id/tv_create_journeys_settings_label_mature_content"
                     android:layout_marginLeft="@dimen/create_journey_settings_item_margin"
                     android:layout_marginStart="@dimen/create_journey_settings_item_margin"
                     android:gravity="center_vertical"
@@ -223,7 +248,6 @@
                     android:layout_below="@id/cbx_create_journey_subscription_tier2"
                     android:visibility="gone" />
 
-                <!-- SHOW HOW MANY FRIENDS IN JOURNEY CHOICE -->
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 

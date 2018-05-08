@@ -13,6 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -20,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
 
 /**
@@ -32,17 +44,26 @@ import nonso.android.nonso.ui.adapters.JourneysAdapter;
  */
 public class JourneysListFragment extends Fragment implements JourneysAdapter.JourneysAdapterOnClickHandler {
 
+    private FirebaseAuth mAuth;
+    private StorageReference mProfileImageRef;
+    private DocumentReference mUserRef;
+    private FirebaseUser mUser;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     @BindView(R.id.profile_recycler_view_journeys) RecyclerView journeysRecyclerView;
+    @BindView(R.id.tv_profile_username) TextView mUsernameText;
+    @BindView(R.id.profile_image) ImageView mUserProfileImage;
 
     private final String TAG = JourneysListFragment.class.getName();
 
     private static final String ARG_JOURNEYS_LIST = "journeys_list";
+    private static final String DATABASE_COLLECTION_USERS = "users/";
 
     private ArrayList<Journey> mJourneysData;
-
     private OnJourneysListFragmentListener mListener;
     private JourneysAdapter journeysAdapter;
     private RecyclerView.LayoutManager journeysLayoutManager;
+    private User mUserData;
 
     public JourneysListFragment() {
         // Required empty public constructor
@@ -79,7 +100,11 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
         View view =  inflater.inflate(R.layout.fragment_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
-        if(mJourneysData != null){
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
+
+        if(mJourneysData != null ){
             journeysLayoutManager = new LinearLayoutManager(getContext());
             journeysRecyclerView.setLayoutManager(journeysLayoutManager);
             journeysRecyclerView.setHasFixedSize(true);
@@ -87,10 +112,26 @@ public class JourneysListFragment extends Fragment implements JourneysAdapter.Jo
             journeysAdapter = new JourneysAdapter(getContext(), this);
             journeysRecyclerView.setAdapter(journeysAdapter);
             journeysAdapter.setJourneysData(mJourneysData);
+
+            mUsernameText.setText(mUser.getDisplayName());
+
+            Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
         }
 
         return view;
     }
+
+    private void getUserData(){
+        mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                mUserData = documentSnapshot.toObject(User.class);
+            }
+        });
+
+    }
+
 
     @Override
     public void onAttach(Context context) {
