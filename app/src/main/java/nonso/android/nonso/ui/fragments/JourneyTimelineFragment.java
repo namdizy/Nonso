@@ -3,11 +3,17 @@ package nonso.android.nonso.ui.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import nonso.android.nonso.R;
 
 /**
@@ -18,7 +24,10 @@ import nonso.android.nonso.R;
  * Use the {@link JourneyTimelineFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JourneyTimelineFragment extends Fragment {
+public class JourneyTimelineFragment extends Fragment{
+
+    //@BindView(R.id.steps_fab_btn) FabSpeedDial mFab;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,8 +73,17 @@ public class JourneyTimelineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_journey_timeline, container, false);
+        View view =  inflater.inflate(R.layout.fragment_journey_timeline, container, false);
+
+        final FabSpeedDial fab = view.findViewById(R.id.steps_fab_btn);
+
+        fab.addOnMenuItemClickListener(new FabSpeedDial.OnMenuItemClickListener() {
+            @Override
+            public void onMenuItemClick(FloatingActionButton fab, TextView label, int itemId) {
+                Toast.makeText(getContext(), "Click: " + itemId, Toast.LENGTH_SHORT).show();
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,6 +109,7 @@ public class JourneyTimelineFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
