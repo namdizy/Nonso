@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "nonso.android.nonso"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -33,7 +33,7 @@ dependencies {
     implementation "com.android.support:design:$supportLibVersion"
     implementation "com.android.support:support-v4:$supportLibVersion"
     implementation "com.android.support:palette-v7:$supportLibVersion"
-    implementation 'com.android.support:support-v4:27.1.1'
+    implementation "com.android.support:support-v4:$supportLibVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
@@ -42,7 +42,7 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:$firebaseVersion"
     implementation "com.google.firebase:firebase-storage:$firebaseVersion"
     implementation "com.google.firebase:firebase-firestore:$firebaseVersion"
-    implementation "com.android.support:design:$supportLibVersion"
+
 
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
@@ -64,7 +64,13 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 
+    //stepper
     implementation 'com.stepstone.stepper:material-stepper:4.3.1'
+
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
+
+    //expandable fab button
+    implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
