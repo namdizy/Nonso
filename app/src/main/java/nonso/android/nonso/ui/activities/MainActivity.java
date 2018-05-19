@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -20,20 +19,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.ui.fragments.DiscoverFragment;
 import nonso.android.nonso.ui.fragments.JourneysFragment;
 import nonso.android.nonso.ui.fragments.JourneysListFragment;
 import nonso.android.nonso.ui.fragments.NotificationsFragment;
 import nonso.android.nonso.ui.fragments.ProfileFragment;
-import nonso.android.nonso.ui.fragments.SearchFragment;
 
-public class MainActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener,
+public class MainActivity extends AppCompatActivity implements DiscoverFragment.OnFragmentInteractionListener,
         JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener,
         JourneysListFragment.OnJourneysListFragmentListener{
 
     private static final String TAG = "MainActivity";
     private SharedPreferences pref;
     private final String ITEM_PREFERENCE_KEY = "menu_item_key";
-    private final String JOURNEY_DATA = "journey";
+    private final String JOURNEY_EXTRA_DATA = "journey_extra";
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
 
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
             case R.id.menu_search:
                 fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(index));
                 if(fragment == null){
-                    fragment = new SearchFragment();
+                    fragment = new DiscoverFragment();
                 }
                 break;
 
@@ -142,10 +141,8 @@ public class MainActivity extends AppCompatActivity implements SearchFragment.On
 
     @Override
     public void onJourneysListInteraction(Journey journey) {
-        Toast.makeText(MainActivity.this, "Journey clicked ", Toast.LENGTH_LONG).show();
-
         Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
-        intent.putExtra(JOURNEY_DATA, journey);
+        intent.putExtra(JOURNEY_EXTRA_DATA, journey);
         startActivity(intent);
     }
 }

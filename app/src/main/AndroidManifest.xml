@@ -79,13 +79,15 @@
                 android:resource="@xml/picker_provider_paths" />
         </provider>
 
-        <activity android:name=".ui.activities.JourneyProfileActivity"
+        <activity
+            android:name=".ui.activities.JourneyProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
+        <activity android:name=".ui.activities.CreateStepTextActivity"></activity>
     </application>
 
 </manifest>

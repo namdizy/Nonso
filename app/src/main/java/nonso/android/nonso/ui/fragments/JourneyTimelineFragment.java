@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,18 +9,27 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
+import com.ebolo.krichtexteditor.fragments.Options;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.StepType;
+import nonso.android.nonso.ui.activities.CreateStepTextActivity;
+import nonso.android.nonso.ui.activities.JourneyProfileActivity;
+import nonso.android.nonso.ui.activities.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link JourneyTimelineFragment.OnFragmentInteractionListener} interface
+ * {@link JourneyTimelineFragment.OnJourneyTimelineListener} interface
  * to handle interaction events.
  * Use the {@link JourneyTimelineFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -37,7 +47,9 @@ public class JourneyTimelineFragment extends Fragment{
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnJourneyTimelineListener mListener;
+
+    private Step mStep;
 
     public JourneyTimelineFragment() {
         // Required empty public constructor
@@ -80,24 +92,26 @@ public class JourneyTimelineFragment extends Fragment{
         fab.addOnMenuItemClickListener(new FabSpeedDial.OnMenuItemClickListener() {
             @Override
             public void onMenuItemClick(FloatingActionButton fab, TextView label, int itemId) {
-                Toast.makeText(getContext(), "Click: " + itemId, Toast.LENGTH_SHORT).show();
+
+                switch (itemId){
+                    case R.id.fab_menu_add_text:
+                        createText();
+                    case R.id.fab_menu_add_photo:
+                        break;
+                    case R.id.fab_menu_add_video:
+                        break;
+                }
             }
         });
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnJourneyTimelineListener) {
+            mListener = (OnJourneyTimelineListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -111,6 +125,14 @@ public class JourneyTimelineFragment extends Fragment{
     }
 
 
+    private void createText(){
+        if (mListener != null) {
+            Step step = new Step();
+            step.setStepType(StepType.TEXT);
+            mListener.onJourneyTimelineInteraction(step);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -121,8 +143,8 @@ public class JourneyTimelineFragment extends Fragment{
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnJourneyTimelineListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onJourneyTimelineInteraction(Step step);
     }
 }

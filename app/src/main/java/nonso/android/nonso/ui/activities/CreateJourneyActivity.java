@@ -111,6 +111,12 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                         }
                         updateUser(journeyId);
                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding file to document", e);
+                    }
                 });
     }
 

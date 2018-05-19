@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "nonso.android.nonso"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -34,6 +34,7 @@ dependencies {
     implementation "com.android.support:support-v4:$supportLibVersion"
     implementation "com.android.support:palette-v7:$supportLibVersion"
     implementation "com.android.support:support-v4:$supportLibVersion"
+    implementation 'com.android.support:support-v4:27.1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
@@ -71,6 +72,9 @@ dependencies {
 
     //expandable fab button
     implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.0'
+
+    //text editor KRichEditor
+    implementation 'com.github.daothanhduy305:KRichEditor:-SNAPSHOT'
 }
 
 apply plugin: 'com.google.gms.google-services'

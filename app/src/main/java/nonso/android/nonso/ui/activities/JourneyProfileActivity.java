@@ -1,38 +1,32 @@
 package nonso.android.nonso.ui.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
-import android.os.Build;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
-import nonso.android.nonso.ui.adapters.SectionPagerAdapter;
+import nonso.android.nonso.models.Step;
+import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
 import nonso.android.nonso.ui.fragments.JourneyCommunityFragment;
 import nonso.android.nonso.ui.fragments.JourneyTimelineFragment;
 import nonso.android.nonso.ui.fragments.JourneyAboutFragment;
 
 
-public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnFragmentInteractionListener,
+public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnJourneyTimelineListener,
         JourneyAboutFragment.OnFragmentInteractionListener, JourneyCommunityFragment.OnFragmentInteractionListener{
 
     @BindView(R.id.journey_page_image) ImageView mImageView;
@@ -49,8 +43,8 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
     private FirebaseUser mUser;
 
 
-    private final String JOURNEY_DATA = "journey";
-
+    private final String JOURNEY_EXTRA_DATA = "journey_extra";
+    private final String STEP_EXTRA_DATA = "step_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +54,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        mJourney = intent.getParcelableExtra(JOURNEY_DATA);
+        mJourney = intent.getParcelableExtra(JOURNEY_EXTRA_DATA);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -76,7 +70,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         Picasso.with(this).load(mJourney.getProfileImage()).into(mImageView);
         Picasso.with(this).load(mUser.getPhotoUrl()).into(mJourneyCreatorImage);
 
-        mViewPager.setAdapter(new SectionPagerAdapter(getSupportFragmentManager(), this));
+        mViewPager.setAdapter(new JourneyProfilePagerAdapter(getSupportFragmentManager(), this));
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
@@ -90,5 +84,21 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
     protected void onDestroy() {
         //Picasso.with(this).cancelRequest(target);
         super.onDestroy();
+    }
+
+    @Override
+    public void onJourneyTimelineInteraction(Step step) {
+
+        switch (step.getStepType()){
+
+            case TEXT:
+                Intent intent = new Intent(this, CreateStepTextActivity.class);
+                intent.putExtra(STEP_EXTRA_DATA, step);
+                intent.putExtra(JOURNEY_EXTRA_DATA, mJourney);
+                startActivity(intent);
+                break;
+            case IMAGES:
+            case VIDEO:
+        }
     }
 }

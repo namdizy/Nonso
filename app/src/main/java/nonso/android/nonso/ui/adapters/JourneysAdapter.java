@@ -67,17 +67,17 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 holder.mJourneyImage.setImageBitmap(bitmap);
-
-                Palette.Builder builder = Palette.from(bitmap);
-                Palette palette = builder.generate();
-                Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
-
-                if(vibrantSwatch != null){
-                    holder.mCard.setCardBackgroundColor(vibrantSwatch.getRgb());
-                    holder.mCard.getBackground().setAlpha(128);
-                    holder.mJourneyTitle.setTextColor(vibrantSwatch.getTitleTextColor());
-                    holder.mJourneyDescription.setTextColor(vibrantSwatch.getTitleTextColor());
-                }
+//
+//                Palette.Builder builder = Palette.from(bitmap);
+//                Palette palette = builder.generate();
+//                Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+//
+//                if(vibrantSwatch != null){
+//                    holder.mCard.setCardBackgroundColor(vibrantSwatch.getRgb());
+//                    holder.mCard.getBackground().setAlpha(128);
+//                    holder.mJourneyTitle.setTextColor(vibrantSwatch.getTitleTextColor());
+//                    holder.mJourneyDescription.setTextColor(vibrantSwatch.getTitleTextColor());
+//                }
             }
 
             @Override

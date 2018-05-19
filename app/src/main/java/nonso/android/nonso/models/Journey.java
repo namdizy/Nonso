@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Journey implements Parcelable {
 
-
+    private String journeyId;
     private String name;
     private String description;
     private String userId;
@@ -135,6 +135,13 @@ public class Journey implements Parcelable {
         this.description = description;
     }
 
+    public String getJourneyId() {
+        return journeyId;
+    }
+
+    public void setJourneyId(String journeyId) {
+        this.journeyId = journeyId;
+    }
 
     @Override
     public int describeContents() {
@@ -143,6 +150,7 @@ public class Journey implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.journeyId);
         dest.writeString(this.name);
         dest.writeString(this.description);
         dest.writeString(this.userId);
@@ -172,6 +180,7 @@ public class Journey implements Parcelable {
     }
 
     protected Journey(Parcel in) {
+        this.journeyId = in.readString();
         this.name = in.readString();
         this.description = in.readString();
         this.userId = in.readString();

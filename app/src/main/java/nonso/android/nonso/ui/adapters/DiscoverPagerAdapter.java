@@ -5,14 +5,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import nonso.android.nonso.ui.fragments.JourneyCommunityFragment;
-import nonso.android.nonso.ui.fragments.JourneyTimelineFragment;
+import nonso.android.nonso.ui.fragments.DiscoverNewFragment;
+import nonso.android.nonso.ui.fragments.DiscoveryHotFragment;
 
-public class SectionPagerAdapter extends FragmentPagerAdapter {
+
+public class DiscoverPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
 
-    public SectionPagerAdapter(FragmentManager fm, Context context) {
+    public DiscoverPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         mContext = context;
     }
@@ -21,11 +22,11 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new JourneyTimelineFragment();
+                return new DiscoveryHotFragment();
             case 1:
-                return new JourneyCommunityFragment();
+                return new DiscoverNewFragment();
             default:
-                    return null;
+                return null;
         }
     }
 
@@ -38,11 +39,12 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "Steps";
+                return "Hot";
             case 1:
-                return "Community";
+                return "New";
             default:
                 return null;
         }
     }
+
 }

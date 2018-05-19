@@ -142,8 +142,6 @@ public class ProfileFragment extends Fragment {
 
     private void getUserJourneys(){
 
-        Log.w(TAG, "getUserJourneys: called!");
-
         db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -151,11 +149,10 @@ public class ProfileFragment extends Fragment {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-
-                        mJourneys.add(document.toObject(Journey.class));
+                        Journey temp = document.toObject(Journey.class);
+                        temp.setJourneyId(document.getId());
+                        mJourneys.add(temp);
                     }
-                    Log.d(TAG, "mJourneys => " + mJourneys.size());
 
                     if (!isAdded()) return;
                     mJourneyListFragment = new JourneysListFragment().newInstance(mJourneys);
