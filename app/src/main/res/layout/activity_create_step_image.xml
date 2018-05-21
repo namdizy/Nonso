@@ -74,62 +74,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/create_step_image_container"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center_horizontal">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/create_step_recyclerView_images"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            />
         <LinearLayout
+            android:id="@+id/create_step_image_library"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="40dp"
-            android:layout_marginRight="20dp">
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/circularview">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_camera_dark"
-                    android:layout_gravity="center"/>
-            </FrameLayout>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Camera"
-                android:layout_gravity="center_horizontal"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="20dp"
             >
 
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/circularview">
+                android:background="@drawable/circularView"
+                android:layout_gravity="center_horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_photo_library_dark" />
+                    android:src="@drawable/ic_photo_dark" />
             </FrameLayout>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Library"
+                android:text="Select Image"
+                android:layout_marginTop="5dp"
                 android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>

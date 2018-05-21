@@ -122,6 +122,7 @@ public class Journey implements Parcelable {
         this.subscribers = new HashMap<>();
         this.blockedList = new HashMap<>();
         this.categories = new HashMap<>();
+        this.steps = new HashMap<>();
     }
 
     public String getName() {
