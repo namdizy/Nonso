@@ -87,7 +87,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
-        <activity android:name=".ui.activities.CreateStepTextActivity"></activity>
+        <activity android:name=".ui.activities.CreateStepTextActivity" />
+        <activity android:name=".ui.activities.SearchActivity" />
+        <activity android:name=".ui.activities.CreateStepImageActivity"></activity>
     </application>
 
 </manifest>

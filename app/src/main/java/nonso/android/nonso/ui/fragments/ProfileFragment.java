@@ -65,7 +65,6 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
     @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
 
-
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private StorageReference mStorageRef;
@@ -113,31 +112,31 @@ public class ProfileFragment extends Fragment {
         Log.w(TAG, "OnCreateView called: called!");
         getUserJourneys();
 
-        //registration = addListenerUserListener();
+        registration = addListenerUserListener();
 
         //setRetainInstance(true);
         return view;
     }
 
-//    private ListenerRegistration addListenerUserListener(){
-//        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
-//                if(e != null){
-//                    Log.w(TAG, "Listen failed,", e);
-//                }
-//
-//                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
-//                        ? "Local" : "Server";
-//                if(snapshot != null && snapshot.exists()){
-//                    Log.d(TAG, source + " data: " + snapshot.getData());
-//
-//                }else{
-//
-//                }
-//            }
-//        });
-//    }
+    private ListenerRegistration addListenerUserListener(){
+        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.w(TAG, "Listen failed,", e);
+                }
+
+                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
+                        ? "Local" : "Server";
+                if(snapshot != null && snapshot.exists()){
+                    Log.d(TAG, source + " data: " + snapshot.getData());
+
+                }else{
+
+                }
+            }
+        });
+    }
 
 
     private void getUserJourneys(){

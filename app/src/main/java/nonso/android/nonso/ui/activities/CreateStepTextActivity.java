@@ -7,14 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ebolo.krichtexteditor.RichEditor;
 import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
 import com.ebolo.krichtexteditor.fragments.Options;
 import com.ebolo.krichtexteditor.ui.widgets.EditorButton;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,7 +44,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
     private static final String DATABASE_JOURNEYS = "journeys";
-    private static final String DATABASE_STEPS = "steps/";
+    private static final String DATABASE_COLLECTION_STEPS = "steps";
     private static final String DATABASE_COLLECTION_USERS = "users/";
 
     private final String STEP_EXTRA_DATA = "step_extra";
@@ -152,37 +151,54 @@ public class CreateStepTextActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save_as_draft:
-                editorFragment.getEditor().getContents(new RichEditor.OnContentsReturned() {
-                    @Override
-                    public void process(@NonNull final String text) {
-                        runOnUiThread( new Runnable() {
-                            @Override
-                            public void run() {
-                            Log.v(TAG, "this is the content: " + text);
-
-                            mStep.setTitle(mStepTitle.getText().toString());
-                            mStep.setDescription(mStepDescription.getText().toString());
-                            mStep.setBodyText(text);
-                            mStep.setJourneyId(mJourney.getJourneyId());
-
-                            db.collection(DATABASE_STEPS)
-                                .add(mStep)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        String stepId = documentReference.getId();
-                                        updateJourney(stepId);
-                                    }
-                                });
-
-                            }
-                        } );
-                    }
-                });
+                saveAsDraft();
+                return true;
+            case  R.id.action_discard:
+                return true;
+            case R.id.action_publish:
+                return true;
+            case R.id.action_settings:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void saveAsDraft(){
+        editorFragment.getEditor().getContents(new RichEditor.OnContentsReturned() {
+            @Override
+            public void process(@NonNull final String text) {
+                runOnUiThread( new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.v(TAG, "this is the content: " + text);
+
+                        mStep.setTitle(mStepTitle.getText().toString());
+                        mStep.setDescription(mStepDescription.getText().toString());
+                        mStep.setBodyText(text);
+                        mStep.setJourneyId(mJourney.getJourneyId());
+
+                        db.collection(DATABASE_COLLECTION_STEPS)
+                            .add(mStep)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+
+                                    Log.d(TAG, "Success Listener: Created step text");
+                                    String stepId = documentReference.getId();
+                                    updateJourney(stepId);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Failure Listener: Failed to create step text");
+                                }
+                            });
+                    }
+                } );
+            }
+        });
     }
 
     public void updateJourney(String stepId){

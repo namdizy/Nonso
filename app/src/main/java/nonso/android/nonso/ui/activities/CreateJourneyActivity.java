@@ -50,8 +50,8 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     private Journey mJourney;
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
-    private static final String DATABASE_JOURNEYS = "journeys";
-    private static final String DATABASE_COLLECTION_USERS = "users/";
+    private static final String DATABASE_COLLECTION_JOURNEYS = "journeys";
+    private static final String DATABASE_COLLECTION_USERS = "users";
     private final String TAG = CreateJourneyActivity.this.getClass().getSimpleName();
 
 
@@ -98,7 +98,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         mProgressbar.setVisibility(View.VISIBLE);
 
         mJourney.setUserId(mUserRef.getId());
-        db.collection(DATABASE_JOURNEYS)
+        db.collection(DATABASE_COLLECTION_JOURNEYS)
                 .add(mJourney)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -129,7 +129,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                    DocumentReference journeyRef = db.collection(DATABASE_JOURNEYS).document(journeyId);
+                    DocumentReference journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).document(journeyId);
                     journeyRef.update("profileImage", downloadUrl.toString())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

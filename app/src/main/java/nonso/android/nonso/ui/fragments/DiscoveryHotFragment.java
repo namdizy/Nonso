@@ -3,6 +3,7 @@ package nonso.android.nonso.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,12 @@ public class DiscoveryHotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_discovery_hot, container, false);
+
+
+        View view =  inflater.inflate(R.layout.fragment_discovery_hot, container, false);
+        Log.v("FragmentDiscoveryHot", "THIS IS DISCOVERY HOT FRAGMENT==========" );
+
+        return view;
     }
 
 }

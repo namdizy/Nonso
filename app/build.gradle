@@ -71,10 +71,11 @@ dependencies {
     implementation 'io.supercharge:shimmerlayout:2.1.0'
 
     //expandable fab button
-    implementation 'com.github.kobakei:MaterialFabSpeedDial:1.2.0'
+    implementation 'io.github.yavski:fab-speed-dial:1.0.6'
 
     //text editor KRichEditor
     implementation 'com.github.daothanhduy305:KRichEditor:-SNAPSHOT'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

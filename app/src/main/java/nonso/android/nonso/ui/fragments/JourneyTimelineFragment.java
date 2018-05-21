@@ -1,31 +1,13 @@
 package nonso.android.nonso.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
-import com.ebolo.krichtexteditor.fragments.Options;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.github.kobakei.materialfabspeeddial.FabSpeedDial;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Step;
-import nonso.android.nonso.models.StepType;
-import nonso.android.nonso.ui.activities.CreateStepTextActivity;
-import nonso.android.nonso.ui.activities.JourneyProfileActivity;
-import nonso.android.nonso.ui.activities.MainActivity;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -36,7 +18,7 @@ import nonso.android.nonso.ui.activities.MainActivity;
  */
 public class JourneyTimelineFragment extends Fragment{
 
-    //@BindView(R.id.steps_fab_btn) FabSpeedDial mFab;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,22 +69,6 @@ public class JourneyTimelineFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_journey_timeline, container, false);
 
-        final FabSpeedDial fab = view.findViewById(R.id.steps_fab_btn);
-
-        fab.addOnMenuItemClickListener(new FabSpeedDial.OnMenuItemClickListener() {
-            @Override
-            public void onMenuItemClick(FloatingActionButton fab, TextView label, int itemId) {
-
-                switch (itemId){
-                    case R.id.fab_menu_add_text:
-                        createText();
-                    case R.id.fab_menu_add_photo:
-                        break;
-                    case R.id.fab_menu_add_video:
-                        break;
-                }
-            }
-        });
         return view;
     }
 
@@ -125,13 +91,13 @@ public class JourneyTimelineFragment extends Fragment{
     }
 
 
-    private void createText(){
-        if (mListener != null) {
-            Step step = new Step();
-            step.setStepType(StepType.TEXT);
-            mListener.onJourneyTimelineInteraction(step);
-        }
-    }
+//    private void createText(){
+//        if (mListener != null) {
+//            Step step = new Step();
+//            step.setStepType(StepType.TEXT);
+//            mListener.onJourneyTimelineInteraction(step);
+//        }
+//    }
 
     /**
      * This interface must be implemented by activities that contain this

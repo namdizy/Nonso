@@ -8,10 +8,5 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.JourneyTimelineFragment">
 
-        <io.github.kobakei.materialfabspeeddial.FabSpeedDial
-            android:id="@+id/steps_fab_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:fab_menu="@menu/add_step_fab_menu"
-            android:layout_gravity="end|bottom" />
+
 </FrameLayout>

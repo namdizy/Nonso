@@ -4,19 +4,16 @@
     <!-- Options buttons of the Fab menu -->
     <item
         android:id="@+id/fab_menu_add_text"
-        android:icon="@drawable/ic_editor_light"
-        android:title=""
-        android:orderInCategory="1"/>
+        android:icon="@drawable/ic_create_dark"
+        android:title="" />
 
     <item
         android:id="@+id/fab_menu_add_photo"
         android:icon="@drawable/ic_camera_white"
-        android:title=""
-        android:orderInCategory="2"/>
+        android:title="" />
 
     <item
         android:id="@+id/fab_menu_add_video"
         android:icon="@drawable/ic_play_white"
-        android:title=""
-        android:orderInCategory="3"/>
+        android:title="" />
 </menu>

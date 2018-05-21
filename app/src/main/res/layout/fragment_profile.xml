@@ -64,7 +64,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:color="@color/colorAccent"
-        android:src="@drawable/ic_editor_light"
+        android:src="@drawable/ic_create_light"
         />
 
 </android.support.design.widget.CoordinatorLayout>
