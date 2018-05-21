@@ -3,7 +3,10 @@ package nonso.android.nonso.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.sql.Time;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +26,9 @@ public class Journey implements Parcelable {
     private Map<String, Boolean> subscribers;
     private Map<String, Boolean> blockedList;
     private Map<String, Boolean> categories;
-    private Time createdAt;
+    private Map<String, Boolean> steps;
+    private Date createdAt;
+    @ServerTimestamp private Date updatedAt;
 
     public Map<String, Boolean> getCategories() {
         return categories;
@@ -143,6 +148,29 @@ public class Journey implements Parcelable {
         this.journeyId = journeyId;
     }
 
+    public Map<String, Boolean> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(Map<String, Boolean> steps) {
+        this.steps = steps;
+    }
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -176,7 +204,13 @@ public class Journey implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
-        dest.writeSerializable(this.createdAt);
+        dest.writeInt(this.steps.size());
+        for (Map.Entry<String, Boolean> entry : this.steps.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeValue(entry.getValue());
+        }
+        dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
+        dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
 
     protected Journey(Parcel in) {
@@ -212,7 +246,17 @@ public class Journey implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.categories.put(key, value);
         }
-        this.createdAt = (Time) in.readSerializable();
+        int stepsSize = in.readInt();
+        this.steps = new HashMap<String, Boolean>(stepsSize);
+        for (int i = 0; i < stepsSize; i++) {
+            String key = in.readString();
+            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
+            this.steps.put(key, value);
+        }
+        long tmpCreatedAt = in.readLong();
+        this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
+        long tmpUpdatedAt = in.readLong();
+        this.updatedAt = tmpUpdatedAt == -1 ? null : new Date(tmpUpdatedAt);
     }
 
     public static final Creator<Journey> CREATOR = new Creator<Journey>() {

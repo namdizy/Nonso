@@ -3,6 +3,9 @@ package nonso.android.nonso.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +22,9 @@ public class Step implements Parcelable {
     private String journeyId;
     private String userId;
     private Boolean publish;
+    private Date createdAt;
+    @ServerTimestamp
+    private Date updatedAt;
 
     public Step(){
         this.likes = new HashMap<>();
@@ -113,6 +119,22 @@ public class Step implements Parcelable {
         StepId = stepId;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -139,6 +161,8 @@ public class Step implements Parcelable {
         dest.writeString(this.journeyId);
         dest.writeString(this.userId);
         dest.writeValue(this.publish);
+        dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
+        dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
 
     protected Step(Parcel in) {
@@ -166,6 +190,10 @@ public class Step implements Parcelable {
         this.journeyId = in.readString();
         this.userId = in.readString();
         this.publish = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        long tmpCreatedAt = in.readLong();
+        this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
+        long tmpUpdatedAt = in.readLong();
+        this.updatedAt = tmpUpdatedAt == -1 ? null : new Date(tmpUpdatedAt);
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {
