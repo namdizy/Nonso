@@ -76,6 +76,8 @@ dependencies {
     //text editor KRichEditor
     implementation 'com.github.daothanhduy305:KRichEditor:-SNAPSHOT'
 
+    implementation 'com.fxn769:pix:1.0.3'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -140,6 +140,4 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         return position;
     }
 
-
-
 }

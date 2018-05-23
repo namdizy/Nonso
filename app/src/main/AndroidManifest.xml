@@ -87,9 +87,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
-        <activity android:name=".ui.activities.CreateStepTextActivity" />
-        <activity android:name=".ui.activities.SearchActivity" />
-        <activity android:name=".ui.activities.CreateStepImageActivity"></activity>
+        <activity android:name=".ui.activities.CreateStepTextActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.JourneyProfileActivity" />
+        </activity>
+
+        <activity android:name=".ui.activities.SearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activities.CreateStepImageActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.JourneyProfileActivity" />
+        </activity>
     </application>
 
 </manifest>

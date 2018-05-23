@@ -5,9 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
 
@@ -19,13 +25,26 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Step;
+import nonso.android.nonso.ui.adapters.ImagesAdapter;
 
 public class CreateStepImageActivity extends AppCompatActivity {
 
     @BindView(R.id.create_step_image_library) LinearLayout mGalleryContainer;
+    @BindView(R.id.create_step_recyclerView_images) RecyclerView mRecyclerView;
+
+    private final String TAG = CreateStepImageActivity.class.getSimpleName();
+
+    private final String STEP_EXTRA_DATA = "step_extra";
+    private final String JOURNEY_EXTRA_DATA = "journey_extra";
 
     private final int GALLERY_REQUEST_CODE = 111;
     private Activity mContext;
+    private ImagesAdapter mImagesAdapter;
+    StaggeredGridLayoutManager mGridLayoutManager;
+    private Step mStep;
+    private Journey mJourney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +55,11 @@ public class CreateStepImageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        mStep = intent.getParcelableExtra(STEP_EXTRA_DATA);
+        mJourney = intent.getParcelableExtra(JOURNEY_EXTRA_DATA);
 
         mContext= this;
 
@@ -46,7 +68,7 @@ public class CreateStepImageActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_step_text, menu);
+        getMenuInflater().inflate(R.menu.create_step_image_video, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -77,6 +99,22 @@ public class CreateStepImageActivity extends AppCompatActivity {
 
         if(resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE){
             ArrayList<String> imgs = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+
+            Log.v(TAG, "URLS: "+ imgs);
+
+            if(imgs.size() == 1){
+                mGridLayoutManager= new StaggeredGridLayoutManager(1, LinearLayout.VERTICAL);
+            }else{
+                mGridLayoutManager= new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
+            }
+
+            mRecyclerView.setLayoutManager(mGridLayoutManager);
+
+            mImagesAdapter = new ImagesAdapter();
+            mRecyclerView.setAdapter(mImagesAdapter);
+
+            mImagesAdapter.setImagesUrls(imgs);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -2,8 +2,10 @@ package nonso.android.nonso.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -30,6 +32,7 @@ import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
 import nonso.android.nonso.ui.fragments.JourneyCommunityFragment;
 import nonso.android.nonso.ui.fragments.JourneyTimelineFragment;
 import nonso.android.nonso.ui.fragments.JourneyAboutFragment;
+import nonso.android.nonso.utils.JourneyUtils;
 
 
 public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnJourneyTimelineListener,
@@ -49,10 +52,10 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
     private Journey mJourney;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+    private SharedPreferences pref;
 
-
-    private final String JOURNEY_EXTRA_DATA = "journey_extra";
     private final String STEP_EXTRA_DATA = "step_extra";
+    private final String JOURNEY_PREFERENCE_KEY = "journey_pref";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,10 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        mJourney = intent.getParcelableExtra(JOURNEY_EXTRA_DATA);
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String journeyString =  pref.getString(JOURNEY_PREFERENCE_KEY, null);
+        mJourney = new JourneyUtils().loadJourneyFromString(journeyString);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -115,7 +120,6 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
                 case R.id.fab_menu_add_text:
                     Intent intent = new Intent(getBaseContext(), CreateStepTextActivity.class);
                     intent.putExtra(STEP_EXTRA_DATA, step);
-                    intent.putExtra(JOURNEY_EXTRA_DATA, mJourney);
                     startActivity(intent);
                     break;
                 case R.id.fab_menu_add_photo:

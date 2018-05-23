@@ -24,6 +24,7 @@ import nonso.android.nonso.ui.fragments.JourneysFragment;
 import nonso.android.nonso.ui.fragments.JourneysListFragment;
 import nonso.android.nonso.ui.fragments.NotificationsFragment;
 import nonso.android.nonso.ui.fragments.ProfileFragment;
+import nonso.android.nonso.utils.JourneyUtils;
 
 public class MainActivity extends AppCompatActivity implements DiscoverFragment.OnFragmentInteractionListener,
         JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener,
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
     private static final String TAG = "MainActivity";
     private SharedPreferences pref;
     private final String ITEM_PREFERENCE_KEY = "menu_item_key";
-    private final String JOURNEY_EXTRA_DATA = "journey_extra";
+    private final String JOURNEY_PREFERENCE_KEY = "journey_pref";
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
 
@@ -46,22 +47,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
         mBottomNavigationView.enableShiftingMode(false);
 
-        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, -1);
-
-                if(menuItem > -1){
-                    fragmentSelect(item);
-                }
-                Log.v(TAG, "=============  I am not sure  ==========");
-                return true;
-
-            }
-
-
-        });
+        mBottomNavigationView.setOnNavigationItemSelectedListener(bottomNavigationViewClickListener);
 
         MenuItem selectedItem;
 
@@ -89,9 +75,23 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
     }
 
+    BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationViewClickListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener(){
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, -1);
+
+            if(menuItem > -1){
+                fragmentSelect(item);
+            }
+            Log.v(TAG, "=============  I am not sure  ==========");
+            return true;
+
+        }
+    };
+
     private void fragmentSelect(MenuItem item){
-
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         Fragment fragment = null;
 
@@ -141,8 +141,11 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
     @Override
     public void onJourneysListInteraction(Journey journey) {
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(JOURNEY_PREFERENCE_KEY, new JourneyUtils().loadStringFromJourney(journey));
+        editor.apply();
         Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
-        intent.putExtra(JOURNEY_EXTRA_DATA, journey);
         startActivity(intent);
     }
 }
