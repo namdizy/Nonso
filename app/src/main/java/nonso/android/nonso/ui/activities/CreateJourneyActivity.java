@@ -1,9 +1,11 @@
 package nonso.android.nonso.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.fxn.pix.Pix;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +26,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
+
+import java.util.ArrayList;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -46,8 +51,9 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     private StorageReference mProfileImageRef;
     private DocumentReference mUserRef;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private Journey mJourney;
+
+    private static final int GALLERY_REQUEST_CODE = 111;
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys";
@@ -181,6 +187,19 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+
+            Fragment f = (Fragment) mStepperLayout.getAdapter().findStep(mStepperLayout.getCurrentStepPosition());
+            ArrayList<String> imgs = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+            //Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.stepperLayout + ":" + mStepperLayout.getCurrentStepPosition());
+            if (mStepperLayout.getCurrentStepPosition() == 0 && f != null) {
+                ((DescriptionStepFragment)f).setProfileImage(imgs.get(0));
+            }
+        }
     }
 
     @Override

@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.DescriptionStepFragment">
+    tools:context=".ui.fragments.DescriptionStepFragment"
+    android:tag="create_journey_step">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
         <ImageButton
             android:id="@+id/create_journey_description_close"
             android:layout_width="wrap_content"
@@ -20,15 +22,41 @@
             />
 
         <ImageView
-            android:id="@+id/create_journey_description_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/grey_border"
+            android:id="@+id/create_journey_description_profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/create_journey_description_image_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/image_view_placeholder"
-            android:alpha="0.3"
-            />
+            >
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circular_view"
+                android:layout_gravity="center_horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_photo_dark" />
+            </FrameLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Image"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/create_journey_input_name"

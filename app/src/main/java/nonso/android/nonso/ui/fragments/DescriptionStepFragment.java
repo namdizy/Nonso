@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.util.Log;
@@ -16,9 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.fxn.pix.Pix;
 import com.google.android.exoplayer2.metadata.id3.ApicFrame;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,6 +46,7 @@ import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,13 +75,15 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
 
     @BindView(R.id.edit_create_journeys_input_description) EditText mJourneysDescription;
     @BindView(R.id.edit_create_journeys_input_name) EditText mJourneysName;
-    @BindView(R.id.create_journey_description_image) ImageView mJourneysImage;
     @BindView(R.id.create_journey_description_spinner) MultiSelectionSpinner mMultiSelectionSpinner;
     @BindView(R.id.create_journey_description_close) ImageButton mCloseButton;
+    @BindView(R.id.create_journey_description_profile_image) ImageView mJourneysImage;
+    @BindView(R.id.create_journey_description_image_btn) LinearLayout mImageButton;
 
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
     private static final String ARG_JOURNEY = "journey_object";
+    private static final int GALLERY_REQUEST_CODE = 111;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -134,7 +141,6 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
         ButterKnife.bind(this, view);
 
         mCategoriesRef  = db.collection(DATABASE_COLLECTION_CATEGORIES).document(DATABASE_DOCUMENT_CATEGORIES);
-
         getCategories();
         mMultiSelectionSpinner.setListener(this);
         return view;
@@ -207,28 +213,11 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
         startActivity(intent);
     }
 
-    @OnClick(R.id.create_journey_description_image)
+    @OnClick(R.id.create_journey_description_image_btn)
     public void onJourneyImageClick(View view){
-        startPickImageActivity();
-    }
+        Fragment g = this;
+        Pix.start(getActivity(), GALLERY_REQUEST_CODE);
 
-    public void startPickImageActivity(){
-        PickImageDialog.build(new PickSetup()
-                .setSystemDialog(true)
-                .setButtonOrientation(LinearLayoutCompat.HORIZONTAL))
-                .setOnPickResult(new IPickResult() {
-                    @Override
-                    public void onPickResult(PickResult r) {
-                        Uri uri = r.getUri();
-                        startCropImageActivity(uri);
-                    }
-                })
-                .setOnPickCancel(new IPickCancel() {
-                    @Override
-                    public void onCancelClick() {
-                        //TODO: Handle cancel: most likely do nothing
-                    }
-                }).show(getFragmentManager());
     }
 
     public void startCropImageActivity(Uri uri){
@@ -239,15 +228,17 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
+
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
+            mImageButton.setVisibility(View.GONE);
+
             Uri resultUri = result.getUri();
             mJourneysImage.setImageURI(resultUri);
             mJourney.setProfileImage(resultUri.toString());
-
-
+            mJourneysImage.setVisibility(View.VISIBLE);
             if(mListener != null){
                 mListener.OnDescriptionStepListener(mJourney);
             }
@@ -304,5 +295,16 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         //super.onSaveInstanceState(outState);
+    }
+
+    public void setProfileImage(String imageString){
+        //startCropImageActivity(Uri.parse(imageString));
+
+        mImageButton.setVisibility(View.GONE);
+
+        //Uri resultUri = result.getUri();
+        mJourneysImage.setImageURI(Uri.parse(imageString));
+        //mJourney.setProfileImage(Ur);
+        mJourneysImage.setVisibility(View.VISIBLE);
     }
 }
