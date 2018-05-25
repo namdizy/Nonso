@@ -18,8 +18,11 @@ import android.widget.LinearLayout;
 
 
 import com.fxn.pix.Pix;
+import com.tangxiaolv.telegramgallery.GalleryActivity;
+import com.tangxiaolv.telegramgallery.GalleryConfig;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,7 +93,14 @@ public class CreateStepImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_step_image_library)
     public void onLibraryClick(){
-        Pix.start(this, GALLERY_REQUEST_CODE, 6);
+
+        GalleryConfig config = new GalleryConfig.Build()
+                .limitPickPhoto(6)
+                .singlePhoto(false)
+                .hintOfPick("Choose Image")
+                .filterMimeTypes(new String[]{"image/*" })
+                .build();
+        GalleryActivity.openActivity(this, GALLERY_REQUEST_CODE, config);
     }
 
     @Override
@@ -98,7 +108,7 @@ public class CreateStepImageActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE){
-            ArrayList<String> imgs = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+            ArrayList<String> imgs = (ArrayList<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
 
             Log.v(TAG, "URLS: "+ imgs);
 
@@ -107,7 +117,6 @@ public class CreateStepImageActivity extends AppCompatActivity {
             }else{
                 mGridLayoutManager= new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
             }
-
             mRecyclerView.setLayoutManager(mGridLayoutManager);
 
             mImagesAdapter = new ImagesAdapter();
@@ -116,5 +125,10 @@ public class CreateStepImageActivity extends AppCompatActivity {
             mImagesAdapter.setImagesUrls(imgs);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

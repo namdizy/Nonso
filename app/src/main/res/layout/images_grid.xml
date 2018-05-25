@@ -8,6 +8,7 @@
     <ImageView
         android:adjustViewBounds="true"
         android:id="@+id/imv_image_item"
+        android:scaleType="fitCenter"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_margin="2dp"

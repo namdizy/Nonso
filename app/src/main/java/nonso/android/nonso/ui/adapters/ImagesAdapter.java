@@ -44,8 +44,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImagesAdap
 
         Context context = holder.mImageView.getContext();
 
-//        Picasso.with(context).load(imageUrl).placeholder(R.drawable.image_view_placeholder)
-//                .error(R.drawable.image_view_placeholder).into(holder.mImageView);
+//        Picasso.with(context).load(imageUrl).into(holder.mImageView);
 
         holder.mImageView.setImageURI(Uri.parse(imageUrl));
     }

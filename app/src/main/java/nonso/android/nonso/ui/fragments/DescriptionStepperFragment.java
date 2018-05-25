@@ -1,77 +1,53 @@
 package nonso.android.nonso.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.fxn.pix.Pix;
-import com.google.android.exoplayer2.metadata.id3.ApicFrame;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.vansuita.pickimage.bean.PickResult;
-import com.vansuita.pickimage.bundle.PickSetup;
-import com.vansuita.pickimage.dialog.PickImageDialog;
-import com.vansuita.pickimage.listeners.IPickCancel;
-import com.vansuita.pickimage.listeners.IPickResult;
+import com.tangxiaolv.telegramgallery.GalleryActivity;
+import com.tangxiaolv.telegramgallery.GalleryConfig;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
-import nonso.android.nonso.ui.activities.LoginActivity;
 import nonso.android.nonso.ui.activities.MainActivity;
-import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.utils.MultiSelectionSpinner;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DescriptionStepFragment.OnDescriptionStepListener} interface
+ * {@link DescriptionStepperFragment.OnDescriptionStepListener} interface
  * to handle interaction events.
- * Use the {@link DescriptionStepFragment#newInstance} factory method to
+ * Use the {@link DescriptionStepperFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DescriptionStepFragment extends Fragment implements Step, MultiSelectionSpinner.OnMultipleItemsSelectedListener {
+public class DescriptionStepperFragment extends Fragment implements Step, MultiSelectionSpinner.OnMultipleItemsSelectedListener {
 
     @BindView(R.id.edit_create_journeys_input_description) EditText mJourneysDescription;
     @BindView(R.id.edit_create_journeys_input_name) EditText mJourneysName;
@@ -89,8 +65,9 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
 
     private static final String DATABASE_COLLECTION_CATEGORIES = "categories";
     private static final String DATABASE_DOCUMENT_CATEGORIES = "categories";
+    private static final int PERMISSIONS_REQUEST_STORAGE = 13;
 
-    private static String TAG = DescriptionStepFragment.class.getName();
+    private static String TAG = DescriptionStepperFragment.class.getName();
 
     private int mStepPosition;
     private Journey mJourney;
@@ -106,17 +83,17 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
      *
      * @param position Position of this step.
      * @param journey Journey being created.
-     * @return A new instance of fragment DescriptionStepFragment.
+     * @return A new instance of fragment DescriptionStepperFragment.
      */
-    public DescriptionStepFragment newInstance(int position, Journey journey) {
-        DescriptionStepFragment fragment = new DescriptionStepFragment();
+    public DescriptionStepperFragment newInstance(int position, Journey journey) {
+        DescriptionStepperFragment fragment = new DescriptionStepperFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_STEP_POSITION_KEY, position);
         args.putParcelable(ARG_JOURNEY, journey);
         fragment.setArguments(args);
         return fragment;
     }
-    public DescriptionStepFragment() {
+    public DescriptionStepperFragment() {
         // Required empty public constructor
     }
 
@@ -215,34 +192,13 @@ public class DescriptionStepFragment extends Fragment implements Step, MultiSele
 
     @OnClick(R.id.create_journey_description_image_btn)
     public void onJourneyImageClick(View view){
-        Fragment g = this;
-        Pix.start(getActivity(), GALLERY_REQUEST_CODE);
 
-    }
-
-    public void startCropImageActivity(Uri uri){
-        CropImage.activity(uri)
-                .start(getContext(), this);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
-
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-            mImageButton.setVisibility(View.GONE);
-
-            Uri resultUri = result.getUri();
-            mJourneysImage.setImageURI(resultUri);
-            mJourney.setProfileImage(resultUri.toString());
-            mJourneysImage.setVisibility(View.VISIBLE);
-            if(mListener != null){
-                mListener.OnDescriptionStepListener(mJourney);
-            }
-        }
+        GalleryConfig config = new GalleryConfig.Build()
+                .singlePhoto(true)
+                .hintOfPick("Choose Image")
+                .filterMimeTypes(new String[]{"image/*" })
+                .build();
+        GalleryActivity.openActivity(getActivity(), GALLERY_REQUEST_CODE, config);
     }
 
     @Override

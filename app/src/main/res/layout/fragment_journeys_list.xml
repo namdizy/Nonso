@@ -80,14 +80,23 @@
                 app:civ_border_color="@color/white"
                 app:civ_border_width="3dp"
                 android:src="@drawable/profile_image_placeholder"/>
-            <de.hdodenhof.circleimageview.CircleImageView
+
+            <FrameLayout
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:background="@drawable/circular_view_fill"
                 android:layout_gravity="bottom|right"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ic_editor_primary"
-                app:civ_border_color="@color/colorWhite"
-                app:civ_border_width="2dp" />
+                android:layout_marginRight="5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_editor_light" />
+            </FrameLayout>
+
         </FrameLayout>
     </FrameLayout>
 

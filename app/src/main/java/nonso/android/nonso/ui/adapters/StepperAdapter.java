@@ -7,8 +7,8 @@ import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
 
 import nonso.android.nonso.models.Journey;
-import nonso.android.nonso.ui.fragments.DescriptionStepFragment;
-import nonso.android.nonso.ui.fragments.SettingsStepFragment;
+import nonso.android.nonso.ui.fragments.DescriptionStepperFragment;
+import nonso.android.nonso.ui.fragments.SettingsStepperFragment;
 
 public class StepperAdapter extends AbstractFragmentStepAdapter {
 
@@ -28,11 +28,11 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
 
         switch (position){
             case 0:
-                final DescriptionStepFragment descriptionStepFragment = new DescriptionStepFragment().newInstance(position, journey);
-                return descriptionStepFragment;
+                final DescriptionStepperFragment descriptionStepperFragment = new DescriptionStepperFragment().newInstance(position, journey);
+                return descriptionStepperFragment;
             case 1:
-                final SettingsStepFragment settingsStepFragment = new SettingsStepFragment().newInstance(position, journey);
-                return  settingsStepFragment;
+                final SettingsStepperFragment settingsStepperFragment = new SettingsStepperFragment().newInstance(position, journey);
+                return settingsStepperFragment;
         }
         return null;
     }

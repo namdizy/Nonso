@@ -1,6 +1,5 @@
 package nonso.android.nonso.ui.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,16 +7,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,12 +33,6 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.vansuita.pickimage.bean.PickResult;
-import com.vansuita.pickimage.bundle.PickSetup;
-import com.vansuita.pickimage.dialog.PickImageDialog;
-import com.vansuita.pickimage.listeners.IPickCancel;
-import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,10 +40,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.supercharge.shimmerlayout.ShimmerLayout;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
-import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 
@@ -181,43 +167,43 @@ public class ProfileFragment extends Fragment {
     }
 
     public void startPickImageActivity(){
-        PickImageDialog.build(new PickSetup()
-                .setSystemDialog(true)
-                .setButtonOrientation(LinearLayoutCompat.HORIZONTAL))
-                .setOnPickResult(new IPickResult() {
-                    @Override
-                    public void onPickResult(PickResult r) {
-                        Uri uri = r.getUri();
-                        startCropImageActivity(uri);
-                    }
-                })
-                .setOnPickCancel(new IPickCancel() {
-                    @Override
-                    public void onCancelClick() {
-                        //TODO: Handle cancel: most likely do nothing
-                    }
-                }).show(getFragmentManager());
+//        PickImageDialog.build(new PickSetup()
+//                .setSystemDialog(true)
+//                .setButtonOrientation(LinearLayoutCompat.HORIZONTAL))
+//                .setOnPickResult(new IPickResult() {
+//                    @Override
+//                    public void onPickResult(PickResult r) {
+//                        Uri uri = r.getUri();
+//                        startCropImageActivity(uri);
+//                    }
+//                })
+//                .setOnPickCancel(new IPickCancel() {
+//                    @Override
+//                    public void onCancelClick() {
+//                        //TODO: Handle cancel: most likely do nothing
+//                    }
+//                }).show(getFragmentManager());
     }
 
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
-
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-            Uri resultUri = result.getUri();
-            uploadToFirebase(resultUri);
-            //mUserProfileImage.setImageURI(resultUri);
-
-        }
+//        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
+//
+//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+//
+//            Uri resultUri = result.getUri();
+//            uploadToFirebase(resultUri);
+//            //mUserProfileImage.setImageURI(resultUri);
+//
+//        }
     }
 
 
     private void startCropImageActivity(Uri imageUri) {
-        CropImage.activity(imageUri)
-                .start(getContext(), this);
+//        CropImage.activity(imageUri)
+//                .start(getContext(), this);
     }
 
     private void uploadToFirebase(Uri uri){

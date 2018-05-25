@@ -1,7 +1,6 @@
 package nonso.android.nonso.ui.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
@@ -21,19 +19,18 @@ import com.stepstone.stepper.VerificationError;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SettingsStepFragment.OnSettingsStepListener} interface
+ * {@link SettingsStepperFragment.OnSettingsStepListener} interface
  * to handle interaction events.
- * Use the {@link SettingsStepFragment#newInstance} factory method to
+ * Use the {@link SettingsStepperFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsStepFragment extends Fragment implements Step {
+public class SettingsStepperFragment extends Fragment implements Step {
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
     private static final String ARG_JOURNEY = "journey_object";
@@ -60,17 +57,17 @@ public class SettingsStepFragment extends Fragment implements Step {
      *
      * @param position Current step position.
      * @param journey Parameter 2.
-     * @return A new instance of fragment SettingsStepFragment.
+     * @return A new instance of fragment SettingsStepperFragment.
      */
-    public SettingsStepFragment newInstance(int position, Journey journey) {
-        SettingsStepFragment fragment = new SettingsStepFragment();
+    public SettingsStepperFragment newInstance(int position, Journey journey) {
+        SettingsStepperFragment fragment = new SettingsStepperFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_STEP_POSITION_KEY, position);
         args.putParcelable(ARG_JOURNEY, journey);
         fragment.setArguments(args);
         return fragment;
     }
-    public SettingsStepFragment() {
+    public SettingsStepperFragment() {
         // Required empty public constructor
     }
 

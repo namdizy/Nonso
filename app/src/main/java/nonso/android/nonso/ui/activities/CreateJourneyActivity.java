@@ -26,8 +26,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
+import com.tangxiaolv.telegramgallery.GalleryActivity;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -37,11 +38,11 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
-import nonso.android.nonso.ui.fragments.DescriptionStepFragment;
-import nonso.android.nonso.ui.fragments.SettingsStepFragment;
+import nonso.android.nonso.ui.fragments.DescriptionStepperFragment;
+import nonso.android.nonso.ui.fragments.SettingsStepperFragment;
 
-public class CreateJourneyActivity extends AppCompatActivity implements DescriptionStepFragment.OnDescriptionStepListener,
-        SettingsStepFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
+public class CreateJourneyActivity extends AppCompatActivity implements DescriptionStepperFragment.OnDescriptionStepListener,
+        SettingsStepperFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
 
     @BindView(R.id.stepperLayout) StepperLayout mStepperLayout;
 
@@ -194,10 +195,9 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         if(requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
 
             Fragment f = (Fragment) mStepperLayout.getAdapter().findStep(mStepperLayout.getCurrentStepPosition());
-            ArrayList<String> imgs = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
-            //Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.stepperLayout + ":" + mStepperLayout.getCurrentStepPosition());
+            List<String> imgs = (List<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
             if (mStepperLayout.getCurrentStepPosition() == 0 && f != null) {
-                ((DescriptionStepFragment)f).setProfileImage(imgs.get(0));
+                ((DescriptionStepperFragment)f).setProfileImage(imgs.get(0));
             }
         }
     }
