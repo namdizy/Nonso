@@ -170,6 +170,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
     }
 
     public void saveAsDraft(){
+
         editorFragment.getEditor().getContents(new RichEditor.OnContentsReturned() {
             @Override
             public void process(@NonNull final String text) {

@@ -32,8 +32,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.util.ArrayList;
 
@@ -59,7 +57,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
-    private static final String TAG = "ProfileFragment";
+    private static final String TAG = ProfileFragment.class.getSimpleName();
     private static final String METADATA_KEY = "creator_id";
     private static final String DATABASE_COLLECTION_USERS = "users/";
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
