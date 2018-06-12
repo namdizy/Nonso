@@ -68,5 +68,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImagesAdap
 
     public void setImagesUrls(ArrayList images){
         mImagesUrls = images;
+        notifyDataSetChanged();
     }
 }

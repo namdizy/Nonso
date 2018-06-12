@@ -257,10 +257,11 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
         //startCropImageActivity(Uri.parse(imageString));
 
         mImageButton.setVisibility(View.GONE);
-
-        //Uri resultUri = result.getUri();
         mJourneysImage.setImageURI(Uri.parse(imageString));
-        //mJourney.setProfileImage(Ur);
+        mJourney.setProfileImage(imageString);
         mJourneysImage.setVisibility(View.VISIBLE);
+        if(mListener != null){
+            mListener.OnDescriptionStepListener(mJourney);
+        }
     }
 }

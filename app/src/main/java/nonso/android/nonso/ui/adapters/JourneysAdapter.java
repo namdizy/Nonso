@@ -128,6 +128,7 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
     public void setJourneysData(ArrayList<Journey> data){
         mJourneys = data;
+        notifyDataSetChanged();
     }
 
     @Override

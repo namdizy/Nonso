@@ -29,13 +29,23 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/journey_page_toolbar"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                app:contentInsetStartWithNavigation="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" >
+
+                <Button
+                    android:id="@+id/discover_search_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/journeys"
+                    android:drawablePadding="10dp"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_search_light"
+                    android:textSize="22sp"/>
+
 
                 <ImageButton
                     android:id="@+id/btn_journey_settings"
@@ -44,8 +54,7 @@
                     android:layout_gravity="end"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_settings_light"
-                    android:layout_marginRight="6dp"/>
-
+                    android:layout_marginEnd="@dimen/margin_5dp"/>
             </android.support.v7.widget.Toolbar>
 
 
@@ -65,57 +74,54 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/grey_border_bottom_light">
+                android:orientation="vertical"
+                android:background="@color/white">
 
                 <LinearLayout
+                    android:id="@+id/journey_creator_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/journey_creator_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/journey_creator_image"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_margin="5dp"
-                            android:src="@drawable/profile_image_placeholder" />
-
-                        <TextView
-                            android:id="@+id/journey_creator_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="5dp" />
-
-                    </LinearLayout>
-
-                    <include
-                        layout="@layout/divider_light"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_create_journeys_settings_title" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/journey_creator_image"
+                        android:layout_width="@dimen/small_image_size"
+                        android:layout_height="@dimen/small_image_size"
+                        android:layout_margin="@dimen/margin_5dp"
+                        android:src="@drawable/profile_image_placeholder" />
 
                     <TextView
-                        android:id="@+id/journey_page_description"
-                        android:layout_width="match_parent"
+                        android:id="@+id/journey_creator_name"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/margin_5dp" />
+
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+
+                <include
+                    layout="@layout/divider_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_create_journeys_settings_title" />
+
+                <TextView
+                    android:id="@+id/journey_page_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_10dp" />
+            </LinearLayout>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/journey_profile_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabMode="fixed"
+                app:layout_scrollFlags="scroll"
+                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 android:background="@drawable/grey_border_bottom_light"/>
             <android.support.v4.view.ViewPager
                 android:id="@+id/journey_profile_viewPager"
@@ -123,9 +129,6 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white" />
         </LinearLayout>
-
-
-
     </android.support.v4.widget.NestedScrollView>
 
     <io.github.yavski.fabspeeddial.FabSpeedDial

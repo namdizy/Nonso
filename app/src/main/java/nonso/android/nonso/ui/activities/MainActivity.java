@@ -1,5 +1,6 @@
 package nonso.android.nonso.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,10 +11,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.tangxiaolv.telegramgallery.GalleryActivity;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,19 +24,24 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.fragments.DiscoverFragment;
 import nonso.android.nonso.ui.fragments.JourneysFragment;
-import nonso.android.nonso.ui.fragments.JourneysListFragment;
 import nonso.android.nonso.ui.fragments.NotificationsFragment;
+import nonso.android.nonso.ui.fragments.ProfileFollowingJourneysListFragment;
 import nonso.android.nonso.ui.fragments.ProfileFragment;
+import nonso.android.nonso.ui.fragments.ProfileJourneysListFragment;
 import nonso.android.nonso.utils.JourneyUtils;
 
 public class MainActivity extends AppCompatActivity implements DiscoverFragment.OnFragmentInteractionListener,
-        JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener,
-        JourneysListFragment.OnJourneysListFragmentListener{
+        JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener
+        , ProfileFollowingJourneysListFragment.OnProfileFollowingJourneysInteractionListener,
+        ProfileJourneysListFragment.OnProfileJourneysListInteractionListener{
 
     private static final String TAG = "MainActivity";
     private SharedPreferences pref;
     private final String ITEM_PREFERENCE_KEY = "menu_item_key";
     private final String JOURNEY_PREFERENCE_KEY = "journey_pref";
+
+    private final int PROFILE_IMAGE_REQUEST_CODE = 101;
+
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
 
@@ -52,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         MenuItem selectedItem;
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-        int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, -1);
+        int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, 0);
+
+        mBottomNavigationView.setCurrentItem(menuItem);
 
 
         //TODO: this caused the fragments to be created twice. Need to fix
@@ -85,11 +95,23 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
             if(menuItem > -1){
                 fragmentSelect(item);
             }
-            Log.v(TAG, "=============  I am not sure  ==========");
             return true;
 
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == PROFILE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+
+            int index = mBottomNavigationView.getCurrentItem();
+            Fragment f = getSupportFragmentManager().findFragmentByTag(String.valueOf(index));
+
+            List<String> imgs = (List<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
+
+            ((ProfileFragment)f).setProfileImage(imgs.get(0));
+        }
+    }
 
     private void fragmentSelect(MenuItem item){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -139,13 +161,23 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
     }
 
-    @Override
-    public void onJourneysListInteraction(Journey journey) {
+//    @Override
+//    public void onJourneysListInteraction(Journey journey) {
+//
+//        SharedPreferences.Editor editor = pref.edit();
+//        editor.putString(JOURNEY_PREFERENCE_KEY, new JourneyUtils().loadStringFromJourney(journey));
+//        editor.apply();
+//        Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
+//        startActivity(intent);
+//    }
 
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(JOURNEY_PREFERENCE_KEY, new JourneyUtils().loadStringFromJourney(journey));
-        editor.apply();
-        Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
-        startActivity(intent);
+    @Override
+    public void OnProfileFollowingJourneysInteractionListener(Uri uri) {
+
+    }
+
+    @Override
+    public void OnProfileJourneysListInteractionListener(Uri uri) {
+
     }
 }

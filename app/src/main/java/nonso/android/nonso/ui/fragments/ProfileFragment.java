@@ -4,14 +4,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +38,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.tangxiaolv.telegramgallery.GalleryActivity;
+import com.tangxiaolv.telegramgallery.GalleryConfig;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -42,12 +52,22 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
+import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
+import nonso.android.nonso.ui.adapters.ProfilePagerAdapter;
 
 
 public class ProfileFragment extends Fragment {
 
+    @BindView(R.id.profile_collapsing_container)
+    CollapsingToolbarLayout mCollapsingToolbar;
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
     @BindView(R.id.fab_profile_create) FloatingActionButton mCreateFab;
+    @BindView(R.id.profile_edit_profile_image) FrameLayout mEditProfileImage;
+    @BindView(R.id.profile_tabs) TabLayout mTabLayout;
+    @BindView(R.id.profile_viewPager) ViewPager mViewPager;
+    private ImageView mUserProfileImage;
+    private TextView mUsername;
+
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -64,7 +84,9 @@ public class ProfileFragment extends Fragment {
 
     private ListenerRegistration registration;
     private ArrayList<Journey> mJourneys;
-    private JourneysListFragment mJourneyListFragment;
+
+
+    private final int PROFILE_IMAGE_REQUEST_CODE = 101;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -80,26 +102,52 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
+        setUp();
+        //getUserJourneys();
+        //setRetainInstance(true);
+        return view;
+    }
+
+    private void setUp(){
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
+        mUsername = (TextView) mCollapsingToolbar.findViewById(R.id.profile_username);
+        mUserProfileImage = (ImageView) mCollapsingToolbar.findViewById(R.id.profile_image);
+
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid() + "_user_profile_image"+ ".jpg");
-
-
         mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
         mJourneys = new ArrayList<>();
 
-        Log.w(TAG, "OnCreateView called: called!");
-        getUserJourneys();
+        mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), getContext()));
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        mUsername.setText(mUser.getDisplayName());
 
         registration = addListenerUserListener();
 
-        //setRetainInstance(true);
-        return view;
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
     }
 
     private ListenerRegistration addListenerUserListener(){
@@ -123,32 +171,6 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void getUserJourneys(){
-
-        db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Journey temp = document.toObject(Journey.class);
-                        temp.setJourneyId(document.getId());
-                        mJourneys.add(temp);
-                    }
-
-                    if (!isAdded()) return;
-                    mJourneyListFragment = new JourneysListFragment().newInstance(mJourneys);
-                    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                    fragmentTransaction.add(R.id.profile_journeys_container, mJourneyListFragment).commitAllowingStateLoss();
-
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-                }
-            });
-    }
-
     @OnClick(R.id.btn_profile_settings)
     public void onSettingsClick(View view){
 
@@ -161,26 +183,23 @@ public class ProfileFragment extends Fragment {
 
         Intent intent = new Intent(getContext(), CreateJourneyActivity.class);
         getActivity().startActivity(intent);
+    }
+
+
+    @OnClick(R.id.profile_image)
+    public void onProfileImageClick(){
 
     }
 
-    public void startPickImageActivity(){
-//        PickImageDialog.build(new PickSetup()
-//                .setSystemDialog(true)
-//                .setButtonOrientation(LinearLayoutCompat.HORIZONTAL))
-//                .setOnPickResult(new IPickResult() {
-//                    @Override
-//                    public void onPickResult(PickResult r) {
-//                        Uri uri = r.getUri();
-//                        startCropImageActivity(uri);
-//                    }
-//                })
-//                .setOnPickCancel(new IPickCancel() {
-//                    @Override
-//                    public void onCancelClick() {
-//                        //TODO: Handle cancel: most likely do nothing
-//                    }
-//                }).show(getFragmentManager());
+    @OnClick(R.id.profile_edit_profile_image)
+    public void onEditImageClick(){
+
+        GalleryConfig config = new GalleryConfig.Build()
+                .singlePhoto(true)
+                .hintOfPick("Choose Image")
+                .filterMimeTypes(new String[]{"image/*" })
+                .build();
+        GalleryActivity.openActivity(getActivity(), PROFILE_IMAGE_REQUEST_CODE, config);
     }
 
 
@@ -198,6 +217,12 @@ public class ProfileFragment extends Fragment {
 //        }
     }
 
+
+    public void setProfileImage(String imageString){
+        Uri imageUri = Uri.parse(imageString);
+        mUserProfileImage.setImageURI(imageUri);
+        //uploadToFirebase(imageUri);
+    }
 
     private void startCropImageActivity(Uri imageUri) {
 //        CropImage.activity(imageUri)
@@ -217,7 +242,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // Get a URL to the uploaded content
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                Uri downloadUrl = taskSnapshot.getUploadSessionUri();
 
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setPhotoUri(downloadUrl)

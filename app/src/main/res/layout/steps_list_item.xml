@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/colorGreyLight"
+    >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_horizontal_margin">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/step_creator_image"
+                android:layout_width="@dimen/small_image_size"
+                android:layout_height="@dimen/small_image_size"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:src="@drawable/profile_image_placeholder"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/step_creator_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/margin_5dp"
+                android:layout_toEndOf="@id/step_creator_image"
+                android:layout_alignParentTop="true"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_more_horiz_dark"
+                android:background="@drawable/transparent"
+                android:layout_gravity="end"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"/>
+
+            <TextView
+                android:id="@+id/step_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:textSize="@dimen/card_h6"
+                android:textStyle="bold"
+                android:layout_below="@id/step_creator_image"/>
+            <TextView
+                android:id="@+id/step_item_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:textSize="@dimen/card_body_text_size"
+                android:layout_below="@id/step_item_title"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

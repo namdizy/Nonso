@@ -58,10 +58,10 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
-    private String username;
-    private String email;
-    private String password;
-    private String retypePassword;
+    private String _username;
+    private String _email;
+    private String _password;
+    private String _retypePassword;
 
     private SharedPreferences pref;
 
@@ -92,17 +92,17 @@ public class SignUpActivity extends AppCompatActivity {
 
     public boolean validateForm(){
         boolean valid = true;
-        email = mEmailText.getText().toString();
-        password = mPasswordText.getText().toString();
+        _email = mEmailText.getText().toString();
+        _password = mPasswordText.getText().toString();
 
-        if(email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(_email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(_email).matches()){
             mEmailText.setError("Enter a valid email address");
             valid = false;
         }else{
             mEmailText.setError(null);
         }
 
-        if(password.isEmpty() || password.length() < 4 || password.length() >10){
+        if(_password.isEmpty() || _password.length() < 4 || _password.length() >10){
             mPasswordText.setError("Password should be between 4 and 10 characters");
             valid = false;
         }else{
@@ -120,14 +120,14 @@ public class SignUpActivity extends AppCompatActivity {
         return valid;
     }
     public void enableSubmitBtn(){
-        username = mUsernameText.getText().toString().trim();
-        email = mEmailText.getText().toString().trim();
-        password = mPasswordText.getText().toString().trim();
-        retypePassword = mRetypePasswordText.getText().toString().trim();
+        _username = mUsernameText.getText().toString().trim();
+        _email = mEmailText.getText().toString().trim();
+        _password = mPasswordText.getText().toString().trim();
+        _retypePassword = mRetypePasswordText.getText().toString().trim();
 
         boolean validated;
 
-        if( username.length()> 1 && email.length() > 4 && password.length() >4 && retypePassword.length() > 4 ){
+        if( _username.length()> 1 && _email.length() > 4 && _password.length() >4 && _retypePassword.length() > 4 ){
             validated = true;
         }else{
             validated = false;
@@ -150,27 +150,36 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         mProgressBarContainer.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(_email, _password)
             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        Log.d(TAG, "createUserWithEmail:success");
-                        mProgressBarContainer.setVisibility(View.INVISIBLE);
-                        FirebaseUser user = mAuth.getCurrentUser();
+                if(task.isSuccessful()){
+                    Log.d(TAG, "createUserWithEmail:success");
 
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(username).build();
+                    final FirebaseUser user = mAuth.getCurrentUser();
 
-                        user.updateProfile(profileUpdates);
-                        createUser(user);
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(_username).build();
 
-                    }else{
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        mProgressBarContainer.setVisibility(View.INVISIBLE);
-                        Toast.makeText(SignUpActivity.this, "Sign up failed. " + task.getException(),
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if(task.isSuccessful()){
+                                createUser(user);
+                            }
+
+                        }
+                    });
+
+
+                }else{
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    mProgressBarContainer.setVisibility(View.INVISIBLE);
+                    Toast.makeText(SignUpActivity.this, "Sign up failed. " + task.getException(),
+                            Toast.LENGTH_SHORT).show();
+                }
                 }
             });
     }
@@ -213,7 +222,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void createUser(final FirebaseUser user){
         User newUser = new User();
-        newUser.setName(user.getDisplayName());
+        newUser.setUserName(user.getDisplayName());
         newUser.setEmail(user.getEmail());
         newUser.setUserId(user.getUid());
 
@@ -221,6 +230,7 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        mProgressBarContainer.setVisibility(View.INVISIBLE);
                         onSignUpSuccess(user);
                     }
                 })

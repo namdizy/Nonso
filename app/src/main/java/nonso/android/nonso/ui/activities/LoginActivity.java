@@ -72,7 +72,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_login)
     public void login(View view){
-        Log.v(TAG, "LoginActivity click");
 
         email = mEmailText.getText().toString().trim();
         password = mPasswordText.getText().toString().trim();
@@ -142,7 +141,12 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        }else{
+        }else if(!firebaseUser.isEmailVerified()){
+            mProgressBarContainer.setVisibility(View.GONE);
+            Toast.makeText(getBaseContext(), "Login failed: Please Verify your email", Toast.LENGTH_LONG).show();
+            mLoginBtn.setEnabled(true);
+        }
+        else{
             mProgressBarContainer.setVisibility(View.GONE);
             Toast.makeText(getBaseContext(), "Login failed: Incorrect username or password", Toast.LENGTH_LONG).show();
             mLoginBtn.setEnabled(true);

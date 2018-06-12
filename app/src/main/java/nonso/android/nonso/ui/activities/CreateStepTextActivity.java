@@ -184,7 +184,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
                         mStep.setBodyText(text);
                         mStep.setStepType(StepType.TEXT);
                         mStep.setPublish(false);
-                        mStep.setUserId(mUserRef.getId());
+                        mStep.setCreatorId(mUserRef.getId());
                         mStep.setJourneyId(mJourney.getJourneyId());
 
                         db.collection(DATABASE_COLLECTION_STEPS)

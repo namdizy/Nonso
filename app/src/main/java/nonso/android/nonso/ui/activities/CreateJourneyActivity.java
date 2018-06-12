@@ -109,13 +109,12 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        mProgressbar.setVisibility(View.GONE);
                         String journeyId = documentReference.getId();
 
                         if(mJourney.getProfileImage() != null){
                             uploadImage(journeyId, mProgressbar);
                         }
-                        updateUser(journeyId);
+                        updateUser(journeyId, mProgressbar);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -133,7 +132,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Uri downloadUrl = taskSnapshot.getUploadSessionUri();
 
                     DocumentReference journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).document(journeyId);
                     journeyRef.update("profileImage", downloadUrl.toString())
@@ -156,7 +155,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                 }
             });
     }
-    private void updateUser(final String journeyId){
+    private void updateUser(final String journeyId, final LinearLayout progressbar){
         final Context context = this;
         mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -168,6 +167,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                 mUserRef.update("createdJourneys", userJourneys).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        progressbar.setVisibility(View.GONE);
                         Log.d(TAG, "DocumentSnapshot successfully updated!");
                         Intent intent = new Intent(context, MainActivity.class);
                         startActivity(intent);

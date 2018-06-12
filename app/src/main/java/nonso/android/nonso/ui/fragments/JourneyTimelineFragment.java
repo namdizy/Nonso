@@ -32,6 +32,7 @@ import com.stepstone.stepper.adapter.StepAdapter;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Step;
@@ -63,7 +64,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
 
     private Step mStep;
     private Journey mJourney;
-    private ArrayList<Step> mStepsList = new ArrayList<>();
+    private ArrayList<Step> mStepsList = new ArrayList<Step>();
     private StepsAdapter stepsAdapter;
     private RecyclerView.LayoutManager stepsLayoutManager;
     private SharedPreferences mPref;
@@ -81,6 +82,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_journey_timeline, container, false);
+        ButterKnife.bind(this, view);
 
         mPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         String journeyString =  mPref.getString(JOURNEY_PREFERENCE_KEY, null);
@@ -104,10 +106,13 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
                         for(QueryDocumentSnapshot snapshot: queryDocumentSnapshots){
                             mStepsList.add(snapshot.toObject(Step.class));
                         }
-                        stepsAdapter.setStepsData(mStepsList);
+                        if(mStepsList != null){
+                            stepsAdapter.setStepsData(mStepsList);
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

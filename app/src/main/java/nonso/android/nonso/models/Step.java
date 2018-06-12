@@ -20,7 +20,7 @@ public class Step implements Parcelable {
     private String bodyText;
     private String description;
     private String journeyId;
-    private String userId;
+    private String creatorId;
     private Boolean publish;
     private Date createdAt;
     @ServerTimestamp
@@ -95,12 +95,12 @@ public class Step implements Parcelable {
         this.journeyId = journeyId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getCreatorId() {
+        return creatorId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCreatorId(String userId) {
+        this.creatorId = userId;
     }
 
     public Boolean getPublish() {
@@ -159,7 +159,7 @@ public class Step implements Parcelable {
         dest.writeString(this.bodyText);
         dest.writeString(this.description);
         dest.writeString(this.journeyId);
-        dest.writeString(this.userId);
+        dest.writeString(this.creatorId);
         dest.writeValue(this.publish);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
@@ -188,7 +188,7 @@ public class Step implements Parcelable {
         this.bodyText = in.readString();
         this.description = in.readString();
         this.journeyId = in.readString();
-        this.userId = in.readString();
+        this.creatorId = in.readString();
         this.publish = (Boolean) in.readValue(Boolean.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class User implements Parcelable {
 
-    private String name;
+    private String userName;
     private String email;
     private String goal;
     private String userId;
@@ -98,12 +98,12 @@ public class User implements Parcelable {
 
 
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String name) {
+        this.userName = name;
     }
 
     public String getEmail() {
@@ -138,7 +138,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
+        dest.writeString(this.userName);
         dest.writeString(this.email);
         dest.writeString(this.goal);
         dest.writeString(this.userId);
@@ -173,7 +173,7 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
-        this.name = in.readString();
+        this.userName = in.readString();
         this.email = in.readString();
         this.goal = in.readString();
         this.userId = in.readString();

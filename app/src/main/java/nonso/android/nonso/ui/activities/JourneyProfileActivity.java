@@ -1,9 +1,7 @@
 package nonso.android.nonso.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.design.internal.NavigationMenu;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -116,6 +113,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         public boolean onMenuItemSelected(MenuItem menuItem) {
 
             Step step = new Step();
+            String creatorId = step.getCreatorId();
             switch (menuItem.getItemId()){
                 case R.id.fab_menu_add_text:
                     Intent intent = new Intent(getBaseContext(), CreateStepTextActivity.class);
