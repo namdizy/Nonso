@@ -47,7 +47,6 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     private OnProfileJourneysListInteractionListener mListener;
 
     private FirebaseAuth mAuth;
-    private DocumentReference mUserRef;
     private FirebaseUser mUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -55,8 +54,8 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     private JourneysAdapter journeysAdapter;
     private RecyclerView.LayoutManager journeysLayoutManager;
 
-    private static final String DATABASE_COLLECTION_USERS = "users/";
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
+    private static final String JOURNEYS_SAVED_STATE = "journeys_saved_state";
 
     public ProfileJourneysListFragment() {
         // Required empty public constructor
@@ -79,13 +78,18 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         journeysAdapter = new JourneysAdapter(getContext(), this);
         mJourneysRecyclerView.setAdapter(journeysAdapter);
 
-        getUserJourneys();
+        if(savedInstanceState != null){
+            mJourneys =  savedInstanceState.getParcelableArrayList(JOURNEYS_SAVED_STATE);
+            journeysAdapter.setJourneysData(mJourneys);
+        }else{
+            getUserJourneys();
+        }
+
         return view;
     }
 
 
     private void getUserJourneys(){
-
         db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -103,14 +107,6 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
                 }
                 }
             });
-
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.OnProfileJourneysListInteractionListener(uri);
-        }
     }
 
     @Override
@@ -132,7 +128,9 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
     @Override
     public void onJourneyItemClick(Journey journey) {
-
+        if (mListener != null) {
+            mListener.journeysListInteractionListener(journey);
+        }
     }
 
     /**
@@ -147,6 +145,14 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
      */
     public interface OnProfileJourneysListInteractionListener {
         // TODO: Update argument type and name
-        void OnProfileJourneysListInteractionListener(Uri uri);
+        void journeysListInteractionListener(Journey journey);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(JOURNEYS_SAVED_STATE, mJourneys);
     }
 }

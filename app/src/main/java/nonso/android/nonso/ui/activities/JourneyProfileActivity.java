@@ -53,6 +53,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
     private final String STEP_EXTRA_DATA = "step_extra";
     private final String JOURNEY_PREFERENCE_KEY = "journey_pref";
+    private final String JOURNEY_EXTRA_DATA = "journey_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
                 case R.id.fab_menu_add_text:
                     Intent intent = new Intent(getBaseContext(), CreateStepTextActivity.class);
                     intent.putExtra(STEP_EXTRA_DATA, step);
+                    intent.putExtra(JOURNEY_EXTRA_DATA, mJourney);
                     startActivity(intent);
                     break;
                 case R.id.fab_menu_add_photo:

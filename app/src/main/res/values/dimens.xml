@@ -9,6 +9,7 @@
     <dimen name="margin_0dp">0dp</dimen>
     <dimen name="card_h6">21sp</dimen>
     <dimen name="card_body_text_size">17sp</dimen>
+    <dimen name="text_padding">3dp</dimen>
 
     <!-- LOGIN AND SIGN UP PAGES -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

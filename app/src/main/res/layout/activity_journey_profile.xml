@@ -2,11 +2,8 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/journey_page_appbar"
         android:layout_width="match_parent"
@@ -14,7 +11,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -33,19 +29,6 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" >
-
-                <Button
-                    android:id="@+id/discover_search_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/journeys"
-                    android:drawablePadding="10dp"
-                    android:textAllCaps="false"
-                    android:gravity="center"
-                    android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_search_light"
-                    android:textSize="22sp"/>
-
 
                 <ImageButton
                     android:id="@+id/btn_journey_settings"

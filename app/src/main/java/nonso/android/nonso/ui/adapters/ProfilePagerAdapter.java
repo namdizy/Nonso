@@ -4,10 +4,12 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+
 import nonso.android.nonso.ui.fragments.ProfileFollowingJourneysListFragment;
 import nonso.android.nonso.ui.fragments.ProfileJourneysListFragment;
 
-public class ProfilePagerAdapter extends FragmentPagerAdapter {
+public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
     private Context mContext;
 
     public ProfilePagerAdapter(FragmentManager fm, Context context){

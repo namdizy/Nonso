@@ -13,8 +13,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,6 +30,7 @@ import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 import com.tangxiaolv.telegramgallery.GalleryActivity;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -112,7 +116,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                         String journeyId = documentReference.getId();
 
                         if(mJourney.getProfileImage() != null){
-                            uploadImage(journeyId, mProgressbar);
+                            uploadImage(journeyId);
                         }
                         updateUser(journeyId, mProgressbar);
                     }
@@ -125,35 +129,42 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                 });
     }
 
-    private void uploadImage(final String journeyId, final LinearLayout progressbar){
+    private void uploadImage(final String journeyId){
 
         mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET  +journeyId+ "_journey_profile_image"+ ".jpg");
-        mProfileImageRef.putFile(Uri.parse(mJourney.getProfileImage()))
-            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        Uri uri = Uri.fromFile(new File(mJourney.getProfileImage()));
+        mProfileImageRef.putFile(uri)
+            .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getUploadSessionUri();
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return mProfileImageRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
 
                     DocumentReference journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).document(journeyId);
-                    journeyRef.update("profileImage", downloadUrl.toString())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                progressbar.setVisibility(View.GONE);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error updating document", e);
-                            }
-                        });
+                    journeyRef.update("profileImage", downloadUri.toString())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error updating document", e);
+                        }
+                    });
+                } else {
+                    Log.w(TAG, "Error updating document");
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w(TAG, "Error adding file to document", e);
-                }
-            });
+            }
+        });
     }
     private void updateUser(final String journeyId, final LinearLayout progressbar){
         final Context context = this;

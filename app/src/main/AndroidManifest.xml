@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nonso.android.nonso">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -71,21 +70,27 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
-        <activity android:name=".ui.activities.CreateStepTextActivity"
+        <activity
+            android:name=".ui.activities.CreateStepTextActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-
-        <activity android:name=".ui.activities.SearchActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activities.CreateStepImageActivity"
+        <activity
+            android:name=".ui.activities.SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.CreateStepImageActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
         <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
+        <activity android:name=".ui.activities.ImageViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

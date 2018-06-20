@@ -92,10 +92,10 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         };
 
         holder.mJourneyImage.setTag(target);
-        Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.image_view_placeholder)
-                .error(R.drawable.image_view_placeholder).into(target);
 //        Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.image_view_placeholder)
-//                .error(R.drawable.image_view_placeholder).into(holder.mJourneyImage);
+//                .error(R.drawable.image_view_placeholder).into(target);
+        Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.image_view_placeholder)
+                .error(R.drawable.image_view_placeholder).into(holder.mJourneyImage);
     }
 
     @Override

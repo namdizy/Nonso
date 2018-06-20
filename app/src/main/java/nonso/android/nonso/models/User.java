@@ -20,8 +20,8 @@ public class User implements Parcelable {
     private Map<String, Boolean> subscribedJourneys;
     private Map<String, Boolean> followingUsers;
     private Map<String, Boolean> followersUsers;
-    private Date createdAt;
     @ServerTimestamp
+    private Date createdAt;
     private Date updatedAt;
 
     public Date getCreatedAt() {

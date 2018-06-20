@@ -141,14 +141,13 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        }else if(!firebaseUser.isEmailVerified()){
+        }else if(firebaseUser != null && !firebaseUser.isEmailVerified()){
             mProgressBarContainer.setVisibility(View.GONE);
             Toast.makeText(getBaseContext(), "Login failed: Please Verify your email", Toast.LENGTH_LONG).show();
             mLoginBtn.setEnabled(true);
         }
         else{
             mProgressBarContainer.setVisibility(View.GONE);
-            Toast.makeText(getBaseContext(), "Login failed: Incorrect username or password", Toast.LENGTH_LONG).show();
             mLoginBtn.setEnabled(true);
             return;
         }
