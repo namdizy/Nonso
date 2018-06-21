@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_more_horiz_dark"
+                android:src="@drawable/ic_more_dark"
                 android:background="@drawable/transparent"/>
 
             <ImageView
@@ -41,7 +41,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="48dp"
                 android:layout_toEndOf="@id/profile_journey_item_image"
                 android:textSize="24sp" />
 

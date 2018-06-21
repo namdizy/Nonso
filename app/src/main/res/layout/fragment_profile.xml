@@ -176,6 +176,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
+        android:scaleType="center"
         android:color="@color/colorAccent"
         android:src="@drawable/ic_create_light"
         />

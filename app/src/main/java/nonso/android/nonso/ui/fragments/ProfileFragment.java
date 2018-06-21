@@ -1,8 +1,11 @@
 package nonso.android.nonso.ui.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,7 +16,10 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -127,6 +133,17 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+                int cx = mCreateFab.getWidth()/2;
+                int cy = mCreateFab.getHeight()/2;
+                float radius = (float)Math.hypot(cx, cy);
+                switch (position){
+                    case 0:
+                        showFab(cx, cy, radius);
+                        break;
+                    case 1:
+                        hideFab(cx, cy, radius);
+                        break;
+                }
             }
 
             @Override
@@ -138,6 +155,44 @@ public class ProfileFragment extends Fragment {
         Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
                 .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
     }
+
+
+    public void showFab(int cx, int cy, float finalRadius){
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(mCreateFab, cx, cy, 0, finalRadius);
+            mCreateFab.setVisibility(View.VISIBLE);
+            anim.setDuration(400);
+            anim.start();
+        }else{
+            mCreateFab.setVisibility(View.VISIBLE);
+        }
+
+
+    }
+    public void hideFab(int cx, int cy, float endRadius){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(mCreateFab, cx, cy, endRadius, 0);
+
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    mCreateFab.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            anim.setDuration(400);
+            anim.start();
+        }else{
+            mCreateFab.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
 
     private ListenerRegistration addListenerUserListener(){
         return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
