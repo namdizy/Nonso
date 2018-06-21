@@ -76,11 +76,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, -1);
-
-            if(menuItem > -1){
-                fragmentSelect(item);
-            }
+            fragmentSelect(item);
             return true;
 
         }
@@ -93,12 +89,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
 
         Fragment fragment = null;
-        SharedPreferences.Editor editor = pref.edit();
         int index = mBottomNavigationView.getMenuItemPosition(item);
-        editor.putInt(ITEM_PREFERENCE_KEY, index);
-        editor.apply();
-
-        //Fragment frJourneys = manager.findFragmentByTag(String.valueOf(index));
 
         switch (item.getItemId()){
             case R.id.menu_home:

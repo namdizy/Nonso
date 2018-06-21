@@ -33,7 +33,7 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String DATABASE_COLLECTION_USERS = "users/";
-    private final String TAG = this.getLocalClassName();
+    private final String TAG = DialogEditGoalsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,7 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.v(TAG, "Success: Updated user goal");
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
