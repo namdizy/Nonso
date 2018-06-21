@@ -82,6 +82,8 @@ dependencies {
     //text editor KRichEditor
     implementation 'com.github.daothanhduy305:KRichEditor:-SNAPSHOT'
 
+    //credit Startup image By Nikita Golubev from flaticon
+
 }
 
 apply plugin: 'com.google.gms.google-services'

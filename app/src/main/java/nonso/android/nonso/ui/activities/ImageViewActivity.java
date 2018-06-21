@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -11,6 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import nonso.android.nonso.R;
 
 public class ImageViewActivity extends AppCompatActivity {
@@ -34,5 +36,10 @@ public class ImageViewActivity extends AppCompatActivity {
             Picasso.with(this).load(imageURL).placeholder(R.drawable.profile_image_placeholder)
                     .error(R.drawable.profile_image_placeholder).into(mImageView);
         }
+    }
+
+    @OnClick(R.id.image_View_close)
+    public void onCloseClick(View view){
+        finish();
     }
 }
