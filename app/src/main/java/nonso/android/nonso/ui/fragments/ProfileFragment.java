@@ -55,7 +55,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
+import nonso.android.nonso.ui.activities.DialogEditGoalsActivity;
 import nonso.android.nonso.ui.activities.ImageViewActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.ui.adapters.ProfilePagerAdapter;
@@ -71,12 +73,14 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_viewPager) ViewPager mViewPager;
     @BindView(R.id.profile_image) ImageView mUserProfileImage;
     @BindView(R.id.profile_username) TextView mUsername;
+    @BindView(R.id.profile_goals) TextView mUserGoals;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private StorageReference mStorageRef;
     private StorageReference mProfileImageRef;
     private DocumentReference mUserRef;
+    private User mUserData;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
@@ -130,7 +134,6 @@ public class ProfileFragment extends Fragment {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
-
             @Override
             public void onPageSelected(int position) {
                 int cx = mCreateFab.getWidth()/2;
@@ -206,7 +209,9 @@ public class ProfileFragment extends Fragment {
                         ? "Local" : "Server";
                 if(snapshot != null && snapshot.exists()){
                     Log.d(TAG, source + " data: " + snapshot.getData());
+                    mUserData = snapshot.toObject(User.class);
 
+                    mUserGoals.setText(mUserData.getGoal());
                 }else{
 
                 }
@@ -244,6 +249,13 @@ public class ProfileFragment extends Fragment {
 
         Pix.start(this,
                 PROFILE_IMAGE_REQUEST_CODE);
+    }
+
+    @OnClick(R.id.profile_edit_btn)
+    public void onEditGoalsClick(View view){
+
+        Intent intent = new Intent(getContext(), DialogEditGoalsActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -348,7 +360,6 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-
         registration.remove();
         super.onDestroy();
     }

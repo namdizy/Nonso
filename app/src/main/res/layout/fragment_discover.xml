@@ -29,7 +29,7 @@
                 android:gravity="center"
                 android:background="@android:color/transparent"
                 android:drawableStart="@drawable/ic_search_light"
-                android:textSize="@dimen/card_h6"/>
+                android:textSize="@dimen/h3"/>
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout

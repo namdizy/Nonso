@@ -82,4 +82,8 @@
     <string name="people">People</string>
     <string name="journeys">Journeys</string>
 
+    <!--Dialog-->
+    <string name="dialog_title">Update goals</string>
+    <string name="dialog_update">Update</string>
+    <string name="discard">Discard</string>
 </resources>
