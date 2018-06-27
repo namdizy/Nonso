@@ -4,46 +4,70 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin_8dp">
 
     <android.support.v7.widget.CardView
         android:id="@+id/profile_journey_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_5dp"
-        app:cardCornerRadius="2dp">
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:layout_marginStart="@dimen/margin_8dp"
+        app:cardCornerRadius="@dimen/margin_10dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_journey_creator_image"
+                android:layout_width="@dimen/small_image_size"
+                android:layout_height="@dimen/small_image_size"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:src="@drawable/profile_image_placeholder"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
 
+            <TextView
+                android:id="@+id/profile_journey_creator_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/margin_8dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/profile_journey_creator_image"/>
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_more_dark"
+                android:layout_marginTop="@dimen/margin_8dp"
                 android:background="@drawable/transparent"/>
 
             <ImageView
                 android:id="@+id/profile_journey_item_image"
-                android:layout_width="100dp"
-                android:layout_height="110dp"
+                android:layout_width="match_parent"
+                android:layout_height="194dp"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:layout_below="@id/profile_journey_creator_image"
                 android:scaleType="centerCrop" />
             <TextView
                 android:id="@+id/profile_journey_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="48dp"
-                android:layout_toEndOf="@id/profile_journey_item_image"
-                android:textSize="24sp" />
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:fontFamily="@font/work_sans_regular"
+                android:layout_below="@id/profile_journey_item_image"
+                android:textSize="@dimen/h5"
+
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/profile_journey_item_description"
@@ -53,13 +77,10 @@
                 android:layout_below="@id/profile_journey_item_title"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/profile_journey_item_image"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:textSize="14sp" />
-
-
-
+                android:fontFamily="@font/work_sans_regular"
+                android:textSize="@dimen/h7" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

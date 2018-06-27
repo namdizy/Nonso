@@ -38,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.CreatedBy;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
@@ -106,8 +107,12 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     public void onCompleted(View completeButton) {
         final LinearLayout mProgressbar = (LinearLayout) findViewById(R.id.create_journey_progress_bar_container);
         mProgressbar.setVisibility(View.VISIBLE);
+        CreatedBy createdBy = new CreatedBy();
 
-        mJourney.setUserId(mUserRef.getId());
+        createdBy.setId(mUserRef.getId());
+        //createdBy.setImageUrl(mUserRef.);
+
+        mJourney.setCreatedBy(createdBy);
         db.collection(DATABASE_COLLECTION_JOURNEYS)
                 .add(mJourney)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

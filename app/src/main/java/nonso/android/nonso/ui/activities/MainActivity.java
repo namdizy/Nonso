@@ -16,6 +16,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.fxn.pix.Pix;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.tangxiaolv.telegramgallery.GalleryActivity;
 
@@ -26,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.fragments.DiscoverFragment;
 import nonso.android.nonso.ui.fragments.JourneysFragment;
 import nonso.android.nonso.ui.fragments.NotificationsFragment;
@@ -39,18 +45,25 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         , ProfileFollowingJourneysListFragment.OnProfileFollowingJourneysInteractionListener,
         ProfileJourneysListFragment.OnProfileJourneysListInteractionListener{
 
-    private static final String TAG = "MainActivity";
+
+    private static final String TAG = MainActivity.class.getSimpleName();
     private SharedPreferences pref;
     private final String ITEM_PREFERENCE_KEY = "menu_item_key";
-    private final String JOURNEY_PREFERENCE_KEY = "journey_pref";
+    private final String JOURNEY_EXTRA_KEY = "journey_extra";
+    private final String USER_EXTRA_KEY = "user_extra";
     private final String TAG_JOURNEY = "journey_tag";
     private final String TAG_PROFILE = "profile_tag";
     private final String TAG_NOTIFICATIONS = "notifications_tag";
     private final String TAG_SEARCH = "search_tag";
 
-    private final int PROFILE_IMAGE_REQUEST_CODE = 101;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private StorageReference mStorageRef;
+    private StorageReference mProfileImageRef;
+    private DocumentReference mUserRef;
+    private User mUserData;
 
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
 
@@ -60,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         mBottomNavigationView.enableShiftingMode(false);
 
@@ -87,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-
         Fragment fragment = null;
         int index = mBottomNavigationView.getMenuItemPosition(item);
 
@@ -107,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
             case R.id.menu_profile:
                 fragment = getSupportFragmentManager().findFragmentByTag(TAG_PROFILE);
                 if(fragment == null){
-                    fragment = new ProfileFragment();
+                    fragment = new ProfileFragment().newInstance(mUser.getUid());
                 }
                 break;
             case R.id.menu_search:
@@ -133,10 +148,9 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
     @Override
     public void journeysListInteractionListener(Journey journey) {
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(JOURNEY_PREFERENCE_KEY, new JourneyUtils().loadStringFromJourney(journey));
-        editor.apply();
         Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
+        intent.putExtra(JOURNEY_EXTRA_KEY, journey);
+        intent.putExtra(USER_EXTRA_KEY, "TEST");
         startActivity(intent);
     }
     @Override
