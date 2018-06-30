@@ -30,7 +30,8 @@ ext {
     supportLibVersion = '27.1.1'
     butterKnifeVersion = '8.8.1'
     schematicVersion = '0.7.0'
-    lifecycle_version = "1.1.1"
+    lifecycleVersion = "1.1.1"
+    daggerVersion = "2.13"
 }
 
 dependencies {
@@ -46,9 +47,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation  "com.google.dagger:dagger:2.13"
-    annotationProcessor "com.google.dagger:dagger-compiler:2.13"
+    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.google.firebase:firebase-auth:16.0.2"
