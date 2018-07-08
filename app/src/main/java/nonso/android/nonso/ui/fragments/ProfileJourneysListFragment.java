@@ -17,20 +17,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-
-import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,8 +46,9 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
     private OnProfileJourneysListInteractionListener mListener;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    ListenerRegistration registration;
 
     private ArrayList<Journey> mJourneys = new ArrayList<>();
     private JourneysAdapter journeysAdapter;
@@ -62,29 +56,9 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
     private static final String JOURNEYS_SAVED_STATE = "journeys_saved_state";
-    public static final String ARG_USER_KEY = "user_data";
-    public static final String USER_ID_STATE = "user_id_state";
 
-    private User mUser;
-
-
-    public DescriptionStepperFragment newInstance(User user) {
-        DescriptionStepperFragment fragment = new DescriptionStepperFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_USER_KEY, user);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public ProfileJourneysListFragment() {}
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        if (getArguments() != null) {
-            mUser = getArguments().getParcelable(ARG_USER_KEY);
-        }
+    public ProfileJourneysListFragment() {
+        // Required empty public constructor
     }
 
     @Override
@@ -94,6 +68,8 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         View view =  inflater.inflate(R.layout.fragment_profile_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         journeysLayoutManager = new LinearLayoutManager(getContext());
         mJourneysRecyclerView.setLayoutManager(journeysLayoutManager);
@@ -104,7 +80,6 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
         if(savedInstanceState != null){
             mJourneys =  savedInstanceState.getParcelableArrayList(JOURNEYS_SAVED_STATE);
-            mUser = savedInstanceState.getParcelable(USER_ID_STATE);
             journeysAdapter.setJourneysData(mJourneys);
         }else{
             getUserJourneys();
@@ -115,31 +90,23 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
 
     private void getUserJourneys(){
-         registration = db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId",mUser.getUserId())
-            .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                    @Nullable FirebaseFirestoreException e) {
-                    if(e !=null){
-                        Log.w(TAG, "Error getting Journeys, ", e );
-                    }
-
-                    for(DocumentChange change: queryDocumentSnapshots.getDocumentChanges()){
-                        if(change.getType() == DocumentChange.Type.ADDED){
-                            Journey temp = change.getDocument().toObject(Journey.class);
-                            temp.setJourneyId(change.getDocument().getId());
-                            mJourneys.add(temp);
-                        }
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Journey temp = document.toObject(Journey.class);
+                        temp.setJourneyId(document.getId());
+                        mJourneys.add(temp);
                     }
                     journeysAdapter.setJourneysData(mJourneys);
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
                 }
             });
-    }
-
-    private ListenerRegistration journeyChangeListener(){
-
-
-        return null;
     }
 
     @Override
@@ -157,7 +124,6 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        registration.remove();
     }
 
     @Override
@@ -188,6 +154,5 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         super.onSaveInstanceState(outState);
 
         outState.putParcelableArrayList(JOURNEYS_SAVED_STATE, mJourneys);
-        outState.putParcelable(USER_ID_STATE, mUser);
     }
 }

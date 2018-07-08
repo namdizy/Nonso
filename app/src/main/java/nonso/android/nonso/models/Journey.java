@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ public class Journey implements Parcelable {
     private String journeyId;
     private String name;
     private String description;
+    private String userId;
     private String profileImage;
     private boolean permissions;
     private boolean subscriptions;
@@ -25,16 +27,8 @@ public class Journey implements Parcelable {
     private Map<String, Boolean> blockedList;
     private Map<String, Boolean> categories;
     private Map<String, Boolean> steps;
-    private CreatedBy createdBy;
     private Date createdAt;
     @ServerTimestamp private Date updatedAt;
-
-    public Journey(){
-        this.subscribers = new HashMap<>();
-        this.blockedList = new HashMap<>();
-        this.categories = new HashMap<>();
-        this.steps = new HashMap<>();
-    }
 
     public Map<String, Boolean> getCategories() {
         return categories;
@@ -66,6 +60,14 @@ public class Journey implements Parcelable {
 
     public void setBlockedList(Map<String, Boolean> blockedList) {
         this.blockedList = blockedList;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public boolean isDisplayFollowers() {
@@ -116,6 +118,13 @@ public class Journey implements Parcelable {
         this.tier3 = tier3;
     }
 
+    public Journey(){
+        this.subscribers = new HashMap<>();
+        this.blockedList = new HashMap<>();
+        this.categories = new HashMap<>();
+        this.steps = new HashMap<>();
+    }
+
     public String getName() {
         return name;
     }
@@ -163,14 +172,6 @@ public class Journey implements Parcelable {
         this.updatedAt = updatedAt;
     }
 
-    public CreatedBy getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(CreatedBy createdBy) {
-        this.createdBy = createdBy;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -181,6 +182,7 @@ public class Journey implements Parcelable {
         dest.writeString(this.journeyId);
         dest.writeString(this.name);
         dest.writeString(this.description);
+        dest.writeString(this.userId);
         dest.writeString(this.profileImage);
         dest.writeByte(this.permissions ? (byte) 1 : (byte) 0);
         dest.writeByte(this.subscriptions ? (byte) 1 : (byte) 0);
@@ -208,7 +210,6 @@ public class Journey implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
-        dest.writeParcelable(this.createdBy, flags);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -217,6 +218,7 @@ public class Journey implements Parcelable {
         this.journeyId = in.readString();
         this.name = in.readString();
         this.description = in.readString();
+        this.userId = in.readString();
         this.profileImage = in.readString();
         this.permissions = in.readByte() != 0;
         this.subscriptions = in.readByte() != 0;
@@ -252,7 +254,6 @@ public class Journey implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.steps.put(key, value);
         }
-        this.createdBy = in.readParcelable(CreatedBy.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

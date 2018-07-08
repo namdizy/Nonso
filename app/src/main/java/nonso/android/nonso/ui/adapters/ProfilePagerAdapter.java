@@ -6,25 +6,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.fragments.ProfileFollowingJourneysListFragment;
 import nonso.android.nonso.ui.fragments.ProfileJourneysListFragment;
 
 public class ProfilePagerAdapter extends FragmentStatePagerAdapter {
     private Context mContext;
-    private User mUser;
 
-    public ProfilePagerAdapter(FragmentManager fm, Context context, User user){
+    public ProfilePagerAdapter(FragmentManager fm, Context context){
         super(fm);
         mContext = context;
-        mUser = user;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new ProfileJourneysListFragment().newInstance(mUser);
+                return new ProfileJourneysListFragment();
             case 1:
                 return new ProfileFollowingJourneysListFragment();
             default:
