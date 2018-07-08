@@ -3,9 +3,7 @@ package nonso.android.nonso.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.app.Application;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
@@ -48,7 +46,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
-import nonso.android.nonso.di.ViewModelFactory;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.ImageViewActivity;
@@ -72,7 +69,6 @@ public class ProfileFragment extends Fragment {
     private StorageReference mProfileImageRef;
     private User mUserData;
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
     private UserProfileViewModel viewModel;
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
@@ -110,21 +106,18 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
+        setUp();
         setRetainInstance(true);
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setUp();
-    }
     private void setUp(){
 
         //mStorageRef = FirebaseStorage.getInstance().getReference();
         //mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUserData.getUserId() + "_user_profile_image"+ ".jpg");
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserProfileViewModel.class);
+
+        viewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
         viewModel.init(mUserId);
 
 

@@ -16,7 +16,6 @@ public class Step implements Parcelable {
     private StepType stepType;
     private Map<String, Boolean> likes;
     private Map<String, Boolean> imageUrls;
-    private CreatedBy createdBy;
     private String videoUrl;
     private String bodyText;
     private String description;
@@ -30,14 +29,6 @@ public class Step implements Parcelable {
     public Step(){
         this.likes = new HashMap<>();
         this.imageUrls = new HashMap<>();
-    }
-
-    public CreatedBy getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(CreatedBy createdBy) {
-        this.createdBy = createdBy;
     }
 
     public String getTitle() {
@@ -164,7 +155,6 @@ public class Step implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
-        dest.writeParcelable(this.createdBy, flags);
         dest.writeString(this.videoUrl);
         dest.writeString(this.bodyText);
         dest.writeString(this.description);
@@ -194,7 +184,6 @@ public class Step implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.imageUrls.put(key, value);
         }
-        this.createdBy = in.readParcelable(CreatedBy.class.getClassLoader());
         this.videoUrl = in.readString();
         this.bodyText = in.readString();
         this.description = in.readString();
