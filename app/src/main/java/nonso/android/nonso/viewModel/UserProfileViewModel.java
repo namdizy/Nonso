@@ -15,8 +15,8 @@ public class UserProfileViewModel extends ViewModel {
     private LiveData<User> mObservableUser;
 
     @Inject
-    public UserProfileViewModel(UserRepository userRepository){
-        this.mUserRepository = userRepository;
+    public UserProfileViewModel(@NonNull UserRepository userRepo){
+        this.mUserRepository = userRepo;
     }
 
 
