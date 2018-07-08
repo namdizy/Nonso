@@ -12,20 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -94,7 +85,6 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         View view =  inflater.inflate(R.layout.fragment_profile_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
-
         journeysLayoutManager = new LinearLayoutManager(getContext());
         mJourneysRecyclerView.setLayoutManager(journeysLayoutManager);
         mJourneysRecyclerView.setHasFixedSize(true);
@@ -137,8 +127,6 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     }
 
     private ListenerRegistration journeyChangeListener(){
-
-
         return null;
     }
 

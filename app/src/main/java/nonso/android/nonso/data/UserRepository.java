@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,16 +31,16 @@ public class UserRepository {
         mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(userId);
         final MutableLiveData<User> data = new MutableLiveData<>();
 
-        mUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        mUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
-                    Log.v(TAG, "Success got users: " + task.getResult().getData());
-                    data.setValue(doc.toObject(User.class));
-                }else{
-                    Log.w(TAG, "Document get failed: ", task.getException());
-                }
+            public void onSuccess(DocumentSnapshot snapshot) {
+                Log.v(TAG, "Success got users: " + snapshot.toObject(User.class));
+                data.setValue(snapshot.toObject(User.class));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Document get failed: ", e);
             }
         });
         return data;

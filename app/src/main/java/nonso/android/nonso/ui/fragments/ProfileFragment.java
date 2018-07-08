@@ -9,6 +9,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,6 +48,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import nonso.android.nonso.App;
 import nonso.android.nonso.R;
 import nonso.android.nonso.di.ViewModelFactory;
 import nonso.android.nonso.models.User;
@@ -124,9 +126,12 @@ public class ProfileFragment extends Fragment {
         //mStorageRef = FirebaseStorage.getInstance().getReference();
         //mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUserData.getUserId() + "_user_profile_image"+ ".jpg");
 
+        
+
+       // ((App)getApplication()).getAppComponent().inject(this);
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserProfileViewModel.class);
         viewModel.init(mUserId);
-
 
         viewModel.getUser().observe(this, new Observer<User>() {
             @Override
@@ -138,6 +143,7 @@ public class ProfileFragment extends Fragment {
 
     private void updateUI(User user){
         mUserData = user;
+        Log.v(TAG, "User: " +user);
 
         mUsername.setText(user.getUserName());
 

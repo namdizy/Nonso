@@ -1,25 +1,24 @@
 package nonso.android.nonso.di;
 
 import android.app.Application;
+import android.content.Context;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(includes = ViewModelModule.class)
 public class AppModule {
-    Application mApplication;
 
-
-    public AppModule(Application application){
-        mApplication = application;
-    }
-
+    public AppModule(){}
 
     @Provides
     @Singleton
-    Application providesApplication(){
-        return mApplication;
+    @ApplicationContext
+    Context provideContext(Application application){
+        return application;
     }
+
+
 }

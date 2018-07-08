@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-
 @Singleton
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
@@ -20,7 +19,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         this.creators = viewModels;
     }
 
-    @NonNull
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         Provider<? extends ViewModel> creator = creators.get(modelClass);

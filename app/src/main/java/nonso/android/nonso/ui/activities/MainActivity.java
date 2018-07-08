@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
             case R.id.menu_profile:
                 fragment = getSupportFragmentManager().findFragmentByTag(TAG_PROFILE);
                 if(fragment == null){
-                    fragment = new ProfileFragment().newInstance(mUser.getUid());
+                    fragment = new ProfileFragment().newInstance(mUser.getEmail());
                 }
                 break;
             case R.id.menu_search:
