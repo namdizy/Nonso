@@ -23,12 +23,21 @@ public class Journey implements Parcelable {
     private boolean tier2;
     private boolean tier3;
     private boolean displayFollowers;
+    private CreatedBy createdBy;
     private Map<String, Boolean> subscribers;
     private Map<String, Boolean> blockedList;
     private Map<String, Boolean> categories;
     private Map<String, Boolean> steps;
     private Date createdAt;
     @ServerTimestamp private Date updatedAt;
+
+
+    public Journey(){
+        this.subscribers = new HashMap<>();
+        this.blockedList = new HashMap<>();
+        this.categories = new HashMap<>();
+        this.steps = new HashMap<>();
+    }
 
     public Map<String, Boolean> getCategories() {
         return categories;
@@ -78,6 +87,14 @@ public class Journey implements Parcelable {
         this.displayFollowers = displayFollowers;
     }
 
+    public CreatedBy getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(CreatedBy createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public boolean isPermissions() {
         return permissions;
     }
@@ -116,13 +133,6 @@ public class Journey implements Parcelable {
 
     public void setTier3(boolean tier3) {
         this.tier3 = tier3;
-    }
-
-    public Journey(){
-        this.subscribers = new HashMap<>();
-        this.blockedList = new HashMap<>();
-        this.categories = new HashMap<>();
-        this.steps = new HashMap<>();
     }
 
     public String getName() {
@@ -190,6 +200,7 @@ public class Journey implements Parcelable {
         dest.writeByte(this.tier2 ? (byte) 1 : (byte) 0);
         dest.writeByte(this.tier3 ? (byte) 1 : (byte) 0);
         dest.writeByte(this.displayFollowers ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.createdBy, flags);
         dest.writeInt(this.subscribers.size());
         for (Map.Entry<String, Boolean> entry : this.subscribers.entrySet()) {
             dest.writeString(entry.getKey());
@@ -226,6 +237,7 @@ public class Journey implements Parcelable {
         this.tier2 = in.readByte() != 0;
         this.tier3 = in.readByte() != 0;
         this.displayFollowers = in.readByte() != 0;
+        this.createdBy = in.readParcelable(CreatedBy.class.getClassLoader());
         int subscribersSize = in.readInt();
         this.subscribers = new HashMap<String, Boolean>(subscribersSize);
         for (int i = 0; i < subscribersSize; i++) {

@@ -22,9 +22,9 @@ public class Step implements Parcelable {
     private String journeyId;
     private String creatorId;
     private Boolean publish;
+    private CreatedBy createdBy;
     private Date createdAt;
-    @ServerTimestamp
-    private Date updatedAt;
+    @ServerTimestamp private Date updatedAt;
 
     public Step(){
         this.likes = new HashMap<>();
@@ -119,6 +119,14 @@ public class Step implements Parcelable {
         StepId = stepId;
     }
 
+    public CreatedBy getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(CreatedBy createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -161,6 +169,7 @@ public class Step implements Parcelable {
         dest.writeString(this.journeyId);
         dest.writeString(this.creatorId);
         dest.writeValue(this.publish);
+        dest.writeParcelable(this.createdBy, flags);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -190,6 +199,7 @@ public class Step implements Parcelable {
         this.journeyId = in.readString();
         this.creatorId = in.readString();
         this.publish = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.createdBy = in.readParcelable(CreatedBy.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();
