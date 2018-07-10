@@ -26,11 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fxn.pix.Pix;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -45,8 +40,7 @@ import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.ImageViewActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.ui.adapters.ProfilePagerAdapter;
-import nonso.android.nonso.data.FirebaseUtils;
-import nonso.android.nonso.viewModel.ProfileViewModel;
+import nonso.android.nonso.viewModel.UserViewModel;
 
 
 public class ProfileFragment extends Fragment {
@@ -104,7 +98,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setUp(){
-        ProfileViewModel viewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        UserViewModel viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         viewModel.init(mUserId);
 
         viewModel.getUserLiveData().observe(this, new Observer<User>() {
@@ -193,29 +187,6 @@ public class ProfileFragment extends Fragment {
         }
 
     }
-
-
-//    private ListenerRegistration addListenerUserListener(){
-//        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
-//                if(e != null){
-//                    Log.w(TAG, "Listen failed,", e);
-//                }
-//
-//                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
-//                        ? "Local" : "Server";
-//                if(snapshot != null && snapshot.exists()){
-//                    Log.d(TAG, source + " data: " + snapshot.getData());
-//                    mUserData = snapshot.toObject(User.class);
-//
-//                    mUserGoals.setText(mUserData.getGoal());
-//                }else{
-//
-//                }
-//            }
-//        });
-//    }
 
     @OnClick(R.id.btn_profile_settings)
     public void onSettingsClick(View view){

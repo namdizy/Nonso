@@ -2,27 +2,14 @@ package nonso.android.nonso.ui.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -30,9 +17,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
-import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
-import nonso.android.nonso.viewModel.ProfileViewModel;
+import nonso.android.nonso.viewModel.UserViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +53,7 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         View view =  inflater.inflate(R.layout.fragment_profile_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
-        ProfileViewModel viewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        UserViewModel viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
 
         journeysLayoutManager = new LinearLayoutManager(getContext());

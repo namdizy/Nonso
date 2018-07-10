@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         mUserId = firebaseUtils.getCurrentUserId();
 
         mBottomNavigationView.enableShiftingMode(false);
+        mBottomNavigationView.setTextVisibility(false);
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(bottomNavigationViewClickListener);
 
