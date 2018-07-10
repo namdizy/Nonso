@@ -1,34 +1,51 @@
 package nonso.android.nonso.data;
 
 import android.arch.lifecycle.LiveData;
-import android.support.annotation.Nullable;
+import android.os.Handler;
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import javax.annotation.Nullable;
 
-public class FirebaseQueryLiveData extends LiveData<DocumentSnapshot> {
+public class FirebaseQueryLiveData extends LiveData<QuerySnapshot> {
+    public static final String TAG = "FbaseQueryLiveData";
 
-    public static final String TAG = FirebaseQueryLiveData.class.getSimpleName();
-    private DocumentReference documentReference;
+    private Query query;
     private final MyValueEventListener listener = new MyValueEventListener();
     private ListenerRegistration listenerRegistration;
 
-    public FirebaseQueryLiveData(DocumentReference documentReference) {
-        this.documentReference = documentReference;
+    private boolean listenerRemovePending = false;
+    private final Handler handler = new Handler();
+
+    public FirebaseQueryLiveData(Query query) {
+        this.query = query;
     }
+
+    private final Runnable removeListener = new Runnable() {
+        @Override
+        public void run() {
+            listenerRegistration.remove();
+            listenerRemovePending = false;
+        }
+    };
 
     @Override
     protected void onActive() {
         super.onActive();
 
         Log.d(TAG, "onActive");
-        if (listenerRegistration == null )
-            listenerRegistration = documentReference.addSnapshotListener(listener);
+        if (listenerRemovePending) {
+            handler.removeCallbacks(removeListener);
+        }
+        else {
+            listenerRegistration = query.addSnapshotListener(listener);
+        }
+        listenerRemovePending = false;
     }
 
     @Override
@@ -36,18 +53,19 @@ public class FirebaseQueryLiveData extends LiveData<DocumentSnapshot> {
         super.onInactive();
 
         Log.d(TAG, "onInactive: ");
-        if (listenerRegistration != null)
-            listenerRegistration.remove();
+        // Listener removal is schedule on a two second delay
+        handler.postDelayed(removeListener, 2000);
+        listenerRemovePending = true;
     }
 
-    private class MyValueEventListener implements EventListener<DocumentSnapshot> {
+    private class MyValueEventListener implements EventListener<QuerySnapshot> {
         @Override
-        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+        public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException e) {
             if (e != null){
-                Log.e(TAG, "Can't listen to doc snapshots: " + documentSnapshot + ":::" + e.getMessage());
+                Log.e(TAG, "Can't listen to query snapshots: " + querySnapshot + ":::" + e.getMessage());
                 return;
             }
-            setValue(documentSnapshot);
+            setValue(querySnapshot);
         }
     }
 }

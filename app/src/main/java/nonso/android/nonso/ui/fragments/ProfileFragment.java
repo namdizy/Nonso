@@ -61,25 +61,14 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_username) TextView mUsername;
     @BindView(R.id.profile_goals) TextView mUserGoals;
 
-    private StorageReference mStorageRef;
-    private StorageReference mProfileImageRef;
-    private DocumentReference mUserRef;
-    private User mUser;
-    private FirebaseUtils firebaseUtils = new FirebaseUtils();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static final String STORAGE_IMAGE_BUCKET = "images/";
     private static final String TAG = ProfileFragment.class.getSimpleName();
-    private static final String METADATA_KEY = "creator_id";
-    private static final String DATABASE_COLLECTION_USERS = "users/";
     private static final String PROFILE_IMAGE_EXTRA = "profile_image_url";
     private static final String UID_KEY = "user_id";
-
-    private ListenerRegistration registration;
 
     private final int PROFILE_IMAGE_REQUEST_CODE = 101;
 
     private String mUserId;
+    private User mUser;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -154,10 +143,11 @@ public class ProfileFragment extends Fragment {
 
 
     private void updateUI(User user){
+        mUser = user;
         mUsername.setText(user.getUserName());
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + user.getUserId() + "_user_profile_image"+ ".jpg");
-        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(user.getEmail());
+        //mStorageRef = FirebaseStorage.getInstance().getReference();
+        //mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + user.getUserId() + "_user_profile_image"+ ".jpg");
+        //mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(user.getEmail());
 
         mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), getContext()));
         mTabLayout.setupWithViewPager(mViewPager);

@@ -1,5 +1,6 @@
 package nonso.android.nonso.ui.fragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
+import nonso.android.nonso.viewModel.ProfileViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,15 +48,12 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
     private OnProfileJourneysListInteractionListener mListener;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private ArrayList<Journey> mJourneys = new ArrayList<>();
     private JourneysAdapter journeysAdapter;
     private RecyclerView.LayoutManager journeysLayoutManager;
 
-    private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
+
     private static final String JOURNEYS_SAVED_STATE = "journeys_saved_state";
 
     public ProfileJourneysListFragment() {
@@ -68,8 +67,8 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         View view =  inflater.inflate(R.layout.fragment_profile_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        ProfileViewModel viewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+
 
         journeysLayoutManager = new LinearLayoutManager(getContext());
         mJourneysRecyclerView.setLayoutManager(journeysLayoutManager);
@@ -82,32 +81,32 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
             mJourneys =  savedInstanceState.getParcelableArrayList(JOURNEYS_SAVED_STATE);
             journeysAdapter.setJourneysData(mJourneys);
         }else{
-            getUserJourneys();
+            //getUserJourneys();
         }
 
         return view;
     }
 
 
-    private void getUserJourneys(){
-        db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Journey temp = document.toObject(Journey.class);
-                        temp.setJourneyId(document.getId());
-                        mJourneys.add(temp);
-                    }
-                    journeysAdapter.setJourneysData(mJourneys);
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-                }
-            });
-    }
+//    private void getUserJourneys(){
+//        db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
+//            .get()
+//            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Journey temp = document.toObject(Journey.class);
+//                        temp.setJourneyId(document.getId());
+//                        mJourneys.add(temp);
+//                    }
+//                    journeysAdapter.setJourneysData(mJourneys);
+//                } else {
+//                    Log.d(TAG, "Error getting documents: ", task.getException());
+//                }
+//                }
+//            });
+//    }
 
     @Override
     public void onAttach(Context context) {
