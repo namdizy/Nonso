@@ -3,49 +3,34 @@ package nonso.android.nonso.ui.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fxn.pix.Pix;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -57,10 +42,11 @@ import butterknife.OnClick;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
-import nonso.android.nonso.ui.activities.DialogEditGoalsActivity;
 import nonso.android.nonso.ui.activities.ImageViewActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.ui.adapters.ProfilePagerAdapter;
+import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.viewModel.ProfileViewModel;
 
 
 public class ProfileFragment extends Fragment {
@@ -75,12 +61,11 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_username) TextView mUsername;
     @BindView(R.id.profile_goals) TextView mUserGoals;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
     private StorageReference mStorageRef;
     private StorageReference mProfileImageRef;
     private DocumentReference mUserRef;
-    private User mUserData;
+    private User mUser;
+    private FirebaseUtils firebaseUtils = new FirebaseUtils();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
@@ -88,19 +73,34 @@ public class ProfileFragment extends Fragment {
     private static final String METADATA_KEY = "creator_id";
     private static final String DATABASE_COLLECTION_USERS = "users/";
     private static final String PROFILE_IMAGE_EXTRA = "profile_image_url";
+    private static final String UID_KEY = "user_id";
 
     private ListenerRegistration registration;
 
     private final int PROFILE_IMAGE_REQUEST_CODE = 101;
 
+    private String mUserId;
+
     public ProfileFragment() {
         // Required empty public constructor
+    }
+
+    public ProfileFragment newInstance(String uid) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString(UID_KEY, uid);
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mUserId = getArguments().getString(UID_KEY);
+        }
     }
 
     @Override
@@ -115,19 +115,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setUp(){
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        ProfileViewModel viewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        viewModel.init(mUserId);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + mUser.getUid() + "_user_profile_image"+ ".jpg");
-        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
-
-        mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), getContext()));
-        mTabLayout.setupWithViewPager(mViewPager);
-
-        mUsername.setText(mUser.getDisplayName());
-
-        registration = addListenerUserListener();
+        viewModel.getUserLiveData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+                updateUI(user);
+            }
+        });
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -154,11 +150,23 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-
-        Picasso.with(getContext()).load(mUser.getPhotoUrl()).placeholder(R.drawable.profile_image_placeholder)
-                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
     }
 
+
+    private void updateUI(User user){
+        mUsername.setText(user.getUserName());
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + user.getUserId() + "_user_profile_image"+ ".jpg");
+        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(user.getEmail());
+
+        mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), getContext()));
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        mUserGoals.setText(user.getGoal());
+
+        Picasso.with(getContext()).load(user.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
+    }
 
     public void showFab(int cx, int cy, float finalRadius){
 
@@ -197,27 +205,27 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private ListenerRegistration addListenerUserListener(){
-        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
-                if(e != null){
-                    Log.w(TAG, "Listen failed,", e);
-                }
-
-                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
-                        ? "Local" : "Server";
-                if(snapshot != null && snapshot.exists()){
-                    Log.d(TAG, source + " data: " + snapshot.getData());
-                    mUserData = snapshot.toObject(User.class);
-
-                    mUserGoals.setText(mUserData.getGoal());
-                }else{
-
-                }
-            }
-        });
-    }
+//    private ListenerRegistration addListenerUserListener(){
+//        return mUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(DocumentSnapshot snapshot, FirebaseFirestoreException e) {
+//                if(e != null){
+//                    Log.w(TAG, "Listen failed,", e);
+//                }
+//
+//                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
+//                        ? "Local" : "Server";
+//                if(snapshot != null && snapshot.exists()){
+//                    Log.d(TAG, source + " data: " + snapshot.getData());
+//                    mUserData = snapshot.toObject(User.class);
+//
+//                    mUserGoals.setText(mUserData.getGoal());
+//                }else{
+//
+//                }
+//            }
+//        });
+//    }
 
     @OnClick(R.id.btn_profile_settings)
     public void onSettingsClick(View view){
@@ -238,8 +246,8 @@ public class ProfileFragment extends Fragment {
     public void onProfileImageClick(){
         Intent intent = new Intent(getContext(), ImageViewActivity.class);
 
-        if(mUser.getPhotoUrl() != null){
-            intent.putExtra(PROFILE_IMAGE_EXTRA, mUser.getPhotoUrl().toString());
+        if(mUser.getImageUri() != null){
+            intent.putExtra(PROFILE_IMAGE_EXTRA, mUser.getImageUri().toString());
         }
         getActivity().startActivity(intent);
     }
@@ -251,12 +259,12 @@ public class ProfileFragment extends Fragment {
                 PROFILE_IMAGE_REQUEST_CODE);
     }
 
-    @OnClick(R.id.profile_edit_btn)
-    public void onEditGoalsClick(View view){
-
-        Intent intent = new Intent(getContext(), DialogEditGoalsActivity.class);
-        startActivity(intent);
-    }
+//    @OnClick(R.id.profile_edit_btn)
+//    public void onEditGoalsClick(View view){
+//
+//        Intent intent = new Intent(getContext(), DialogEditGoalsActivity.class);
+//        startActivity(intent);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -279,88 +287,87 @@ public class ProfileFragment extends Fragment {
 
         Uri file = Uri.fromFile(new File(uri.getPath()));
 
-        upLoadImage(file);
+        //upLoadImage(file);
 
     }
 
-    private void upLoadImage(Uri file){
-        mProfileImageRef.putFile(file).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-                return mProfileImageRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    updateUserAuth(downloadUri);
-                } else {
-                    Log.w(TAG, "Error updating document");
-                }
-            }
-        });
-    }
+//    private void upLoadImage(Uri file){
+//        mProfileImageRef.putFile(file).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//            @Override
+//            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                if (!task.isSuccessful()) {
+//                    throw task.getException();
+//                }
+//                return mProfileImageRef.getDownloadUrl();
+//            }
+//        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Uri> task) {
+//                if (task.isSuccessful()) {
+//                    Uri downloadUri = task.getResult();
+//                    updateUserAuth(downloadUri);
+//                } else {
+//                    Log.w(TAG, "Error updating document");
+//                }
+//            }
+//        });
+//    }
 
-    private void updateUserAuth(final Uri uri){
+//    private void updateUserAuth(final Uri uri){
+//
+//        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//            .setPhotoUri(uri)
+//            .build();
+//        mUser.updateProfile(profileUpdates)
+//            .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Void> task) {
+//                    if (task.isSuccessful()) {
+//                        updateUser(uri);
+//                    }
+//                }
+//            });
+//    }
+//    private void updateUser(Uri uri){
+//
+//        mUserRef.update("imageUri", uri.toString())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        updateMetaData();
+//                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error updating document", e);
+//                    }
+//                });
+//    }
 
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-            .setPhotoUri(uri)
-            .build();
-        mUser.updateProfile(profileUpdates)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        updateUser(uri);
-                    }
-                }
-            });
-    }
-    private void updateUser(Uri uri){
-
-        mUserRef.update("imageUri", uri.toString())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        updateMetaData();
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
-    }
-
-    private void updateMetaData(){
-
-        StorageMetadata metadata = new StorageMetadata.Builder()
-            .setCustomMetadata(METADATA_KEY, mUser.getUid())
-            .build();
-        mProfileImageRef.updateMetadata(metadata)
-            .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-                @Override
-                public void onSuccess(StorageMetadata storageMetadata) {
-                    Log.d(TAG, "User profile metadata updated.");
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "Metadata update failed.");
-                }
-            });
-    }
+//    private void updateMetaData(){
+//
+//        StorageMetadata metadata = new StorageMetadata.Builder()
+//            .setCustomMetadata(METADATA_KEY, mUser.getUid())
+//            .build();
+//        mProfileImageRef.updateMetadata(metadata)
+//            .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+//                @Override
+//                public void onSuccess(StorageMetadata storageMetadata) {
+//                    Log.d(TAG, "User profile metadata updated.");
+//                }
+//            })
+//            .addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Log.d(TAG, "Metadata update failed.");
+//                }
+//            });
+//    }
 
     @Override
     public void onDestroy() {
-        registration.remove();
         super.onDestroy();
     }
 

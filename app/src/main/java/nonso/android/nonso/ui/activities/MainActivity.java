@@ -1,6 +1,5 @@
 package nonso.android.nonso.ui.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -15,12 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.fxn.pix.Pix;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.tangxiaolv.telegramgallery.GalleryActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +27,7 @@ import nonso.android.nonso.ui.fragments.ProfileFollowingJourneysListFragment;
 import nonso.android.nonso.ui.fragments.ProfileFragment;
 import nonso.android.nonso.ui.fragments.ProfileJourneysListFragment;
 import nonso.android.nonso.utils.JourneyUtils;
+import nonso.android.nonso.data.FirebaseUtils;
 
 public class MainActivity extends AppCompatActivity implements DiscoverFragment.OnFragmentInteractionListener,
         JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener
@@ -50,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
     private final int PROFILE_IMAGE_REQUEST_CODE = 101;
 
-
+    private FirebaseUtils firebaseUtils = new FirebaseUtils();
+    private String mUserId;
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
 
@@ -60,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mUserId = firebaseUtils.getCurrentUserId();
 
         mBottomNavigationView.enableShiftingMode(false);
 
@@ -107,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
             case R.id.menu_profile:
                 fragment = getSupportFragmentManager().findFragmentByTag(TAG_PROFILE);
                 if(fragment == null){
-                    fragment = new ProfileFragment();
+                    fragment = new ProfileFragment().newInstance(mUserId);
                 }
                 break;
             case R.id.menu_search:
