@@ -61,7 +61,7 @@ dependencies {
     implementation "net.simonvt.schematic:schematic:$schematicVersion"
 
     testImplementation 'junit:junit:4.12'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+
     implementation 'com.google.code.gson:gson:2.8.0'
 
     implementation 'com.google.android.exoplayer:exoplayer:2.6.1'
@@ -70,8 +70,11 @@ dependencies {
 
     // Image Libraries
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.library.tangxiaolv:telegramgallery:1.0.5'
-    implementation 'com.fxn769:pix:1.0.6'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+
+    implementation 'com.zhihu.android:matisse:0.5.1-beta1'
 
     //stepper
     implementation 'com.stepstone.stepper:material-stepper:4.3.1'

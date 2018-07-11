@@ -12,8 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.tangxiaolv.telegramgallery.GalleryActivity;
-import com.tangxiaolv.telegramgallery.GalleryConfig;
 
 import java.util.ArrayList;
 
@@ -87,37 +85,37 @@ public class CreateStepImageActivity extends AppCompatActivity {
     @OnClick(R.id.create_step_image_library)
     public void onLibraryClick(){
 
-        GalleryConfig config = new GalleryConfig.Build()
-                .limitPickPhoto(6)
-                .singlePhoto(false)
-                .hintOfPick("Choose Image")
-                .filterMimeTypes(new String[]{"image/*" })
-                .build();
-        GalleryActivity.openActivity(this, GALLERY_REQUEST_CODE, config);
+//        GalleryConfig config = new GalleryConfig.Build()
+//                .limitPickPhoto(6)
+//                .singlePhoto(false)
+//                .hintOfPick("Choose Image")
+//                .filterMimeTypes(new String[]{"image/*" })
+//                .build();
+//        GalleryActivity.openActivity(this, GALLERY_REQUEST_CODE, config);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE){
-            ArrayList<String> imgs = (ArrayList<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
-
-            Log.v(TAG, "URLS: "+ imgs);
-
-            if(imgs.size() == 1){
-                mGridLayoutManager= new StaggeredGridLayoutManager(1, LinearLayout.VERTICAL);
-            }else{
-                mGridLayoutManager= new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
-            }
-            mRecyclerView.setLayoutManager(mGridLayoutManager);
-
-            mImagesAdapter = new ImagesAdapter();
-            mRecyclerView.setAdapter(mImagesAdapter);
-
-            mImagesAdapter.setImagesUrls(imgs);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
+//        if(resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE){
+//            ArrayList<String> imgs = (ArrayList<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
+//
+//            Log.v(TAG, "URLS: "+ imgs);
+//
+//            if(imgs.size() == 1){
+//                mGridLayoutManager= new StaggeredGridLayoutManager(1, LinearLayout.VERTICAL);
+//            }else{
+//                mGridLayoutManager= new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
+//            }
+//            mRecyclerView.setLayoutManager(mGridLayoutManager);
+//
+//            mImagesAdapter = new ImagesAdapter();
+//            mRecyclerView.setAdapter(mImagesAdapter);
+//
+//            mImagesAdapter.setImagesUrls(imgs);
+//            mRecyclerView.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override

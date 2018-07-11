@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_more_horiz_dark"
-                android:background="@drawable/transparent"
+                android:background="@null"
                 android:layout_gravity="end"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"/>
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:textSize="@dimen/h3"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_below="@id/step_creator_image"/>
             <TextView
@@ -53,7 +53,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:textSize="@dimen/h4"
+                android:textSize="13sp"
                 android:layout_below="@id/step_item_title"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
         </RelativeLayout>

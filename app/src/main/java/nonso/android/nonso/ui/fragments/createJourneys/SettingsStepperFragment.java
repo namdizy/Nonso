@@ -1,4 +1,4 @@
-package nonso.android.nonso.ui.fragments;
+package nonso.android.nonso.ui.fragments.createJourneys;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
     private final String TAG_NOTIFICATIONS = "notifications_tag";
     private final String TAG_SEARCH = "search_tag";
 
-    private final int PROFILE_IMAGE_REQUEST_CODE = 101;
-
     private FirebaseUtils firebaseUtils = new FirebaseUtils();
     private String mUserId;
 
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
         mBottomNavigationView.enableShiftingMode(false);
         mBottomNavigationView.setTextVisibility(false);
+        //mBottomNavigationView.setItemHeight(R.dimen.margin_5dp);
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(bottomNavigationViewClickListener);
 
@@ -126,15 +125,15 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
     }
 
-
     @Override
-    public void journeysListInteractionListener(Journey journey) {
+    public void onProfileJourneysListItemInteractionListener(Journey journey) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(JOURNEY_PREFERENCE_KEY, new JourneyUtils().loadStringFromJourney(journey));
         editor.apply();
         Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void OnProfileFollowingJourneysInteractionListener(Uri uri) {
 

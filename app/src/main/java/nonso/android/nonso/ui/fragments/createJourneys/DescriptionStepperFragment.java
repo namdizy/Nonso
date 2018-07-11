@@ -1,4 +1,4 @@
-package nonso.android.nonso.ui.fragments;
+package nonso.android.nonso.ui.fragments.createJourneys;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +23,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
-import com.tangxiaolv.telegramgallery.GalleryActivity;
-import com.tangxiaolv.telegramgallery.GalleryConfig;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,12 +190,12 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
     @OnClick(R.id.create_journey_description_image_btn)
     public void onJourneyImageClick(View view){
 
-        GalleryConfig config = new GalleryConfig.Build()
-                .singlePhoto(true)
-                .hintOfPick("Choose Image")
-                .filterMimeTypes(new String[]{"image/*" })
-                .build();
-        GalleryActivity.openActivity(getActivity(), GALLERY_REQUEST_CODE, config);
+//        GalleryConfig config = new GalleryConfig.Build()
+//                .singlePhoto(true)
+//                .hintOfPick("Choose Image")
+//                .filterMimeTypes(new String[]{"image/*" })
+//                .build();
+//        GalleryActivity.openActivity(getActivity(), GALLERY_REQUEST_CODE, config);
     }
 
     @Override

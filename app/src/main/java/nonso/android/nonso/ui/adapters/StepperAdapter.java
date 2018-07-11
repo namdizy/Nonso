@@ -7,8 +7,8 @@ import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
 
 import nonso.android.nonso.models.Journey;
-import nonso.android.nonso.ui.fragments.DescriptionStepperFragment;
-import nonso.android.nonso.ui.fragments.SettingsStepperFragment;
+import nonso.android.nonso.ui.fragments.createJourneys.DescriptionStepperFragment;
+import nonso.android.nonso.ui.fragments.createJourneys.SettingsStepperFragment;
 
 public class StepperAdapter extends AbstractFragmentStepAdapter {
 

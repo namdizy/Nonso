@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,21 +27,20 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
-import com.tangxiaolv.telegramgallery.GalleryActivity;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.CreatedBy;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
-import nonso.android.nonso.ui.fragments.DescriptionStepperFragment;
-import nonso.android.nonso.ui.fragments.SettingsStepperFragment;
+import nonso.android.nonso.ui.fragments.createJourneys.DescriptionStepperFragment;
+import nonso.android.nonso.ui.fragments.createJourneys.SettingsStepperFragment;
 
 public class CreateJourneyActivity extends AppCompatActivity implements DescriptionStepperFragment.OnDescriptionStepListener,
         SettingsStepperFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
@@ -58,6 +56,8 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     private Journey mJourney;
 
     private static final int GALLERY_REQUEST_CODE = 111;
+    private static final String EXTRA_CREATOR = "user";
+    private User mCreator;
 
     private static final String STORAGE_IMAGE_BUCKET = "images/";
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys";
@@ -71,6 +71,10 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         setContentView(R.layout.activity_create_journey);
 
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+
+        intent.getParcelableExtra(EXTRA_CREATOR);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -108,6 +112,13 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         mProgressbar.setVisibility(View.VISIBLE);
 
         mJourney.setUserId(mUserRef.getId());
+
+        CreatedBy createdBy = new CreatedBy();
+        createdBy.setId(mCreator.getUserId());
+        createdBy.setImageUrl(mCreator.getImageUri());
+        createdBy.setName(mCreator.getUserName());
+        mJourney.setCreatedBy(createdBy);
+
         db.collection(DATABASE_COLLECTION_JOURNEYS)
                 .add(mJourney)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -204,11 +215,11 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
 
-            Fragment f = (Fragment) mStepperLayout.getAdapter().findStep(mStepperLayout.getCurrentStepPosition());
-            List<String> imgs = (List<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
-            if (mStepperLayout.getCurrentStepPosition() == 0 && f != null) {
-                ((DescriptionStepperFragment)f).setProfileImage(imgs.get(0));
-            }
+//            Fragment f = (Fragment) mStepperLayout.getAdapter().findStep(mStepperLayout.getCurrentStepPosition());
+//            List<String> imgs = (List<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
+//            if (mStepperLayout.getCurrentStepPosition() == 0 && f != null) {
+//                ((DescriptionStepperFragment)f).setProfileImage(imgs.get(0));
+//            }
         }
     }
 

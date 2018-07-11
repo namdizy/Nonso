@@ -1,11 +1,14 @@
 package nonso.android.nonso.ui.fragments;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,8 +17,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -25,11 +31,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fxn.pix.Pix;
 import com.squareup.picasso.Picasso;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,9 +46,11 @@ import butterknife.OnClick;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
+import nonso.android.nonso.ui.activities.DialogEditGoalsActivity;
 import nonso.android.nonso.ui.activities.ImageViewActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.ui.adapters.ProfilePagerAdapter;
+import nonso.android.nonso.utils.ImageUtils;
 import nonso.android.nonso.viewModel.UserViewModel;
 
 
@@ -59,7 +70,9 @@ public class ProfileFragment extends Fragment {
     private static final String PROFILE_IMAGE_EXTRA = "profile_image_url";
     private static final String UID_KEY = "user_id";
 
-    private final int PROFILE_IMAGE_REQUEST_CODE = 101;
+    private static final int REQUEST_PROFILE_IMAGE_CODE = 101;
+    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS =201;
+    private static final String EXTRA_CREATOR = "user";
 
     private String mUserId;
     private User mUser;
@@ -149,8 +162,8 @@ public class ProfileFragment extends Fragment {
 
         mUserGoals.setText(user.getGoal());
 
-        Picasso.with(getContext()).load(user.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
-                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
+//        Picasso.with(getContext()).load(user.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
+//                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
     }
 
     public void showFab(int cx, int cy, float finalRadius){
@@ -200,6 +213,7 @@ public class ProfileFragment extends Fragment {
     public void fabOnClick(View view){
 
         Intent intent = new Intent(getContext(), CreateJourneyActivity.class);
+        intent.putExtra(EXTRA_CREATOR, mUser);
         getActivity().startActivity(intent);
     }
 
@@ -217,32 +231,81 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.profile_edit_profile_image)
     public void onEditImageClick(){
 
-        Pix.start(this,
-                PROFILE_IMAGE_REQUEST_CODE);
+        if(checkAndRequestPermissions()){
+            startPicker();
+        }
+
     }
 
-//    @OnClick(R.id.profile_edit_btn)
-//    public void onEditGoalsClick(View view){
-//
-//        Intent intent = new Intent(getContext(), DialogEditGoalsActivity.class);
-//        startActivity(intent);
-//    }
+    private void startPicker(){
+        Matisse.from(this)
+                .choose(MimeType.ofImage())
+                .theme(R.style.Matisse_Dracula)
+                .countable(false)
+                .imageEngine(new PicassoEngine())
+                .forResult(REQUEST_PROFILE_IMAGE_CODE);
+    }
+
+    private boolean checkAndRequestPermissions(){
+        int camera = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
+        int storage1 = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int storage2 = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (camera != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.CAMERA);
+        }
+        if (storage1 != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (storage2 != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
+        if (!listPermissionsNeeded.isEmpty())
+        {
+            ActivityCompat.requestPermissions(getActivity(),listPermissionsNeeded.toArray
+                    (new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if(requestCode == PROFILE_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK ){
-            ArrayList<String> selectionResult = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
-            String imgUri = selectionResult.get(0);
-            setProfileImage(imgUri);
-
+        if(requestCode == REQUEST_ID_MULTIPLE_PERMISSIONS){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                startPicker();
+            }
         }
     }
 
-    public void setProfileImage(String imageString){
-        Uri imageUri = Uri.parse(imageString);
-        mUserProfileImage.setImageURI(imageUri);
-        uploadToFirebase(imageUri);
+        @OnClick(R.id.profile_edit_btn)
+    public void onEditGoalsClick(View view){
+
+        Intent intent = new Intent(getContext(), DialogEditGoalsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_PROFILE_IMAGE_CODE && resultCode == Activity.RESULT_OK) {
+            setProfileImage(Matisse.obtainPathResult(data).get(0));
+        }
+    }
+
+    public void setProfileImage(String imagePath){
+        Log.w(TAG, "Image Path: " + imagePath);
+        ImageUtils imageUtils = new ImageUtils();
+
+        Bitmap bitmap = imageUtils.decodeFile(imagePath);
+
+        mUserProfileImage.setImageBitmap(bitmap);
+        uploadToFirebase(Uri.parse(imagePath));
     }
 
     private void uploadToFirebase(Uri uri){
