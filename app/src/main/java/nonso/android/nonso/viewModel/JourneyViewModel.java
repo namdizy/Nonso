@@ -3,6 +3,7 @@ package nonso.android.nonso.viewModel;
 import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
+import android.arch.lifecycle.ViewModel;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -16,7 +17,7 @@ import java.util.List;
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.models.Journey;
 
-public class JourneyViewModel {
+public class JourneyViewModel extends ViewModel {
 
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -29,7 +30,7 @@ public class JourneyViewModel {
 
     }
 
-    public void setUpUserForJourneysList(String userId){
+    public void setJourneysList(String userId){
 
         journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", userId);
         jLiveData = new FirebaseQueryLiveData(journeyRef);
@@ -38,6 +39,10 @@ public class JourneyViewModel {
 
     public void setUpJourney(String journeyId){
 
+    }
+
+    public LiveData<ArrayList<Journey>> getJourneyListLiveData(){
+        return journeyLiveData;
     }
 
     private class Deserializer implements Function<QuerySnapshot, ArrayList<Journey>>{

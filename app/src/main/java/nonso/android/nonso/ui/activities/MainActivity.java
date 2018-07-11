@@ -83,10 +83,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
 
     private void fragmentSelect(MenuItem item){
-        FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-
         Fragment fragment = null;
         int index = mBottomNavigationView.getMenuItemPosition(item);
 

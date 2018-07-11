@@ -28,6 +28,8 @@
     <string name="menu_discover">Discover</string>
     <string name="menu_notifications">Notifications</string>
     <string name="menu_profile">Profile</string>
+    <string name="menu_delete">Delete</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_journeys_fragment">Hello Journeys fragment</string>

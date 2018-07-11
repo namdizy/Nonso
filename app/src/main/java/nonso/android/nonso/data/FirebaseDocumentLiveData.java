@@ -1,6 +1,7 @@
 package nonso.android.nonso.data;
 
 import android.arch.lifecycle.LiveData;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -19,6 +20,9 @@ public class FirebaseDocumentLiveData extends LiveData<DocumentSnapshot> {
     private final MyValueEventListener listener = new MyValueEventListener();
     private ListenerRegistration listenerRegistration;
 
+    private final Handler handler = new Handler();
+    private boolean listenerRemovePending = false;
+
     public FirebaseDocumentLiveData(DocumentReference documentReference) {
         this.documentReference = documentReference;
     }
@@ -28,8 +32,14 @@ public class FirebaseDocumentLiveData extends LiveData<DocumentSnapshot> {
         super.onActive();
 
         Log.d(TAG, "onActive");
-        if (listenerRegistration == null )
+
+        if (listenerRemovePending) {
+            handler.removeCallbacks(removeListener);
+        }
+        else {
             listenerRegistration = documentReference.addSnapshotListener(listener);
+        }
+
     }
 
     @Override
@@ -37,10 +47,17 @@ public class FirebaseDocumentLiveData extends LiveData<DocumentSnapshot> {
         super.onInactive();
 
         Log.d(TAG, "onInactive: ");
-        if (listenerRegistration != null)
-            listenerRegistration.remove();
+        handler.postDelayed(removeListener, 2000);
+        listenerRemovePending = true;
     }
 
+    private final Runnable removeListener = new Runnable() {
+        @Override
+        public void run() {
+            listenerRegistration.remove();
+            listenerRemovePending = false;
+        }
+    };
     private class MyValueEventListener implements EventListener<DocumentSnapshot> {
         @Override
         public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {

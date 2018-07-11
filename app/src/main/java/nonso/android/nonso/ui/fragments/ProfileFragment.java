@@ -108,6 +108,9 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), mUserId));
+        mTabLayout.setupWithViewPager(mViewPager);
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -143,8 +146,6 @@ public class ProfileFragment extends Fragment {
         //mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + user.getUserId() + "_user_profile_image"+ ".jpg");
         //mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(user.getEmail());
 
-        mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), getContext()));
-        mTabLayout.setupWithViewPager(mViewPager);
 
         mUserGoals.setText(user.getGoal());
 

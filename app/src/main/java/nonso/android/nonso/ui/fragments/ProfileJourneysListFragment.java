@@ -1,9 +1,11 @@
 package nonso.android.nonso.ui.fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,7 @@ import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
+import nonso.android.nonso.viewModel.JourneyViewModel;
 import nonso.android.nonso.viewModel.UserViewModel;
 
 /**
@@ -31,31 +34,52 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     @BindView(R.id.profile_recycler_view_journeys) RecyclerView mJourneysRecyclerView;
 
     private final String TAG = ProfileJourneysListFragment.class.getSimpleName();
-
     private OnProfileJourneysListInteractionListener mListener;
 
-
-    private ArrayList<Journey> mJourneys = new ArrayList<>();
     private JourneysAdapter journeysAdapter;
     private RecyclerView.LayoutManager journeysLayoutManager;
+    private String mUserId;
+    private static final String UID_KEY = "user_id";
 
+    public ProfileJourneysListFragment() { }
 
-    private static final String JOURNEYS_SAVED_STATE = "journeys_saved_state";
-
-    public ProfileJourneysListFragment() {
-        // Required empty public constructor
+    public ProfileJourneysListFragment newInstance(String uid) {
+        ProfileJourneysListFragment fragment = new ProfileJourneysListFragment();
+        Bundle args = new Bundle();
+        args.putString(UID_KEY, uid);
+        fragment.setArguments(args);
+        return fragment;
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mUserId = getArguments().getString(UID_KEY);
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view =  inflater.inflate(R.layout.fragment_profile_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
-        UserViewModel viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        JourneyViewModel viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
+        viewModel.setJourneysList(mUserId);
+        viewModel.getJourneyListLiveData().observe(this, new Observer<ArrayList<Journey>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<Journey> journeys) {
+                updateUI(journeys);
+            }
+        });
+        return view;
+    }
 
-
+    private void updateUI(ArrayList<Journey> journeys){
         journeysLayoutManager = new LinearLayoutManager(getContext());
         mJourneysRecyclerView.setLayoutManager(journeysLayoutManager);
         mJourneysRecyclerView.setHasFixedSize(true);
@@ -63,36 +87,8 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         journeysAdapter = new JourneysAdapter(getContext(), this);
         mJourneysRecyclerView.setAdapter(journeysAdapter);
 
-        if(savedInstanceState != null){
-            mJourneys =  savedInstanceState.getParcelableArrayList(JOURNEYS_SAVED_STATE);
-            journeysAdapter.setJourneysData(mJourneys);
-        }else{
-            //getUserJourneys();
-        }
-
-        return view;
+        journeysAdapter.setJourneysData(journeys);
     }
-
-
-//    private void getUserJourneys(){
-//        db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", mUser.getEmail())
-//            .get()
-//            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Journey temp = document.toObject(Journey.class);
-//                        temp.setJourneyId(document.getId());
-//                        mJourneys.add(temp);
-//                    }
-//                    journeysAdapter.setJourneysData(mJourneys);
-//                } else {
-//                    Log.d(TAG, "Error getting documents: ", task.getException());
-//                }
-//                }
-//            });
-//    }
 
     @Override
     public void onAttach(Context context) {
@@ -133,11 +129,4 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         void journeysListInteractionListener(Journey journey);
     }
 
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelableArrayList(JOURNEYS_SAVED_STATE, mJourneys);
-    }
 }

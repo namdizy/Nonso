@@ -8,6 +8,6 @@
     <color name="colorGray">#9E9E9E</color>
     <color name="colorGrayDark">#616161</color>
     <color name="colorGreyLight">#F5F5F5</color>
-    <color name="colorPrimaryPix">#9E9D24</color>
-    <color name="colorPrimaryLightPix">#C0CA33</color>
+    <color name="colorPrimaryPix">#232F34</color>
+    <color name="colorPrimaryLightPix">#344955</color>
 </resources>
