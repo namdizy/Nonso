@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.activities;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -41,6 +42,7 @@ import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
 import nonso.android.nonso.ui.fragments.createJourneys.DescriptionStepperFragment;
 import nonso.android.nonso.ui.fragments.createJourneys.SettingsStepperFragment;
+import nonso.android.nonso.viewModel.JourneyViewModel;
 
 public class CreateJourneyActivity extends AppCompatActivity implements DescriptionStepperFragment.OnDescriptionStepListener,
         SettingsStepperFragment.OnSettingsStepListener, StepperLayout.StepperListener  {
@@ -74,7 +76,9 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
         Intent intent = getIntent();
 
-        intent.getParcelableExtra(EXTRA_CREATOR);
+        mCreator = intent.getParcelableExtra(EXTRA_CREATOR);
+        JourneyViewModel viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
+
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
