@@ -8,6 +8,7 @@ public class CreatedBy implements Parcelable {
     private String id;
     private String name;
     private String imageUrl;
+    private CreatorType creatorType;
 
     public String getId() {
         return id;
@@ -33,6 +34,16 @@ public class CreatedBy implements Parcelable {
         this.imageUrl = imageUrl;
     }
 
+    public CreatorType getCreatorType() {
+        return creatorType;
+    }
+
+    public void setCreatorType(CreatorType creatorType) {
+        this.creatorType = creatorType;
+    }
+
+    public CreatedBy() {
+    }
 
     @Override
     public int describeContents() {
@@ -44,18 +55,18 @@ public class CreatedBy implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.imageUrl);
-    }
-
-    public CreatedBy() {
+        dest.writeInt(this.creatorType == null ? -1 : this.creatorType.ordinal());
     }
 
     protected CreatedBy(Parcel in) {
         this.id = in.readString();
         this.name = in.readString();
         this.imageUrl = in.readString();
+        int tmpCreatorType = in.readInt();
+        this.creatorType = tmpCreatorType == -1 ? null : CreatorType.values()[tmpCreatorType];
     }
 
-    public static final Parcelable.Creator<CreatedBy> CREATOR = new Parcelable.Creator<CreatedBy>() {
+    public static final Creator<CreatedBy> CREATOR = new Creator<CreatedBy>() {
         @Override
         public CreatedBy createFromParcel(Parcel source) {
             return new CreatedBy(source);

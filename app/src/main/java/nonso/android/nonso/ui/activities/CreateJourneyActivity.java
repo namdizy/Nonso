@@ -66,6 +66,8 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     private static final String DATABASE_COLLECTION_USERS = "users";
     private final String TAG = CreateJourneyActivity.this.getClass().getSimpleName();
 
+    private JourneyViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         Intent intent = getIntent();
 
         mCreator = intent.getParcelableExtra(EXTRA_CREATOR);
-        JourneyViewModel viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -123,25 +125,27 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         createdBy.setName(mCreator.getUserName());
         mJourney.setCreatedBy(createdBy);
 
-        db.collection(DATABASE_COLLECTION_JOURNEYS)
-                .add(mJourney)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        String journeyId = documentReference.getId();
+        viewModel.saveJourney(mJourney);
 
-                        if(mJourney.getProfileImage() != null){
-                            uploadImage(journeyId);
-                        }
-                        updateUser(journeyId, mProgressbar);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding file to document", e);
-                    }
-                });
+//        db.collection(DATABASE_COLLECTION_JOURNEYS)
+//                .add(mJourney)
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//                        String journeyId = documentReference.getId();
+//
+//                        if(mJourney.getProfileImage() != null){
+//                            uploadImage(journeyId);
+//                        }
+//                        updateUser(journeyId, mProgressbar);
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error adding file to document", e);
+//                    }
+//                });
     }
 
     private void uploadImage(final String journeyId){
