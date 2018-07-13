@@ -36,8 +36,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.CreatedBy;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
 import nonso.android.nonso.ui.fragments.createJourneys.DescriptionStepperFragment;
@@ -125,7 +127,22 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         createdBy.setName(mCreator.getUserName());
         mJourney.setCreatedBy(createdBy);
 
-        viewModel.saveJourney(mJourney);
+        viewModel.saveJourney(mJourney, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
+                        mProgressbar.setVisibility(View.GONE);
+                    case FAILED:
+                        Toast.makeText(getApplicationContext(), "Oops looks like there was an issue creating the journey!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+        });
 
 //        db.collection(DATABASE_COLLECTION_JOURNEYS)
 //                .add(mJourney)

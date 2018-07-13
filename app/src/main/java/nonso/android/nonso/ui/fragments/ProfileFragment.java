@@ -162,8 +162,8 @@ public class ProfileFragment extends Fragment {
 
         mUserGoals.setText(user.getGoal());
 
-//        Picasso.with(getContext()).load(user.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
-//                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
+        Picasso.with(getContext()).load(user.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
     }
 
     public void showFab(int cx, int cy, float finalRadius){

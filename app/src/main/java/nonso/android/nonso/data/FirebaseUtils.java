@@ -19,8 +19,10 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 
+import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.User;
 
 public class FirebaseUtils {
@@ -43,33 +45,42 @@ public class FirebaseUtils {
         return mUser.getEmail();
     }
 
-    public StorageTask<UploadTask.TaskSnapshot> saveJourney(Journey journey){
+    public void saveJourney(Journey journey, final Callback callback){
 
         sJourney = journey;
         String prepend = DATABASE_STORAGE_IMAGE_BUCKET + journey.getCreatedBy().getId() +"_journey_profile_image"+ ".jpg";
 
-        StorageTask task = uploadImage(Uri.parse(journey.getProfileImage()), prepend, CreatorType.JOURNEY);
 
-        return uploadImage(Uri.parse(journey.getProfileImage()), prepend, CreatorType.JOURNEY);
+         uploadImage(Uri.parse(journey.getProfileImage()), prepend, new Callback() {
+             @Override
+             public void result(Result result) {}
+
+             @Override
+             public void journey(Uri downloadUrl) {
+                createJourney(downloadUrl, new Callback() {
+                    @Override
+                    public void result(Result result) {
+                        callback.result(result);
+                    }
+
+                    @Override
+                    public void journey(Uri downloadUrl) { }
+                });
+             }
+         });
 
     }
 
-    public StorageTask<UploadTask.TaskSnapshot> uploadImage(Uri file, String prepend, final CreatorType flag){
+    public void uploadImage(Uri file, String prepend, final Callback callback ){
         final StorageReference ref = mStorageRef.child( prepend );
 
-        return ref.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+       ref.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        switch (flag){
-                            case JOURNEY:
-                                createJourney(uri);
-                            case STEP:
-
-                            case USER:
-                        }
+                        callback.journey(uri);
                         Log.d(TAG, "onSuccess: uri= "+ uri.toString());
                     }
                 });
@@ -79,20 +90,20 @@ public class FirebaseUtils {
     }
 
 
-    public void createJourney(Uri downloadUri){
+    public void createJourney(Uri downloadUri, final Callback callback){
 
         sJourney.setProfileImage(downloadUri.toString());
         db.collection(DATABASE_COLLECTION_JOURNEYS).add(sJourney)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                    String journeyId = documentReference.getId();
-
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        callback.result(Result.SUCCESS);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        callback.result(Result.FAILED);
                         Log.w(TAG, "Error adding file to document", e);
                     }
                 });

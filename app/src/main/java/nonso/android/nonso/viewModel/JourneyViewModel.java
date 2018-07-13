@@ -4,19 +4,22 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.net.Uri;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
 
 public class JourneyViewModel extends ViewModel {
 
@@ -43,8 +46,18 @@ public class JourneyViewModel extends ViewModel {
 
     }
 
-    public void saveJourney(Journey journey){
-        firebaseUtils.saveJourney(journey);
+    public void saveJourney(Journey journey, final Callback callback){
+        firebaseUtils.saveJourney(journey, new Callback() {
+            @Override
+            public void result(Result result) {
+                callback.result(result);
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+        });
     }
 
     public LiveData<ArrayList<Journey>> getJourneyListLiveData(){
