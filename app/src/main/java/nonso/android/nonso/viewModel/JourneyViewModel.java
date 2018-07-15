@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,6 +26,8 @@ public class JourneyViewModel extends ViewModel {
 
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private String TAG = JourneyViewModel.class.getSimpleName();
 
     private Query journeyRef;
     private FirebaseQueryLiveData jLiveData;
@@ -50,6 +53,7 @@ public class JourneyViewModel extends ViewModel {
         firebaseUtils.saveJourney(journey, new Callback() {
             @Override
             public void result(Result result) {
+                Log.v(TAG, "Journey Creation in callback saveJourney");
                 callback.result(result);
             }
 
@@ -58,6 +62,22 @@ public class JourneyViewModel extends ViewModel {
 
             }
         });
+    }
+
+    public void deleteJourney(Journey journey, final Callback callback){
+
+        firebaseUtils.deleteJourney(journey, new Callback() {
+            @Override
+            public void result(Result result) {
+                callback.result(result);
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+        });
+
     }
 
     public LiveData<ArrayList<Journey>> getJourneyListLiveData(){

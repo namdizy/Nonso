@@ -11,11 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -38,6 +40,8 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
     public interface JourneysAdapterOnClickHandler{
         void onJourneyItemClick(Journey journey);
+        void onMenuDeleteClick(Journey journey);
+        void onMenuSettingClick(Journey journey);
     }
 
 
@@ -59,7 +63,7 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
     @Override
     public void onBindViewHolder(@NonNull final JourneysViewHolder holder, int position) {
-        Journey journey = mJourneys.get(position);
+        final Journey journey = mJourneys.get(position);
         holder.mJourneyTitle.setText(journey.getName());
         holder.mJourneyDescription.setText(journey.getDescription());
 
@@ -70,6 +74,23 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
                 MenuInflater inflater = menu.getMenuInflater();
                 inflater.inflate(R.menu.profile_journy_item_menu, menu.getMenu());
                 menu.show();
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId()){
+                            case R.id.journey_item_menu_delete:
+                                mOnClickListener.onMenuDeleteClick(journey);
+                                return true;
+                            case R.id.journey_item_menu_settings:
+                                mOnClickListener.onMenuSettingClick(journey);
+                                return true;
+                            default:
+                                return false;
+
+                        }
+                    }
+                });
 
             }
         });

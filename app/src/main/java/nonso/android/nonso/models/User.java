@@ -20,6 +20,7 @@ public class User implements Parcelable {
     private Map<String, Boolean> subscribedJourneys;
     private Map<String, Boolean> followingUsers;
     private Map<String, Boolean> followersUsers;
+    private Boolean updateFlag;
     private Date createdAt;
     @ServerTimestamp private Date updatedAt;
 
@@ -129,6 +130,13 @@ public class User implements Parcelable {
         this.userId = userId;
     }
 
+    public Boolean getUpdateFlag() {
+        return updateFlag;
+    }
+
+    public void setUpdateFlag(Boolean updateFlag) {
+        this.updateFlag = updateFlag;
+    }
 
     @Override
     public int describeContents() {
@@ -167,6 +175,7 @@ public class User implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
+        dest.writeValue(this.updateFlag);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -212,6 +221,7 @@ public class User implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.followersUsers.put(key, value);
         }
+        this.updateFlag = (Boolean) in.readValue(Boolean.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

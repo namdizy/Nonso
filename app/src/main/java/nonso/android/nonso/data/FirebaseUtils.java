@@ -50,25 +50,57 @@ public class FirebaseUtils {
         sJourney = journey;
         String prepend = DATABASE_STORAGE_IMAGE_BUCKET + journey.getCreatedBy().getId() +"_journey_profile_image"+ ".jpg";
 
+        if(sJourney.getProfileImage() != null){
+            uploadImage(Uri.parse(journey.getProfileImage()), prepend, new Callback() {
+                @Override
+                public void result(Result result) {}
 
-         uploadImage(Uri.parse(journey.getProfileImage()), prepend, new Callback() {
-             @Override
-             public void result(Result result) {}
+                @Override
+                public void journey(Uri downloadUrl) {
+                    createJourney(downloadUrl, new Callback() {
+                        @Override
+                        public void result(Result result) {
+                            Log.v(TAG, "Journey Creation in callback result of save Journey");
+                            callback.result(result);
+                        }
 
-             @Override
-             public void journey(Uri downloadUrl) {
-                createJourney(downloadUrl, new Callback() {
+                        @Override
+                        public void journey(Uri downloadUrl) { }
+                    });
+                }
+            });
+        }else{
+            createJourney(null, new Callback() {
+                @Override
+                public void result(Result result) {
+                    Log.v(TAG, "Journey Creation in callback result of save Journey");
+                    callback.result(result);
+                }
+
+                @Override
+                public void journey(Uri downloadUrl) {
+
+                }
+            });
+        }
+    }
+
+    public void deleteJourney(Journey journey, final Callback callback){
+        db.collection(DATABASE_COLLECTION_JOURNEYS).
+                document(journey.getJourneyId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void result(Result result) {
-                        callback.result(result);
+                    public void onSuccess(Void aVoid) {
+                        callback.result(Result.SUCCESS);
                     }
-
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void journey(Uri downloadUrl) { }
+                    public void onFailure(@NonNull Exception e) {
+                        callback.result(Result.FAILED);
+                        Log.v(TAG, "Failed to delete journey");
+                    }
                 });
-             }
-         });
-
     }
 
     public void uploadImage(Uri file, String prepend, final Callback callback ){
@@ -92,21 +124,24 @@ public class FirebaseUtils {
 
     public void createJourney(Uri downloadUri, final Callback callback){
 
-        sJourney.setProfileImage(downloadUri.toString());
+        if(downloadUri != null){
+            sJourney.setProfileImage(downloadUri.toString());
+        }
         db.collection(DATABASE_COLLECTION_JOURNEYS).add(sJourney)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        callback.result(Result.SUCCESS);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        callback.result(Result.FAILED);
-                        Log.w(TAG, "Error adding file to document", e);
-                    }
-                });
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.w(TAG, "Document upload complete");
+                    callback.result(Result.SUCCESS);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(TAG, "Error adding uploading document", e);
+                    callback.result(Result.FAILED);
+                }
+            });
     }
 
 

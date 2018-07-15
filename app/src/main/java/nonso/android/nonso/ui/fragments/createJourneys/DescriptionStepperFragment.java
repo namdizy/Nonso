@@ -1,12 +1,19 @@
 package nonso.android.nonso.ui.fragments.createJourneys;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +30,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +47,7 @@ import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.activities.MainActivity;
+import nonso.android.nonso.utils.ImageUtils;
 import nonso.android.nonso.utils.MultiSelectionSpinner;
 
 /**
@@ -56,7 +70,9 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
     private static final String ARG_JOURNEY = "journey_object";
-    private static final int GALLERY_REQUEST_CODE = 111;
+    private static final int REQUEST_PROFILE_IMAGE_CODE = 111;
+
+    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS =201;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -149,8 +165,6 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
     @Override
     public void selectedStrings(List<String> strings) {
 
-        Log.v(TAG, "the strings: " + strings);
-
         Map<String, Boolean> map= new HashMap<>();
         for(String st: strings){
             map.put(st, true);
@@ -190,13 +204,46 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
     @OnClick(R.id.create_journey_description_image_btn)
     public void onJourneyImageClick(View view){
 
-//        GalleryConfig config = new GalleryConfig.Build()
-//                .singlePhoto(true)
-//                .hintOfPick("Choose Image")
-//                .filterMimeTypes(new String[]{"image/*" })
-//                .build();
-//        GalleryActivity.openActivity(getActivity(), GALLERY_REQUEST_CODE, config);
+        if(checkAndRequestPermissions()){
+            startPicker();
+        }
     }
+
+    public boolean checkAndRequestPermissions(){
+        int camera = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
+        int storage1 = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int storage2 = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (camera != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.CAMERA);
+        }
+        if (storage1 != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (storage2 != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
+        if (!listPermissionsNeeded.isEmpty())
+        {
+            ActivityCompat.requestPermissions(getActivity(),listPermissionsNeeded.toArray
+                    (new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+    private void startPicker(){
+        Matisse.from(this)
+                .choose(MimeType.ofImage())
+                .theme(R.style.Matisse_Dracula)
+                .countable(false)
+                .imageEngine(new PicassoEngine())
+                .forResult(REQUEST_PROFILE_IMAGE_CODE);
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -250,12 +297,27 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
         //super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_PROFILE_IMAGE_CODE && resultCode == Activity.RESULT_OK) {
+            setProfileImage(Matisse.obtainPathResult(data).get(0));
+        }
+    }
+
     public void setProfileImage(String imageString){
-        //startCropImageActivity(Uri.parse(imageString));
+        ImageUtils imageUtils = new ImageUtils();
+
+        Bitmap bitmap = imageUtils.decodeFile(imageString);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, "Title", null);
 
         mImageButton.setVisibility(View.GONE);
-        mJourneysImage.setImageURI(Uri.parse(imageString));
-        mJourney.setProfileImage(imageString);
+        mJourneysImage.setImageURI(Uri.parse(path));
+        mJourney.setProfileImage(path);
         mJourneysImage.setVisibility(View.VISIBLE);
         if(mListener != null){
             mListener.OnDescriptionStepListener(mJourney);

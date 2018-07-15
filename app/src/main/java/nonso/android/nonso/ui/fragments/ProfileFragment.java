@@ -155,11 +155,6 @@ public class ProfileFragment extends Fragment {
     private void updateUI(User user){
         mUser = user;
         mUsername.setText(user.getUserName());
-        //mStorageRef = FirebaseStorage.getInstance().getReference();
-        //mProfileImageRef = mStorageRef.child(STORAGE_IMAGE_BUCKET + user.getUserId() + "_user_profile_image"+ ".jpg");
-        //mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(user.getEmail());
-
-
         mUserGoals.setText(user.getGoal());
 
         Picasso.with(getContext()).load(user.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
@@ -299,7 +294,6 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setProfileImage(String imagePath){
-        Log.w(TAG, "Image Path: " + imagePath);
         ImageUtils imageUtils = new ImageUtils();
 
         Bitmap bitmap = imageUtils.decodeFile(imagePath);
@@ -312,84 +306,9 @@ public class ProfileFragment extends Fragment {
 
         Uri file = Uri.fromFile(new File(uri.getPath()));
 
-        //upLoadImage(file);
 
     }
 
-//    private void upLoadImage(Uri file){
-//        mProfileImageRef.putFile(file).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-//            @Override
-//            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-//                if (!task.isSuccessful()) {
-//                    throw task.getException();
-//                }
-//                return mProfileImageRef.getDownloadUrl();
-//            }
-//        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Uri> task) {
-//                if (task.isSuccessful()) {
-//                    Uri downloadUri = task.getResult();
-//                    updateUserAuth(downloadUri);
-//                } else {
-//                    Log.w(TAG, "Error updating document");
-//                }
-//            }
-//        });
-//    }
-
-//    private void updateUserAuth(final Uri uri){
-//
-//        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//            .setPhotoUri(uri)
-//            .build();
-//        mUser.updateProfile(profileUpdates)
-//            .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                @Override
-//                public void onComplete(@NonNull Task<Void> task) {
-//                    if (task.isSuccessful()) {
-//                        updateUser(uri);
-//                    }
-//                }
-//            });
-//    }
-//    private void updateUser(Uri uri){
-//
-//        mUserRef.update("imageUri", uri.toString())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        updateMetaData();
-//                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error updating document", e);
-//                    }
-//                });
-//    }
-
-//    private void updateMetaData(){
-//
-//        StorageMetadata metadata = new StorageMetadata.Builder()
-//            .setCustomMetadata(METADATA_KEY, mUser.getUid())
-//            .build();
-//        mProfileImageRef.updateMetadata(metadata)
-//            .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-//                @Override
-//                public void onSuccess(StorageMetadata storageMetadata) {
-//                    Log.d(TAG, "User profile metadata updated.");
-//                }
-//            })
-//            .addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Log.d(TAG, "Metadata update failed.");
-//                }
-//            });
-//    }
 
     @Override
     public void onDestroy() {

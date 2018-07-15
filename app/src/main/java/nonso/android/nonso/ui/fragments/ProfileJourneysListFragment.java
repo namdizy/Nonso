@@ -3,6 +3,7 @@ package nonso.android.nonso.ui.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,13 +13,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
 import nonso.android.nonso.viewModel.JourneyViewModel;
 import nonso.android.nonso.viewModel.UserViewModel;
@@ -40,6 +44,7 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     private RecyclerView.LayoutManager journeysLayoutManager;
     private String mUserId;
     private static final String UID_KEY = "user_id";
+    private JourneyViewModel mViewModel;
 
     public ProfileJourneysListFragment() { }
 
@@ -68,9 +73,9 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         View view =  inflater.inflate(R.layout.fragment_profile_journeys_list, container, false);
         ButterKnife.bind(this, view);
 
-        JourneyViewModel viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
-        viewModel.setJourneysList(mUserId);
-        viewModel.getJourneyListLiveData().observe(this, new Observer<ArrayList<Journey>>() {
+        mViewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
+        mViewModel.setJourneysList(mUserId);
+        mViewModel.getJourneyListLiveData().observe(this, new Observer<ArrayList<Journey>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Journey> journeys) {
                 updateUI(journeys);
@@ -112,6 +117,33 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         if (mListener != null) {
             mListener.onProfileJourneysListItemInteractionListener(journey);
         }
+    }
+
+    @Override
+    public void onMenuDeleteClick(final Journey journey) {
+        mViewModel.deleteJourney(journey,  new Callback(){
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
+                        Toast.makeText(getContext(), journey.getName() + " deleted.", Toast.LENGTH_LONG);
+                        break;
+                    case FAILED:
+                        Toast.makeText(getContext(), "Looks like there was a problem deleting " + journey.getName(), Toast.LENGTH_LONG);
+                        break;
+                }
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onMenuSettingClick(Journey journey) {
+
     }
 
     /**
