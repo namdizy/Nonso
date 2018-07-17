@@ -2,6 +2,7 @@ package nonso.android.nonso.data;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.telecom.Call;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
@@ -9,8 +10,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,7 +45,11 @@ public class FirebaseUtils {
 
     public String getCurrentUserId(){
 
-        return mUser.getEmail();
+        return mUser.getUid();
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return mUser;
     }
 
     public void saveJourney(Journey journey, final Callback callback){
@@ -56,6 +63,11 @@ public class FirebaseUtils {
                 public void result(Result result) {}
 
                 @Override
+                public void authorization(FirebaseUser user) {
+
+                }
+
+                @Override
                 public void journey(Uri downloadUrl) {
                     createJourney(downloadUrl, new Callback() {
                         @Override
@@ -66,6 +78,11 @@ public class FirebaseUtils {
 
                         @Override
                         public void journey(Uri downloadUrl) { }
+
+                        @Override
+                        public void authorization(FirebaseUser user) {
+
+                        }
                     });
                 }
             });
@@ -75,6 +92,11 @@ public class FirebaseUtils {
                 public void result(Result result) {
                     Log.v(TAG, "Journey Creation in callback result of save Journey");
                     callback.result(result);
+                }
+
+                @Override
+                public void authorization(FirebaseUser user) {
+
                 }
 
                 @Override
@@ -142,6 +164,54 @@ public class FirebaseUtils {
                     callback.result(Result.FAILED);
                 }
             });
+    }
+
+    public void login(String email, String password, final Callback callback){
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            callback.authorization(mAuth.getCurrentUser());
+
+                        } else {
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            callback.authorization(mAuth.getCurrentUser());
+                        }
+                    }
+                });
+    }
+
+    public void createUser(String email, String password, final String username, final Callback callback){
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "createUserWithEmail:success");
+
+                            final FirebaseUser user = mAuth.getCurrentUser();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username).build();
+
+                            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        callback.result(Result.SUCCESS);
+                                    }
+                                }
+                            });
+
+                        }else{
+                            callback.result(Result.FAILED);
+                        }
+                    }
+                });
     }
 
 

@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,6 @@ import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
 import nonso.android.nonso.viewModel.JourneyViewModel;
-import nonso.android.nonso.viewModel.UserViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -123,13 +123,18 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     public void onMenuDeleteClick(final Journey journey) {
         mViewModel.deleteJourney(journey,  new Callback(){
             @Override
+            public void authorization(FirebaseUser user) {
+
+            }
+
+            @Override
             public void result(Result result) {
                 switch (result){
                     case SUCCESS:
-                        Toast.makeText(getContext(), journey.getName() + " deleted.", Toast.LENGTH_LONG);
+                        Toast.makeText(getContext(), journey.getName() + " deleted.", Toast.LENGTH_LONG).show();
                         break;
                     case FAILED:
-                        Toast.makeText(getContext(), "Looks like there was a problem deleting " + journey.getName(), Toast.LENGTH_LONG);
+                        Toast.makeText(getContext(), "Looks like there was a problem deleting " + journey.getName(), Toast.LENGTH_LONG).show();
                         break;
                 }
             }

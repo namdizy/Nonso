@@ -78,7 +78,7 @@
                         layout="@layout/divider_light"
                         android:layout_width="280dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_5dp" />
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"

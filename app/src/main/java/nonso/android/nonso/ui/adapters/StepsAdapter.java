@@ -72,7 +72,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
                     DocumentSnapshot snapshot = task.getResult();
                     mCreator = snapshot.toObject(User.class);
 
-                    holder.mCreatorName.setText(mCreator.getUserName());
+                    //holder.mCreatorName.setText(mCreator.getUserName());
                 }else{
 
                 }
@@ -96,8 +96,6 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     public class StepsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.step_item_title) TextView mStepTitle;
-        @BindView(R.id.step_creator_name) TextView mCreatorName;
-        @BindView(R.id.step_creator_image) ImageView mCreatorImage;
         @BindView(R.id.step_item_description) TextView mStepDescription;
 
         public StepsViewHolder(View view){

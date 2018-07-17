@@ -23,7 +23,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +68,14 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         final Journey journey = mJourneys.get(position);
         holder.mJourneyTitle.setText(journey.getName());
         holder.mJourneyDescription.setText(journey.getDescription());
+
+        if(journey.getCreatedBy() != null){
+            holder.mJourneyCreatorName.setText(journey.getCreatedBy().getName());
+            Date date = journey.getCreatedAt();
+            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            holder.mJourneyCreatedTime.setText( df.format(date));
+        }
+
 
         holder.mMoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +122,9 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         @BindView(R.id.profile_journey_item_description) TextView mJourneyDescription;
         @BindView(R.id.profile_journey_item_container) CardView mCard;
         @BindView(R.id.profile_journey_item_more_btn) ImageButton mMoreBtn;
+        @BindView(R.id.profile_journey_creator_name) TextView mJourneyCreatorName;
+        @BindView(R.id.profile_journey_created_time) TextView mJourneyCreatedTime;
+        @BindView(R.id.profile_journey_creator_image) ImageView mJourneyCreatorImage;
 
         public JourneysViewHolder(View view){
             super(view);

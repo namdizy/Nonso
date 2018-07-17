@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
@@ -89,14 +90,21 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
         viewModel.saveJourney(mJourney, new Callback() {
             @Override
+            public void authorization(FirebaseUser user) {
+
+            }
+
+            @Override
             public void result(Result result) {
                 switch (result){
                     case SUCCESS:
                         mProgressbar.setVisibility(View.GONE);
+                        finishAffinity();
                         break;
                     case FAILED:
                         Log.v(TAG, "Journey Creation failed");
                         Toast.makeText(getApplicationContext(), "Oops looks like there was an issue creating the journey!", Toast.LENGTH_LONG).show();
+                        finishAffinity();
                         break;
                 }
             }

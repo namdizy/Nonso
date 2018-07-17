@@ -8,8 +8,36 @@
     android:orientation="vertical"
     tools:context=".ui.fragments.JourneyTimelineFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/journey_profile_recycler_view_steps"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/margin_5dp">
+            <ImageView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="center"
+                android:src="@drawable/hot_air_balloon_start" />
+
+            <include
+                layout="@layout/vertical_timeline_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/journey_profile_recycler_view_steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
 </LinearLayout>

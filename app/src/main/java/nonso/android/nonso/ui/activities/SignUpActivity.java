@@ -1,7 +1,9 @@
 package nonso.android.nonso.ui.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +40,10 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.User;
+import nonso.android.nonso.viewModel.AuthorizationViewModel;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -52,8 +57,8 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.progressBarSignUpContainer) LinearLayout mProgressBarContainer;
 
     private final String TAG = SignUpActivity.this.getClass().getSimpleName();
-    private final String COLLECTION_NAME = "users/";
-    private final String METADATA_KEY = "user_id";
+
+    private AuthorizationViewModel mViewModel;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -72,9 +77,8 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         ButterKnife.bind(this);
+        mViewModel = ViewModelProviders.of(this).get(AuthorizationViewModel.class);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
     }
 
     @OnTextChanged(value = {
@@ -150,38 +154,30 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         mProgressBarContainer.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(_email, _password)
-            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Log.d(TAG, "createUserWithEmail:success");
 
-                    final FirebaseUser user = mAuth.getCurrentUser();
-
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(_username).build();
-
-                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                            if(task.isSuccessful()){
-                                createUser(user);
-                            }
-
-                        }
-                    });
-
-
-                }else{
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    mProgressBarContainer.setVisibility(View.INVISIBLE);
-                    Toast.makeText(SignUpActivity.this, "Sign up failed. " + task.getException(),
-                            Toast.LENGTH_SHORT).show();
+        mViewModel.createUser(_email, _password, _username, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
+                        onSignUpSuccess();
+                        break;
+                    case FAILED:
+                        onSignUpFailed();
                 }
-                }
-            });
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorization(FirebaseUser user) {
+
+            }
+        });
+
     }
 
     @OnClick(R.id.btn_link_login)
@@ -199,47 +195,16 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public void onSignUpSuccess(FirebaseUser user){
-        if (user != null){
-            user.sendEmailVerification()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-
-                    if(task.isSuccessful()){
-                        Log.v(TAG, "Email sent.");
-
-                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        getApplication().startActivity(intent);
-                    }
-                }
-            });
-        }
+    public void onSignUpSuccess(){
+        mProgressBarContainer.setVisibility(View.INVISIBLE);
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        getApplication().startActivity(intent);
     }
     public void onSignUpFailed(){
-        //TODO: add functionality for signup failed
+        mProgressBarContainer.setVisibility(View.INVISIBLE);
+        Toast.makeText(SignUpActivity.this, "Oops looks like Sign up failed. Please Try again",
+                Toast.LENGTH_SHORT).show();
     }
 
-    public void createUser(final FirebaseUser user){
-        User newUser = new User();
-        newUser.setUserName(user.getDisplayName());
-        newUser.setEmail(user.getEmail());
-        newUser.setUserId(user.getUid());
-
-        db.collection(COLLECTION_NAME).document(user.getEmail()).set(newUser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        mProgressBarContainer.setVisibility(View.INVISIBLE);
-                        onSignUpSuccess(user);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
 
 }

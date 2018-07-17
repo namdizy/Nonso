@@ -1,37 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/vertical_timeline_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/circular_view_fill_blue"/>
+        <include
+            layout="@layout/vertical_timeline_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center"/>
+   </LinearLayout>
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_5dp">
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:layout_marginStart="@dimen/margin_8dp"
+        android:layout_marginBottom="2dp"
+        app:cardCornerRadius="@dimen/margin_5dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/activity_horizontal_margin">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/step_creator_image"
-                android:layout_width="@dimen/small_image_size"
-                android:layout_height="@dimen/small_image_size"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:src="@drawable/profile_image_placeholder"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
-
             <TextView
-                android:id="@+id/step_creator_name"
+                android:id="@+id/step_created_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/margin_5dp"
-                android:layout_toEndOf="@id/step_creator_image"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_more_horiz_dark"
+                android:src="@drawable/ic_more_dark"
                 android:background="@null"
                 android:layout_gravity="end"
                 android:layout_alignParentTop="true"
@@ -45,7 +66,7 @@
                 android:layout_marginTop="@dimen/margin_5dp"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_below="@id/step_creator_image"/>
+                android:layout_below="@id/step_created_time"/>
             <TextView
                 android:id="@+id/step_item_description"
                 android:layout_width="match_parent"
@@ -59,3 +80,5 @@
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
+
+</LinearLayout>

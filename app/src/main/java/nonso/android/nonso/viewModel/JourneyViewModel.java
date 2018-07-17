@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -40,7 +41,7 @@ public class JourneyViewModel extends ViewModel {
 
     public void setJourneysList(String userId){
 
-        journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("userId", userId);
+        journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("createdBy.id", userId);
         jLiveData = new FirebaseQueryLiveData(journeyRef);
         journeyLiveData = Transformations.map(jLiveData, new Deserializer());
     }
@@ -61,6 +62,11 @@ public class JourneyViewModel extends ViewModel {
             public void journey(Uri downloadUrl) {
 
             }
+
+            @Override
+            public void authorization(FirebaseUser user) {
+
+            }
         });
     }
 
@@ -70,6 +76,11 @@ public class JourneyViewModel extends ViewModel {
             @Override
             public void result(Result result) {
                 callback.result(result);
+            }
+
+            @Override
+            public void authorization(FirebaseUser user) {
+
             }
 
             @Override

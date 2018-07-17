@@ -153,6 +153,7 @@ public class ProfileFragment extends Fragment {
 
 
     private void updateUI(User user){
+
         mUser = user;
         mUsername.setText(user.getUserName());
         mUserGoals.setText(user.getGoal());

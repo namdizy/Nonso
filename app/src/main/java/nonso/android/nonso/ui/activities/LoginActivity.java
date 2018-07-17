@@ -1,7 +1,8 @@
 package nonso.android.nonso.ui.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.net.Uri;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,10 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
@@ -26,11 +23,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Result;
+import nonso.android.nonso.viewModel.AuthorizationViewModel;
 
 public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = LoginActivity.this.getClass().getSimpleName();
-    private FirebaseAuth mAuth;
+
+    private AuthorizationViewModel mViewModel;
 
     private String email;
     private String password;
@@ -48,8 +49,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
+        mViewModel = ViewModelProviders.of(this).get(AuthorizationViewModel.class);
 
-        mAuth = FirebaseAuth.getInstance();
     }
 
 
@@ -85,21 +86,22 @@ public class LoginActivity extends AppCompatActivity {
 
         mProgressBarContainer.setVisibility(View.VISIBLE);
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            onLoginSuccess(user);
-                        } else {
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            onLoginSuccess(null);
-                        }
-                    }
-                });
+        mViewModel.signIn(email, password, new Callback() {
+            @Override
+            public void result(Result result) {
+
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorization(FirebaseUser user) {
+                onLoginSuccess(user);
+            }
+        });
 
     }
 
@@ -135,21 +137,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess(FirebaseUser firebaseUser) {
-        if (firebaseUser != null && firebaseUser.isEmailVerified()){
-            mProgressBarContainer.setVisibility(View.GONE);
-            mLoginBtn.setEnabled(true);
+
+        mLoginBtn.setEnabled(true);
+        mProgressBarContainer.setVisibility(View.GONE);
+        if (firebaseUser.isEmailVerified()){
+
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        }else if(firebaseUser != null && !firebaseUser.isEmailVerified()){
-            mProgressBarContainer.setVisibility(View.GONE);
-            Toast.makeText(getBaseContext(), "Login failed: Please Verify your email", Toast.LENGTH_LONG).show();
-            mLoginBtn.setEnabled(true);
+        }else if(!firebaseUser.isEmailVerified()){
+            Toast.makeText(getBaseContext(), "Login failed: Please check your email, and verify.", Toast.LENGTH_LONG).show();
         }
         else{
-            mProgressBarContainer.setVisibility(View.GONE);
-            mLoginBtn.setEnabled(true);
-            return;
+            Toast.makeText(getBaseContext(), "Login failed: Email or Password is incorrect", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -164,9 +164,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mViewModel.getCurrentUser();
 
-        onLoginSuccess(currentUser);
+        if(currentUser != null){
+            onLoginSuccess(currentUser);
+        }
+
+
     }
 
 
