@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
     private final String TAG_NOTIFICATIONS = "notifications_tag";
     private final String TAG_SEARCH = "search_tag";
 
-    private FirebaseUtils firebaseUtils = new FirebaseUtils();
+
     private String mUserId;
 
     @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        FirebaseUtils firebaseUtils = new FirebaseUtils();
 
         mUserId = firebaseUtils.getCurrentUserId();
 

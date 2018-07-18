@@ -2,10 +2,8 @@ package nonso.android.nonso.data;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.telecom.Call;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,20 +16,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 
 import nonso.android.nonso.models.Callback;
-import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
-import nonso.android.nonso.models.User;
-
 public class FirebaseUtils {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseUser mUser = mAuth.getCurrentUser();
+    private FirebaseUser mUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -42,6 +36,10 @@ public class FirebaseUtils {
 
     private Journey sJourney;
 
+
+    public FirebaseUtils(){
+        mUser = mAuth.getCurrentUser();
+    }
 
     public String getCurrentUserId(){
 
@@ -187,31 +185,45 @@ public class FirebaseUtils {
 
     public void createUser(String email, String password, final String username, final Callback callback){
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "createUserWithEmail:success");
+
+                    final FirebaseUser user = mAuth.getCurrentUser();
+
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(username).build();
+
+                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Log.d(TAG, "createUserWithEmail:success");
 
-                            final FirebaseUser user = mAuth.getCurrentUser();
+                            user.sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
 
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(username).build();
-
-                            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        callback.result(Result.SUCCESS);
+                                        if(task.isSuccessful()){
+                                            callback.result(Result.SUCCESS);
+                                        }
+                                        else{
+                                            callback.result(Result.FAILED);
+                                        }
                                     }
-                                }
-                            });
+                                });
 
-                        }else{
-                            callback.result(Result.FAILED);
                         }
-                    }
-                });
+                        }
+                    });
+
+                }else{
+                    callback.result(Result.FAILED);
+                }
+                }
+            });
     }
 
 

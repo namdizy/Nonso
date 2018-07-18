@@ -111,6 +111,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setUp(){
+
+
         UserViewModel viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         viewModel.init(mUserId);
 
@@ -158,8 +160,15 @@ public class ProfileFragment extends Fragment {
         mUsername.setText(user.getUserName());
         mUserGoals.setText(user.getGoal());
 
-        Picasso.with(getContext()).load(user.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
-                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
+
+        if(mUser.getImageUri() != null && !mUser.getImageUri().isEmpty()){
+            Picasso.with(getContext()).load(mUser.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
+                    .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
+        }
+        else{
+            mUserProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.profile_image_placeholder));
+        }
+
     }
 
     public void showFab(int cx, int cy, float finalRadius){

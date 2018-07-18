@@ -71,9 +71,9 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
         if(journey.getCreatedBy() != null){
             holder.mJourneyCreatorName.setText(journey.getCreatedBy().getName());
-            Date date = journey.getCreatedAt();
-            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            holder.mJourneyCreatedTime.setText( df.format(date));
+//            Date date = journey.getCreatedAt();
+//            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+//            holder.mJourneyCreatedTime.setText( df.format(date));
         }
 
 
