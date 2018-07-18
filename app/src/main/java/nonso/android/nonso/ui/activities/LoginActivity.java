@@ -169,9 +169,5 @@ public class LoginActivity extends AppCompatActivity {
         if(currentUser != null){
             onLoginSuccess(currentUser);
         }
-
-
     }
-
-
 }

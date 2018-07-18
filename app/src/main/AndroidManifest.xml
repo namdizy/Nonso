@@ -89,13 +89,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-        <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
         <activity
             android:name=".ui.activities.ImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activities.DialogEditGoalsActivity"
-            android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:theme="@style/AppTheme.NoActionBar.dialog"
             />

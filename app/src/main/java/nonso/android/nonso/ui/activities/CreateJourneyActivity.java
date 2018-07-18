@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.CreatedBy;
+import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.User;
@@ -86,6 +87,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         createdBy.setId(mCreator.getUserId());
         createdBy.setImageUrl(mCreator.getImageUri());
         createdBy.setName(mCreator.getUserName());
+        createdBy.setCreatorType(CreatorType.USER);
         mJourney.setCreatedBy(createdBy);
 
         viewModel.saveJourney(mJourney, new Callback() {
@@ -99,12 +101,12 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
                 switch (result){
                     case SUCCESS:
                         mProgressbar.setVisibility(View.GONE);
-                        finishAffinity();
+                        finish();
                         break;
                     case FAILED:
                         Log.v(TAG, "Journey Creation failed");
                         Toast.makeText(getApplicationContext(), "Oops looks like there was an issue creating the journey!", Toast.LENGTH_LONG).show();
-                        finishAffinity();
+                        finish();
                         break;
                 }
             }

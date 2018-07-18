@@ -227,4 +227,27 @@ public class FirebaseUtils {
     }
 
 
+
+    public void updateUserGoals(String userId, String goals, final Callback callback){
+
+        DocumentReference mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(userId);
+        mUserRef.update("goal", goals)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.v(TAG, "Success: Updated user goal");
+                        callback.result(Result.SUCCESS);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Failed: Update user goal failed", e);
+                        callback.result(Result.FAILED);
+                    }
+                });
+    }
+
+
+
 }

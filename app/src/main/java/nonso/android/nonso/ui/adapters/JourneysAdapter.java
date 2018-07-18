@@ -31,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.utils.DateUtils;
 
 public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.JourneysViewHolder> {
 
@@ -69,13 +70,11 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         holder.mJourneyTitle.setText(journey.getName());
         holder.mJourneyDescription.setText(journey.getDescription());
 
-        if(journey.getCreatedBy() != null){
-            holder.mJourneyCreatorName.setText(journey.getCreatedBy().getName());
-//            Date date = journey.getCreatedAt();
-//            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-//            holder.mJourneyCreatedTime.setText( df.format(date));
-        }
+        holder.mJourneyCreatorName.setText(journey.getCreatedBy().getName());
+        Date date = journey.getCreatedAt();
 
+        DateUtils dateUtils = new DateUtils();
+        holder.mJourneyCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
 
         holder.mMoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override

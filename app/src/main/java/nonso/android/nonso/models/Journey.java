@@ -28,8 +28,8 @@ public class Journey implements Parcelable {
     private Map<String, Boolean> categories;
     private Map<String, Boolean> steps;
     private Boolean updateFlag;
-    private Date createdAt;
-    @ServerTimestamp private Date updatedAt;
+    @ServerTimestamp private Date createdAt;
+    private Date updatedAt;
 
 
     public Journey(){

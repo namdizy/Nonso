@@ -9,6 +9,15 @@
     <dimen name="margin_8dp">8dp</dimen>
     <dimen name="margin_0dp">0dp</dimen>
     <dimen name="text_padding">3dp</dimen>
+    <dimen name="_20dp">20dp</dimen>
+
+    <dimen name="h1">32sp</dimen>
+    <dimen name="h2">24sp</dimen>
+    <dimen name="h3">19sp</dimen>
+    <dimen name="h4">16sp</dimen>
+    <dimen name="h5">13sp</dimen>
+    <dimen name="h6">11sp</dimen>
+    <dimen name="h7">9sp</dimen>
 
     <!-- LOGIN AND SIGN UP PAGES -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

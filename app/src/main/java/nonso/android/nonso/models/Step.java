@@ -24,8 +24,8 @@ public class Step implements Parcelable {
     private Boolean publish;
     private Boolean updateFlag;
     private CreatedBy createdBy;
-    private Date createdAt;
-    @ServerTimestamp private Date updatedAt;
+    @ServerTimestamp private Date createdAt;
+    private Date updatedAt;
 
     public Step(){
         this.likes = new HashMap<>();

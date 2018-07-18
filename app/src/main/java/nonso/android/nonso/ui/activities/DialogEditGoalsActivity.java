@@ -1,5 +1,9 @@
 package nonso.android.nonso.ui.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Result;
+import nonso.android.nonso.viewModel.UserViewModel;
 
 public class DialogEditGoalsActivity extends AppCompatActivity {
 
@@ -27,12 +34,10 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
     @BindView(R.id.dialog_discard) Button mDiscardBtn;
     @BindView(R.id.dialog_update) Button mUpdateBtn;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-    private DocumentReference mUserRef;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String UID_KEY = "user_id";
+    private UserViewModel viewModel;
+    private String mUserId;
 
-    private static final String DATABASE_COLLECTION_USERS = "users/";
     private final String TAG = DialogEditGoalsActivity.class.getSimpleName();
 
     @Override
@@ -42,9 +47,11 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ButterKnife.bind(this);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
+        Intent intent = getIntent();
+        mUserId = intent.getStringExtra(UID_KEY);
+
+        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
     }
 
     @OnClick(R.id.dialog_discard)
@@ -56,21 +63,30 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
     public void onUpdateClick(View view){
 
         String goals = mGoalsText.getText().toString();
-
-        mUserRef.update("goal", goals)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.v(TAG, "Success: Updated user goal");
+        viewModel.updateUserGoals(mUserId, goals, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
                         finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Failed: Update user goal failed", e);
-                    }
-                });
+                        break;
+                    case FAILED:
+                        break;
+
+                }
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorization(FirebaseUser user) {
+
+            }
+        });
+
 
     }
 }

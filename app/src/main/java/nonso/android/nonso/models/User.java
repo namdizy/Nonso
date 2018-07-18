@@ -20,9 +20,9 @@ public class User implements Parcelable {
     private Map<String, Boolean> subscribedJourneys;
     private Map<String, Boolean> followingUsers;
     private Map<String, Boolean> followersUsers;
-    private Boolean updateFlag;
-    private Date createdAt;
-    @ServerTimestamp private Date updatedAt;
+    private Boolean flagUpdate;
+    @ServerTimestamp private Date createdAt;
+    private Date updatedAt;
 
     public Date getCreatedAt() {
         return createdAt;
@@ -131,11 +131,11 @@ public class User implements Parcelable {
     }
 
     public Boolean getUpdateFlag() {
-        return updateFlag;
+        return flagUpdate;
     }
 
-    public void setUpdateFlag(Boolean updateFlag) {
-        this.updateFlag = updateFlag;
+    public void setUpdateFlag(Boolean flagUpdate) {
+        this.flagUpdate = flagUpdate;
     }
 
     @Override
@@ -175,7 +175,7 @@ public class User implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
-        dest.writeValue(this.updateFlag);
+        dest.writeValue(this.flagUpdate);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -221,7 +221,7 @@ public class User implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.followersUsers.put(key, value);
         }
-        this.updateFlag = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.flagUpdate = (Boolean) in.readValue(Boolean.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

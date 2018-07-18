@@ -44,16 +44,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_8dp"
+                android:textSize="@dimen/h7"
+                android:textStyle="italic"
                 android:layout_toEndOf="@id/profile_journey_creator_image"
                 android:layout_below="@id/profile_journey_creator_name"/>
             <ImageButton
                 android:id="@+id/profile_journey_item_more_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_20dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_more_dark"
                 android:layout_marginTop="@dimen/margin_8dp"
+                android:scaleType="centerInside"
                 android:background="@null"/>
 
             <ImageView

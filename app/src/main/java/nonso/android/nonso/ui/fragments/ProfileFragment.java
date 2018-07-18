@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,7 +55,7 @@ import nonso.android.nonso.utils.ImageUtils;
 import nonso.android.nonso.viewModel.UserViewModel;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlobalLayoutListener {
 
     @BindView(R.id.profile_collapsing_container) CollapsingToolbarLayout mCollapsingToolbar;
     @BindView(R.id.btn_profile_settings) ImageButton mProfileSettings;
@@ -287,10 +288,11 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-        @OnClick(R.id.profile_edit_btn)
+    @OnClick(R.id.profile_edit_btn)
     public void onEditGoalsClick(View view){
 
         Intent intent = new Intent(getContext(), DialogEditGoalsActivity.class);
+        intent.putExtra(UID_KEY, mUserId);
         startActivity(intent);
     }
 
@@ -330,4 +332,14 @@ public class ProfileFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void onGlobalLayout() {
+        final int maxHeight = 192;
+        if(mCollapsingToolbar.getHeight() > maxHeight){
+            mCollapsingToolbar.getLayoutParams().height = maxHeight;
+        }
+    }
+
+
 }
