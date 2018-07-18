@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -32,11 +33,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.DialogEditGoalsActivity;
@@ -77,6 +82,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
     private String mUserId;
     private User mUser;
+    private UserViewModel viewModel;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -114,7 +120,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     private void setUp(){
 
 
-        UserViewModel viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         viewModel.init(mUserId);
 
         viewModel.getUserLiveData().observe(this, new Observer<User>() {
@@ -228,10 +234,9 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     public void onProfileImageClick(){
         Intent intent = new Intent(getContext(), ImageViewActivity.class);
 
-        if(mUser.getImageUri() != null){
-            intent.putExtra(PROFILE_IMAGE_EXTRA, mUser.getImageUri().toString());
-        }
+        intent.putExtra(PROFILE_IMAGE_EXTRA, mUser.getImageUri().toString());
         getActivity().startActivity(intent);
+
     }
 
     @OnClick(R.id.profile_edit_profile_image)
@@ -311,14 +316,28 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         Bitmap bitmap = imageUtils.decodeFile(imagePath);
 
         mUserProfileImage.setImageBitmap(bitmap);
-        uploadToFirebase(Uri.parse(imagePath));
+        uploadToFirebase(bitmap);
     }
 
-    private void uploadToFirebase(Uri uri){
-
-        Uri file = Uri.fromFile(new File(uri.getPath()));
+    private void uploadToFirebase(Bitmap bitmap){
 
 
+        viewModel.saveUserImage(mUserId, bitmap, new Callback() {
+            @Override
+            public void result(Result result) {
+
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorization(FirebaseUser user) {
+
+            }
+        });
     }
 
 

@@ -32,10 +32,11 @@ public class ImageViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String imageURL = intent.getStringExtra(PROFILE_IMAGE_EXTRA);
 
-        if(imageURL != null){
+        if(imageURL != null && !imageURL.isEmpty()){
             Picasso.with(this).load(imageURL).placeholder(R.drawable.profile_image_placeholder)
                     .error(R.drawable.profile_image_placeholder).into(mImageView);
         }
+
     }
 
     @OnClick(R.id.image_View_close)

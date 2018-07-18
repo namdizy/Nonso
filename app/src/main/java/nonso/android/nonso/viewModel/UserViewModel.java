@@ -4,6 +4,7 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +49,25 @@ public class UserViewModel extends ViewModel {
             @Override
             public void result(Result result) {
                 callback.result(result);
+            }
+
+            @Override
+            public void journey(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorization(FirebaseUser user) {
+
+            }
+        });
+    }
+
+    public void saveUserImage(String userId, Bitmap bitmap, Callback callback){
+        firebaseUtils.saveUserImage(userId, bitmap, new Callback() {
+            @Override
+            public void result(Result result) {
+
             }
 
             @Override

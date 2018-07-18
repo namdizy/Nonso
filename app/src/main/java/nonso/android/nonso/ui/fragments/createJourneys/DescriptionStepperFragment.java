@@ -311,13 +311,12 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
 
         Bitmap bitmap = imageUtils.decodeFile(imageString);
 
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, "Title", null);
-
         mImageButton.setVisibility(View.GONE);
-        mJourneysImage.setImageURI(Uri.parse(path));
-        mJourney.setProfileImage(path);
+        mJourneysImage.setImageBitmap(bitmap);
+
+        String bitmapString = imageUtils.BitMapToString(bitmap);
+
+        mJourney.setProfileImage(bitmapString);
         mJourneysImage.setVisibility(View.VISIBLE);
         if(mListener != null){
             mListener.OnDescriptionStepListener(mJourney);

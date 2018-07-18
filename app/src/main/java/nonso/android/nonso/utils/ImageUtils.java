@@ -4,7 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.util.Base64;
 import android.util.Log;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class ImageUtils {
 
@@ -18,6 +22,7 @@ public class ImageUtils {
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
             // Find the correct scale value. It should be the power of 2.
+            // TODO: !IMPORTANT find correct compression scale
 //            final int REQUIRED_SIZE = 70;
 //            int width_tmp = o.outWidth, height_tmp = o.outHeight;
 //            int scale = 0;
@@ -31,7 +36,7 @@ public class ImageUtils {
 //            }
             // decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = 8;
+            o2.inSampleSize = 4;
             Bitmap bm = BitmapFactory.decodeFile(path, o2);
             Bitmap bitmap = bm;
 
@@ -74,6 +79,26 @@ public class ImageUtils {
             return null;
         }
 
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos = new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+
+    public Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
     }
 
 

@@ -1,9 +1,11 @@
 package nonso.android.nonso.data;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,9 +21,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 
+import java.io.ByteArrayOutputStream;
+
 import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.utils.ImageUtils;
+
 public class FirebaseUtils {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -53,10 +59,14 @@ public class FirebaseUtils {
     public void saveJourney(Journey journey, final Callback callback){
 
         sJourney = journey;
-        String prepend = DATABASE_STORAGE_IMAGE_BUCKET + journey.getCreatedBy().getId() +"_journey_profile_image"+ ".jpg";
+        String prepend = DATABASE_STORAGE_IMAGE_BUCKET + journey.getCreatedBy().getId() +"_journey_profile_image"+ ".png";
 
         if(sJourney.getProfileImage() != null){
-            uploadImage(Uri.parse(journey.getProfileImage()), prepend, new Callback() {
+
+            ImageUtils imageUtils = new ImageUtils();
+            Bitmap imageBitmap = imageUtils.StringToBitMap(sJourney.getProfileImage());
+
+            uploadImage(imageBitmap, prepend, new Callback() {
                 @Override
                 public void result(Result result) {}
 
@@ -123,22 +133,36 @@ public class FirebaseUtils {
                 });
     }
 
-    public void uploadImage(Uri file, String prepend, final Callback callback ){
+    public void uploadImage(Bitmap bitmap, String prepend, final Callback callback ){
         final StorageReference ref = mStorageRef.child( prepend );
 
-       ref.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = ref.putBytes(data);
+
+        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        callback.journey(uri);
-                        Log.d(TAG, "onSuccess: uri= "+ uri.toString());
-                    }
-                });
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    callback.result(Result.FAILED);
+                    throw task.getException();
+                }
+                return ref.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    callback.journey(downloadUri);
+                    Log.d(TAG, "onSuccess: uri= "+ downloadUri.toString());
+                } else {
+                   callback.result(Result.FAILED);
+                }
             }
         });
-
     }
 
 
@@ -226,8 +250,6 @@ public class FirebaseUtils {
             });
     }
 
-
-
     public void updateUserGoals(String userId, String goals, final Callback callback){
 
         DocumentReference mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(userId);
@@ -248,6 +270,8 @@ public class FirebaseUtils {
                 });
     }
 
-
+    public void saveUserImage(String userId, Bitmap userImage, Callback callback){
+        String prepend = DATABASE_STORAGE_IMAGE_BUCKET + userId +"_user_profile_image"+ ".png";
+    }
 
 }
