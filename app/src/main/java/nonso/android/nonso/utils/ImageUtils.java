@@ -36,7 +36,7 @@ public class ImageUtils {
 //            }
             // decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = 4;
+            o2.inSampleSize = 2;
             Bitmap bm = BitmapFactory.decodeFile(path, o2);
             Bitmap bitmap = bm;
 

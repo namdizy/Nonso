@@ -119,7 +119,6 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
     private void setUp(){
 
-
         viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         viewModel.init(mUserId);
 
@@ -167,14 +166,8 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         mUsername.setText(user.getUserName());
         mUserGoals.setText(user.getGoal());
 
-
-        if(mUser.getImageUri() != null && !mUser.getImageUri().isEmpty()){
-            Picasso.with(getContext()).load(mUser.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
-                    .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
-        }
-        else{
-            mUserProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.profile_image_placeholder));
-        }
+        Picasso.with(getContext()).load(mUser.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
 
     }
 
@@ -189,8 +182,6 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         }else{
             mCreateFab.setVisibility(View.VISIBLE);
         }
-
-
     }
     public void hideFab(int cx, int cy, float endRadius){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -211,7 +202,6 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         }else{
             mCreateFab.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @OnClick(R.id.btn_profile_settings)
@@ -236,7 +226,6 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
         intent.putExtra(PROFILE_IMAGE_EXTRA, mUser.getImageUri().toString());
         getActivity().startActivity(intent);
-
     }
 
     @OnClick(R.id.profile_edit_profile_image)
@@ -329,12 +318,12 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
             }
 
             @Override
-            public void journey(Uri downloadUrl) {
+            public void imageResult(Uri downloadUrl) {
 
             }
 
             @Override
-            public void authorization(FirebaseUser user) {
+            public void authorizationResult(FirebaseUser user) {
 
             }
         });

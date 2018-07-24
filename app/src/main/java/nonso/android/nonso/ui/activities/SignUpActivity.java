@@ -168,12 +168,12 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void journey(Uri downloadUrl) {
+            public void imageResult(Uri downloadUrl) {
 
             }
 
             @Override
-            public void authorization(FirebaseUser user) {
+            public void authorizationResult(FirebaseUser user) {
 
             }
         });

@@ -1,14 +1,10 @@
 package nonso.android.nonso.ui.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,9 +17,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -75,6 +70,7 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
         DateUtils dateUtils = new DateUtils();
         holder.mJourneyCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
+        //holder.mJourneyCreatedTime.setText(new SimpleDateFormat().format(date));
 
         holder.mMoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override

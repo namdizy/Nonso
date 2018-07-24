@@ -27,13 +27,13 @@ public class AuthorizationViewModel extends ViewModel {
             }
 
             @Override
-            public void journey(Uri downloadUrl) {
+            public void imageResult(Uri downloadUrl) {
 
             }
 
             @Override
-            public void authorization(FirebaseUser user) {
-                callback.authorization(user);
+            public void authorizationResult(FirebaseUser user) {
+                callback.authorizationResult(user);
             }
         });
 
@@ -47,12 +47,12 @@ public class AuthorizationViewModel extends ViewModel {
            }
 
            @Override
-           public void journey(Uri downloadUrl) {
+           public void imageResult(Uri downloadUrl) {
 
            }
 
            @Override
-           public void authorization(FirebaseUser user) {
+           public void authorizationResult(FirebaseUser user) {
 
            }
        });

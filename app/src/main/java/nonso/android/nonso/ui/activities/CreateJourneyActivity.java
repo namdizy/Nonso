@@ -92,7 +92,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
         viewModel.saveJourney(mJourney, new Callback() {
             @Override
-            public void authorization(FirebaseUser user) {
+            public void authorizationResult(FirebaseUser user) {
 
             }
 
@@ -112,7 +112,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
             }
 
             @Override
-            public void journey(Uri downloadUrl) { }
+            public void imageResult(Uri downloadUrl) { }
         });
 
     }

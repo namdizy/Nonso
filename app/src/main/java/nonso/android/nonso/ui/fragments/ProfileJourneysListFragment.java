@@ -123,7 +123,7 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     public void onMenuDeleteClick(final Journey journey) {
         mViewModel.deleteJourney(journey,  new Callback(){
             @Override
-            public void authorization(FirebaseUser user) {
+            public void authorizationResult(FirebaseUser user) {
 
             }
 
@@ -140,7 +140,7 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
             }
 
             @Override
-            public void journey(Uri downloadUrl) {
+            public void imageResult(Uri downloadUrl) {
 
             }
         });

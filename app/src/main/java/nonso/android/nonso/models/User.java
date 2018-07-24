@@ -15,11 +15,6 @@ public class User implements Parcelable {
     private String goal;
     private String userId;
     private String imageUri;
-    private Map<String, Boolean> createdJourneys;
-    private Map<String, Boolean> followingJourneys;
-    private Map<String, Boolean> subscribedJourneys;
-    private Map<String, Boolean> followingUsers;
-    private Map<String, Boolean> followersUsers;
     private Boolean flagUpdate;
     @ServerTimestamp private Date createdAt;
     private Date updatedAt;
@@ -40,52 +35,9 @@ public class User implements Parcelable {
         this.updatedAt = updatedAt;
     }
 
-    public Map<String, Boolean> getCreatedJourneys() {
-        return createdJourneys;
-    }
 
-    public void setCreatedJourneys(Map<String, Boolean> createdJourneys) {
-        this.createdJourneys = createdJourneys;
-    }
-
-    public Map<String, Boolean> getFollowingJourneys() {
-        return followingJourneys;
-    }
-
-    public void setFollowingJourneys(Map<String, Boolean> followingJourneys) {
-        this.followingJourneys = followingJourneys;
-    }
-
-    public Map<String, Boolean> getSubscribedJourneys() {
-        return subscribedJourneys;
-    }
-
-    public void setSubscribedJourneys(Map<String, Boolean> subscribedJourneys) {
-        this.subscribedJourneys = subscribedJourneys;
-    }
-
-    public Map<String, Boolean> getFollowingUsers() {
-        return followingUsers;
-    }
-
-    public void setFollowingUsers(Map<String, Boolean> followingUsers) {
-        this.followingUsers = followingUsers;
-    }
-
-    public Map<String, Boolean> getFollowersUsers() {
-        return followersUsers;
-    }
-
-    public void setFollowersUsers(Map<String, Boolean> followersUsers) {
-        this.followersUsers = followersUsers;
-    }
 
     public User(){
-        this.createdJourneys = new HashMap<>();
-        this.followersUsers = new HashMap<>();
-        this.followingJourneys = new HashMap<>();
-        this.followingUsers = new HashMap<>();
-        this.subscribedJourneys = new HashMap<>();
     }
 
     public String getImageUri() {
@@ -150,31 +102,6 @@ public class User implements Parcelable {
         dest.writeString(this.goal);
         dest.writeString(this.userId);
         dest.writeString(this.imageUri);
-        dest.writeInt(this.createdJourneys.size());
-        for (Map.Entry<String, Boolean> entry : this.createdJourneys.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
-        }
-        dest.writeInt(this.followingJourneys.size());
-        for (Map.Entry<String, Boolean> entry : this.followingJourneys.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
-        }
-        dest.writeInt(this.subscribedJourneys.size());
-        for (Map.Entry<String, Boolean> entry : this.subscribedJourneys.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
-        }
-        dest.writeInt(this.followingUsers.size());
-        for (Map.Entry<String, Boolean> entry : this.followingUsers.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
-        }
-        dest.writeInt(this.followersUsers.size());
-        for (Map.Entry<String, Boolean> entry : this.followersUsers.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
-        }
         dest.writeValue(this.flagUpdate);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
@@ -186,41 +113,6 @@ public class User implements Parcelable {
         this.goal = in.readString();
         this.userId = in.readString();
         this.imageUri = in.readString();
-        int createdJourneysSize = in.readInt();
-        this.createdJourneys = new HashMap<String, Boolean>(createdJourneysSize);
-        for (int i = 0; i < createdJourneysSize; i++) {
-            String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.createdJourneys.put(key, value);
-        }
-        int followingJourneysSize = in.readInt();
-        this.followingJourneys = new HashMap<String, Boolean>(followingJourneysSize);
-        for (int i = 0; i < followingJourneysSize; i++) {
-            String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.followingJourneys.put(key, value);
-        }
-        int subscribedJourneysSize = in.readInt();
-        this.subscribedJourneys = new HashMap<String, Boolean>(subscribedJourneysSize);
-        for (int i = 0; i < subscribedJourneysSize; i++) {
-            String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.subscribedJourneys.put(key, value);
-        }
-        int followingUsersSize = in.readInt();
-        this.followingUsers = new HashMap<String, Boolean>(followingUsersSize);
-        for (int i = 0; i < followingUsersSize; i++) {
-            String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.followingUsers.put(key, value);
-        }
-        int followersUsersSize = in.readInt();
-        this.followersUsers = new HashMap<String, Boolean>(followersUsersSize);
-        for (int i = 0; i < followersUsersSize; i++) {
-            String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.followersUsers.put(key, value);
-        }
         this.flagUpdate = (Boolean) in.readValue(Boolean.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);

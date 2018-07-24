@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.utils.ImageUtils;
 
 public class FirebaseUtils {
@@ -71,12 +72,12 @@ public class FirebaseUtils {
                 public void result(Result result) {}
 
                 @Override
-                public void authorization(FirebaseUser user) {
+                public void authorizationResult(FirebaseUser user) {
 
                 }
 
                 @Override
-                public void journey(Uri downloadUrl) {
+                public void imageResult(Uri downloadUrl) {
                     createJourney(downloadUrl, new Callback() {
                         @Override
                         public void result(Result result) {
@@ -85,10 +86,10 @@ public class FirebaseUtils {
                         }
 
                         @Override
-                        public void journey(Uri downloadUrl) { }
+                        public void imageResult(Uri downloadUrl) { }
 
                         @Override
-                        public void authorization(FirebaseUser user) {
+                        public void authorizationResult(FirebaseUser user) {
 
                         }
                     });
@@ -103,12 +104,12 @@ public class FirebaseUtils {
                 }
 
                 @Override
-                public void authorization(FirebaseUser user) {
+                public void authorizationResult(FirebaseUser user) {
 
                 }
 
                 @Override
-                public void journey(Uri downloadUrl) {
+                public void imageResult(Uri downloadUrl) {
 
                 }
             });
@@ -133,7 +134,7 @@ public class FirebaseUtils {
                 });
     }
 
-    public void uploadImage(Bitmap bitmap, String prepend, final Callback callback ){
+    public void uploadImage(final Bitmap bitmap, String prepend, final Callback callback ){
         final StorageReference ref = mStorageRef.child( prepend );
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -141,6 +142,7 @@ public class FirebaseUtils {
         byte[] data = baos.toByteArray();
 
         UploadTask uploadTask = ref.putBytes(data);
+        bitmap.recycle();
 
         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -156,7 +158,8 @@ public class FirebaseUtils {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUri = task.getResult();
-                    callback.journey(downloadUri);
+                    bitmap.recycle();
+                    callback.imageResult(downloadUri);
                     Log.d(TAG, "onSuccess: uri= "+ downloadUri.toString());
                 } else {
                    callback.result(Result.FAILED);
@@ -197,55 +200,52 @@ public class FirebaseUtils {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            callback.authorization(mAuth.getCurrentUser());
+                            callback.authorizationResult(mAuth.getCurrentUser());
 
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            callback.authorization(mAuth.getCurrentUser());
+                            callback.authorizationResult(mAuth.getCurrentUser());
                         }
                     }
                 });
     }
 
     public void createUser(String email, String password, final String username, final Callback callback){
+
+        final User userPojo = new User();
+        userPojo.setUserName(username);
+        userPojo.setEmail(email);
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Log.d(TAG, "createUserWithEmail:success");
+                    if(task.isSuccessful()){
+                        Log.d(TAG, "createUserWithEmail:success");
 
-                    final FirebaseUser user = mAuth.getCurrentUser();
+                        final FirebaseUser authUser = mAuth.getCurrentUser();
 
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(username).build();
-
-                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-
-                            user.sendEmailVerification()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        userPojo.setUserId(authUser.getUid());
+                        authUser.sendEmailVerification();
+                        db.collection(DATABASE_COLLECTION_USERS).document(authUser.getUid())
+                                .set(userPojo)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                        if(task.isSuccessful()){
-                                            callback.result(Result.SUCCESS);
-                                        }
-                                        else{
-                                            callback.result(Result.FAILED);
-                                        }
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "Created new user");
+                                        callback.result(Result.SUCCESS);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "Creating new user false");
+                                        callback.result(Result.FAILED);
                                     }
                                 });
 
-                        }
-                        }
-                    });
-
-                }else{
-                    callback.result(Result.FAILED);
-                }
+                    }else {
+                        callback.result(Result.FAILED);
+                    }
                 }
             });
     }
@@ -270,8 +270,59 @@ public class FirebaseUtils {
                 });
     }
 
-    public void saveUserImage(String userId, Bitmap userImage, Callback callback){
+    public void updateUserImage(String userId, Uri userImage, final Callback callback){
+
+        DocumentReference mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(userId);
+        mUserRef.update("imageUri", userImage.toString())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.result(Result.SUCCESS);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.result(Result.FAILED);
+                    }
+                });
+    }
+
+    public void saveUserImage(final String userId, Bitmap userImage, final Callback callback){
         String prepend = DATABASE_STORAGE_IMAGE_BUCKET + userId +"_user_profile_image"+ ".png";
+
+
+        uploadImage(userImage, prepend, new Callback() {
+            @Override
+            public void result(Result result) {
+
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+                updateUserImage(userId, downloadUrl, new Callback() {
+                    @Override
+                    public void result(Result result) {
+                        callback.result(result);
+                    }
+
+                    @Override
+                    public void imageResult(Uri downloadUrl) {
+
+                    }
+
+                    @Override
+                    public void authorizationResult(FirebaseUser user) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+        });
     }
 
 }

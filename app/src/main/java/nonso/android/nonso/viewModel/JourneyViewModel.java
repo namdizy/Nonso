@@ -59,12 +59,12 @@ public class JourneyViewModel extends ViewModel {
             }
 
             @Override
-            public void journey(Uri downloadUrl) {
+            public void imageResult(Uri downloadUrl) {
 
             }
 
             @Override
-            public void authorization(FirebaseUser user) {
+            public void authorizationResult(FirebaseUser user) {
 
             }
         });
@@ -79,12 +79,12 @@ public class JourneyViewModel extends ViewModel {
             }
 
             @Override
-            public void authorization(FirebaseUser user) {
+            public void authorizationResult(FirebaseUser user) {
 
             }
 
             @Override
-            public void journey(Uri downloadUrl) {
+            public void imageResult(Uri downloadUrl) {
 
             }
         });

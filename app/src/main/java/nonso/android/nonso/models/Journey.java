@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
