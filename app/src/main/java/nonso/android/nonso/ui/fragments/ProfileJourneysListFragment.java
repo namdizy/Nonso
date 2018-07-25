@@ -113,9 +113,9 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
     }
 
     @Override
-    public void onJourneyItemClick(Journey journey) {
+    public void onJourneyItemClick(String journeyId) {
         if (mListener != null) {
-            mListener.onProfileJourneysListItemInteractionListener(journey);
+            mListener.onProfileJourneysListItemInteractionListener(journeyId);
         }
     }
 
@@ -163,7 +163,7 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
      */
     public interface OnProfileJourneysListInteractionListener {
         // TODO: Update argument type and name
-        void onProfileJourneysListItemInteractionListener(Journey journey);
+        void onProfileJourneysListItemInteractionListener(String journeyId);
     }
 
 }

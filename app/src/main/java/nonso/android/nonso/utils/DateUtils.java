@@ -3,8 +3,6 @@ package nonso.android.nonso.utils;
 import android.content.Context;
 import android.text.format.DateFormat;
 
-import nonso.android.nonso.R;
-
 import java.util.Calendar;
 import java.util.Date;
 

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import nonso.android.nonso.data.FirebaseDocumentLiveData;
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
 import nonso.android.nonso.models.Callback;
@@ -30,10 +32,16 @@ public class JourneyViewModel extends ViewModel {
 
     private String TAG = JourneyViewModel.class.getSimpleName();
 
-    private Query journeyRef;
-    private FirebaseQueryLiveData jLiveData;
-    private LiveData<ArrayList<Journey>> journeyLiveData;
+    private Query journeyListRef;
+    private FirebaseQueryLiveData jListLiveData;
+    private LiveData<ArrayList<Journey>> journeyListLiveData;
+
+    private DocumentReference journeyItemRef;
+    private FirebaseDocumentLiveData jItemLiveData;
+    private LiveData<Journey> journeyItemLiveData;
+
     private FirebaseUtils firebaseUtils;
+
 
     public JourneyViewModel(){
         firebaseUtils = new FirebaseUtils();
@@ -41,13 +49,19 @@ public class JourneyViewModel extends ViewModel {
 
     public void setJourneysList(String userId){
 
-        journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("createdBy.id", userId);
-        jLiveData = new FirebaseQueryLiveData(journeyRef);
-        journeyLiveData = Transformations.map(jLiveData, new Deserializer());
+        journeyListRef = db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("createdBy.id", userId);
+        jListLiveData = new FirebaseQueryLiveData(journeyListRef);
+        journeyListLiveData = Transformations.map(jListLiveData, new Deserializer());
     }
 
-    public void setUpJourney(String journeyId){
+    public void setUpJourneyItem(String journeyId){
+        journeyItemRef = db.collection(DATABASE_COLLECTION_JOURNEYS).document(journeyId);
+        jItemLiveData = new FirebaseDocumentLiveData(journeyItemRef);
+        journeyItemLiveData = Transformations.map(jItemLiveData, new ItemDeserializer());
+    }
 
+    public LiveData<Journey> getJourneyItemLiveData() {
+        return journeyItemLiveData;
     }
 
     public void saveJourney(Journey journey, final Callback callback){
@@ -92,7 +106,7 @@ public class JourneyViewModel extends ViewModel {
     }
 
     public LiveData<ArrayList<Journey>> getJourneyListLiveData(){
-        return journeyLiveData;
+        return journeyListLiveData;
     }
 
     private class Deserializer implements Function<QuerySnapshot, ArrayList<Journey>>{
@@ -109,8 +123,13 @@ public class JourneyViewModel extends ViewModel {
             }
             return returnJourney;
         }
+        public Journey apply(DocumentSnapshot input) {
+            return input.toObject(Journey.class);
+        }
+    }
 
-
+    private class ItemDeserializer implements Function<DocumentSnapshot, Journey>{
+        @Override
         public Journey apply(DocumentSnapshot input) {
             return input.toObject(Journey.class);
         }

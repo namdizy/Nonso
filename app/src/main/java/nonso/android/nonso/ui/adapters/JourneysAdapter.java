@@ -37,7 +37,7 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
     private final String TAG = JourneysAdapter.class.getName();
 
     public interface JourneysAdapterOnClickHandler{
-        void onJourneyItemClick(Journey journey);
+        void onJourneyItemClick(String journeyId);
         void onMenuDeleteClick(Journey journey);
         void onMenuSettingClick(Journey journey);
     }
@@ -102,6 +102,8 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
         Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.image_view_placeholder)
                 .error(R.drawable.image_view_placeholder).into(holder.mJourneyImage);
+        Picasso.with(mContext).load(journey.getCreatedBy().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(holder.mJourneyCreatorImage);
     }
 
     @Override
@@ -131,7 +133,7 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         public void onClick(View v) {
             int position = getAdapterPosition();
             Journey journey = mJourneys.get(position);
-            mOnClickListener.onJourneyItemClick(journey);
+            mOnClickListener.onJourneyItemClick(journey.getJourneyId());
         }
     }
 

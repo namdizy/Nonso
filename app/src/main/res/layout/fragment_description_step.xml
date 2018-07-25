@@ -67,6 +67,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
+            android:textColorHint="@color/colorPrimary"
             >
 
             <EditText
@@ -120,7 +121,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:textColorHint="@color/colorPrimary">
 
             <EditText
                 android:id="@+id/edit_create_journeys_input_description"

@@ -16,17 +16,14 @@ public class Journey implements Parcelable {
     private String description;
     private String profileImage;
     private boolean permissions;
+    private boolean matureContent;
     private boolean subscriptions;
-    private boolean tier1;
-    private boolean tier2;
-    private boolean tier3;
     private boolean displayFollowers;
     private CreatedBy createdBy;
     private Map<String, Boolean> subscribers;
     private Map<String, Boolean> blockedList;
     private Map<String, Boolean> categories;
     private Map<String, Boolean> steps;
-    private Boolean updateFlag;
     @ServerTimestamp private Date createdAt;
     private Date updatedAt;
 
@@ -102,29 +99,14 @@ public class Journey implements Parcelable {
         this.subscriptions = subscriptions;
     }
 
-    public boolean isTier1() {
-        return tier1;
+    public boolean isMatureContent() {
+        return matureContent;
     }
 
-    public void setTier1(boolean tier1) {
-        this.tier1 = tier1;
+    public void setMatureContent(boolean matureContent) {
+        this.matureContent = matureContent;
     }
 
-    public boolean isTier2() {
-        return tier2;
-    }
-
-    public void setTier2(boolean tier2) {
-        this.tier2 = tier2;
-    }
-
-    public boolean isTier3() {
-        return tier3;
-    }
-
-    public void setTier3(boolean tier3) {
-        this.tier3 = tier3;
-    }
 
     public String getName() {
         return name;
@@ -158,14 +140,6 @@ public class Journey implements Parcelable {
         this.steps = steps;
     }
 
-    public Boolean getUpdateFlag() {
-        return updateFlag;
-    }
-
-    public void setUpdateFlag(Boolean updateFlag) {
-        this.updateFlag = updateFlag;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -194,10 +168,8 @@ public class Journey implements Parcelable {
         dest.writeString(this.description);
         dest.writeString(this.profileImage);
         dest.writeByte(this.permissions ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.matureContent ? (byte) 1 : (byte) 0);
         dest.writeByte(this.subscriptions ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.tier1 ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.tier2 ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.tier3 ? (byte) 1 : (byte) 0);
         dest.writeByte(this.displayFollowers ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.createdBy, flags);
         dest.writeInt(this.subscribers.size());
@@ -220,7 +192,6 @@ public class Journey implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
-        dest.writeValue(this.updateFlag);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -231,10 +202,8 @@ public class Journey implements Parcelable {
         this.description = in.readString();
         this.profileImage = in.readString();
         this.permissions = in.readByte() != 0;
+        this.matureContent = in.readByte() != 0;
         this.subscriptions = in.readByte() != 0;
-        this.tier1 = in.readByte() != 0;
-        this.tier2 = in.readByte() != 0;
-        this.tier3 = in.readByte() != 0;
         this.displayFollowers = in.readByte() != 0;
         this.createdBy = in.readParcelable(CreatedBy.class.getClassLoader());
         int subscribersSize = in.readInt();
@@ -265,7 +234,6 @@ public class Journey implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.steps.put(key, value);
         }
-        this.updateFlag = (Boolean) in.readValue(Boolean.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

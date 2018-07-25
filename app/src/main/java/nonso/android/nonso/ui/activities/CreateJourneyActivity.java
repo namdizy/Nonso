@@ -73,9 +73,6 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
     public void OnSettingsStepListener(Journey journey) {
         mJourney.setPermissions(journey.isPermissions());
         mJourney.setSubscriptions(journey.isSubscriptions());
-        mJourney.setTier1(journey.isTier1());
-        mJourney.setTier2(journey.isTier2());
-        mJourney.setTier3(journey.isTier3());
     }
 
     @Override

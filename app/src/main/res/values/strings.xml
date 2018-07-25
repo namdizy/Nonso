@@ -67,12 +67,10 @@
     <string name="create_journey_settings_permission">Permissions</string>
     <string name="create_journey_settings_permission_disclaimer">Require permission to join this journey. If disabled you will get only a notification when a new friend joins.</string>
     <string name="create_journey_settings_subscription">Subscriptions</string>
-    <string name="create_journey_settings_subscription_disclaimer">Require subscriptions to join this journey. If disabled you will not be able to monetize your journey.</string>
-    <string name="create_journeys_settings_subscriptions_tier_header">Select subscription tiers</string>
-    <string name="create_journey_settings_subscriptions_tier1">Tier 1: $4.99</string>
-    <string name="create_journey_settings_subscriptions_tier2">Tier 2: $11.99</string>
-    <string name="create_journey_settings_subscriptions_tier3">Tier 3: $23.99</string>
+    <string name="create_journey_settings_subscription_disclaimer">Require subscriptions to join this journey. Subscriptions are a $4.99 monthly charge. If disabled you will not be able to monetize your journey.</string>
     <string name="create_journey_settings_discoverers">Discoverers</string>
+    <string name="create_journey_settings_mature_content">Mature Content</string>
+    <string name="create_journey_settings_mature_content_disclaimer">Select this if your journey contains mature content.</string>
     <string name="create_journey_setting_discoverers_disclaimer">Show how many friends are currently in this journey. If disabled the number of friends in this journey will be hidden</string>
     <string name="create_journey_settings_disclaimer">These settings can be changed at any time after creating this journey</string>
     <string name="create_journey_progress_bar_string">Taking the first step..</string>

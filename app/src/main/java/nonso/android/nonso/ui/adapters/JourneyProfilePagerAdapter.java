@@ -10,18 +10,18 @@ import nonso.android.nonso.ui.fragments.JourneyTimelineFragment;
 
 public class JourneyProfilePagerAdapter extends FragmentPagerAdapter {
 
-    private Context mContext;
+    private String mJourneyId;
 
-    public JourneyProfilePagerAdapter(FragmentManager fm, Context context) {
+    public JourneyProfilePagerAdapter(FragmentManager fm, String id) {
         super(fm);
-        mContext = context;
+        mJourneyId = id;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new JourneyTimelineFragment();
+                return new JourneyTimelineFragment().newInstance(mJourneyId);
             case 1:
                 return new JourneyCommunityFragment();
             default:

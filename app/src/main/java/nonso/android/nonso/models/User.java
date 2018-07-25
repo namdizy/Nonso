@@ -15,7 +15,6 @@ public class User implements Parcelable {
     private String goal;
     private String userId;
     private String imageUri;
-    private Boolean flagUpdate;
     @ServerTimestamp private Date createdAt;
     private Date updatedAt;
 
@@ -82,14 +81,6 @@ public class User implements Parcelable {
         this.userId = userId;
     }
 
-    public Boolean getUpdateFlag() {
-        return flagUpdate;
-    }
-
-    public void setUpdateFlag(Boolean flagUpdate) {
-        this.flagUpdate = flagUpdate;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -102,7 +93,6 @@ public class User implements Parcelable {
         dest.writeString(this.goal);
         dest.writeString(this.userId);
         dest.writeString(this.imageUri);
-        dest.writeValue(this.flagUpdate);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -113,7 +103,6 @@ public class User implements Parcelable {
         this.goal = in.readString();
         this.userId = in.readString();
         this.imageUri = in.readString();
-        this.flagUpdate = (Boolean) in.readValue(Boolean.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

@@ -38,12 +38,7 @@ public class SettingsStepperFragment extends Fragment implements Step {
 
     @BindView(R.id.switch_create_journeys_settings_permissions) Switch mPermissionsSwitch;
     @BindView(R.id.switch_create_journeys_settings_subscriptions) Switch mSubscriptionsSwitch;
-    @BindView(R.id.cbx_create_journey_subscription_tier1) CheckBox mTier1Cbx;
-    @BindView(R.id.cbx_create_journey_subscription_tier2) CheckBox mTier2Cbx;
-    @BindView(R.id.cbx_create_journey_subscription_tier3) CheckBox mTier3Cbx;
-    @BindView(R.id.tv_create_journeys_description_tier1_title) TextView mTier1TitleTV;
-    @BindView(R.id.tv_create_journeys_description_tier2_title) TextView mTier2TitleTv;
-    @BindView(R.id.tv_create_journeys_description_tier3_title) TextView mTier3TitleTV;
+    @BindView(R.id.switch_create_journeys_settings_mature_content) Switch mMatureContentSwitch;
 
 
     private int mStepPosition;
@@ -104,53 +99,20 @@ public class SettingsStepperFragment extends Fragment implements Step {
 
     @OnCheckedChanged(R.id.switch_create_journeys_settings_subscriptions)
     public void onSubscriptionChange(CompoundButton button, boolean checked){
-        if(checked){
-            mJourney.setSubscriptions(true);
-            mTier1Cbx.setVisibility(View.VISIBLE);
-            mTier2Cbx.setVisibility(View.VISIBLE);
-            mTier3Cbx.setVisibility(View.VISIBLE);
-            mTier1TitleTV.setVisibility(View.VISIBLE);
-            mTier2TitleTv.setVisibility(View.VISIBLE);
-            mTier3TitleTV.setVisibility(View.VISIBLE);
-        }else{
-            mJourney.setSubscriptions(true);
 
-            mJourney.setTier3(false);
-            mJourney.setTier1(false);
-            mJourney.setTier2(false);
-
-            mTier1Cbx.setChecked(false);
-            mTier2Cbx.setChecked(false);
-            mTier3Cbx.setChecked(false);
-
-            mTier1Cbx.setVisibility(View.GONE);
-            mTier2Cbx.setVisibility(View.GONE);
-            mTier3Cbx.setVisibility(View.GONE);
-            mTier1TitleTV.setVisibility(View.GONE);
-            mTier2TitleTv.setVisibility(View.GONE);
-            mTier3TitleTV.setVisibility(View.GONE);
-        }
-
+        mJourney.setSubscriptions(true);
         mListener.OnSettingsStepListener(mJourney);
     }
 
-    @OnCheckedChanged({R.id.cbx_create_journey_subscription_tier1, R.id.cbx_create_journey_subscription_tier2,
-                        R.id.cbx_create_journey_subscription_tier3})
-    public void onTierCheckChanged(CompoundButton button, boolean checked){
-        switch (button.getId()){
-            case R.id.cbx_create_journey_subscription_tier1:
-                mJourney.setTier1(checked);
-            case R.id.cbx_create_journey_subscription_tier2:
-                mJourney.setTier2(checked);
-            case R.id.cbx_create_journey_subscription_tier3:
-                mJourney.setTier3(checked);
-        }
-        mListener.OnSettingsStepListener(mJourney);
-    }
 
     @OnCheckedChanged(R.id.switch_create_journeys_settings_discoverers)
     public void onDiscoverersCheck(CompoundButton compoundButton, boolean checked){
         mJourney.setDisplayFollowers(checked);
+        mListener.OnSettingsStepListener(mJourney);
+    }
+
+    public void onMatureContentCheck(CompoundButton compoundButton, boolean checked){
+        mJourney.setMatureContent(checked);
         mListener.OnSettingsStepListener(mJourney);
     }
 

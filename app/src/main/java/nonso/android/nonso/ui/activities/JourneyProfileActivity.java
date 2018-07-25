@@ -1,9 +1,13 @@
 package nonso.android.nonso.ui.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -12,11 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -29,7 +33,7 @@ import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
 import nonso.android.nonso.ui.fragments.JourneyCommunityFragment;
 import nonso.android.nonso.ui.fragments.JourneyTimelineFragment;
 import nonso.android.nonso.ui.fragments.JourneyAboutFragment;
-import nonso.android.nonso.utils.JourneyUtils;
+import nonso.android.nonso.viewModel.JourneyViewModel;
 
 
 public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnJourneyTimelineListener,
@@ -47,12 +51,10 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
 
     private Journey mJourney;
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-    private SharedPreferences pref;
+    private JourneyViewModel viewModel;
 
     private final String STEP_EXTRA_DATA = "step_extra";
-    private final String JOURNEY_PREFERENCE_KEY = "journey_pref";
+    private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
     private final String JOURNEY_EXTRA_DATA = "journey_extra";
 
     @Override
@@ -62,13 +64,25 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
         ButterKnife.bind(this);
 
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
+        String journeyId = intent.getStringExtra(JOURNEY_EXTRA_ID_KEY);
 
-        String journeyString =  pref.getString(JOURNEY_PREFERENCE_KEY, null);
-        mJourney = new JourneyUtils().loadJourneyFromString(journeyString);
+        viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
+        viewModel.setUpJourneyItem(journeyId);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        viewModel.getJourneyItemLiveData().observe(this, new Observer<Journey>() {
+            @Override
+            public void onChanged(@Nullable Journey journey) {
+                updateUI(journey);
+            }
+        });
+
+    }
+
+
+    public void updateUI(Journey journey){
+
+        mJourney = journey;
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(mJourney.getName());
@@ -76,12 +90,13 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mJourneyDescription.setText(mJourney.getDescription());
-        mJourneyCreatorName.setText(mUser.getDisplayName());
+        mJourneyCreatorName.setText(mJourney.getCreatedBy().getName());
 
         Picasso.with(this).load(mJourney.getProfileImage()).into(mImageView);
-        Picasso.with(this).load(mUser.getPhotoUrl()).into(mJourneyCreatorImage);
+        Picasso.with(this).load(mJourney.getCreatedBy().getImageUrl()).placeholder(R.drawable.profile_image_placeholder).
+                error(R.drawable.profile_image_placeholder).into(mJourneyCreatorImage);
 
-        mViewPager.setAdapter(new JourneyProfilePagerAdapter(getSupportFragmentManager(), this));
+        mViewPager.setAdapter(new JourneyProfilePagerAdapter(getSupportFragmentManager(), mJourney.getJourneyId()));
         mTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -92,6 +107,18 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
             @Override
             public void onPageSelected(int position) {
+
+                int cx = mFab.getWidth()/2;
+                int cy = mFab.getHeight()/2;
+                float radius = (float)Math.hypot(cx, cy);
+                switch (position){
+                    case 0:
+                        showFab(cx, cy, radius);
+                        break;
+                    case 1:
+                        hideFab(cx, cy, radius);
+                        break;
+                }
             }
 
             @Override
@@ -103,6 +130,38 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         mFab.setMenuListener(menuListener);
     }
 
+    public void showFab(int cx, int cy, float finalRadius){
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(mFab, cx, cy, 0, finalRadius);
+            mFab.setVisibility(View.VISIBLE);
+            anim.setDuration(400);
+            anim.start();
+        }else{
+            mFab.setVisibility(View.VISIBLE);
+        }
+    }
+    public void hideFab(int cx, int cy, float endRadius){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(mFab, cx, cy, endRadius, 0);
+
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    mFab.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            anim.setDuration(400);
+            anim.start();
+        }else{
+            mFab.setVisibility(View.INVISIBLE);
+        }
+    }
 
     FabSpeedDial.MenuListener menuListener = new FabSpeedDial.MenuListener() {
         @Override

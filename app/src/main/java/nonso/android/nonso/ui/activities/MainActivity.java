@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,14 +18,12 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
-import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.fragments.DiscoverFragment;
 import nonso.android.nonso.ui.fragments.JourneysFragment;
 import nonso.android.nonso.ui.fragments.NotificationsFragment;
 import nonso.android.nonso.ui.fragments.ProfileFollowingJourneysListFragment;
 import nonso.android.nonso.ui.fragments.ProfileFragment;
 import nonso.android.nonso.ui.fragments.ProfileJourneysListFragment;
-import nonso.android.nonso.utils.JourneyUtils;
 import nonso.android.nonso.data.FirebaseUtils;
 
 public class MainActivity extends AppCompatActivity implements DiscoverFragment.OnFragmentInteractionListener,
@@ -37,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
     private static final String TAG = "MainActivity";
     private SharedPreferences pref;
     private final String ITEM_PREFERENCE_KEY = "menu_item_key";
-    private final String JOURNEY_PREFERENCE_KEY = "journey_pref";
+    private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
     private final String TAG_JOURNEY = "journey_tag";
     private final String TAG_PROFILE = "profile_tag";
     private final String TAG_NOTIFICATIONS = "notifications_tag";
@@ -128,11 +125,9 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
     }
 
     @Override
-    public void onProfileJourneysListItemInteractionListener(Journey journey) {
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(JOURNEY_PREFERENCE_KEY, new JourneyUtils().loadStringFromJourney(journey));
-        editor.apply();
+    public void onProfileJourneysListItemInteractionListener(String journeyId) {
         Intent intent = new Intent(MainActivity.this, JourneyProfileActivity.class);
+        intent.putExtra(JOURNEY_EXTRA_ID_KEY, journeyId);
         startActivity(intent);
     }
 
