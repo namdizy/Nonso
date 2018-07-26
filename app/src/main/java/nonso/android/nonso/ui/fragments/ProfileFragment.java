@@ -49,7 +49,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
 import nonso.android.nonso.ui.activities.DialogEditGoalsActivity;
@@ -314,6 +316,16 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         viewModel.saveUserImage(mUserId, bitmap, new Callback() {
             @Override
             public void result(Result result) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
 
             }
 

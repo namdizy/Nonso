@@ -27,6 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.CreatedBy;
+import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
@@ -55,7 +57,6 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
     private final String STEP_EXTRA_DATA = "step_extra";
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
-    private final String JOURNEY_EXTRA_DATA = "journey_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,12 +174,19 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         public boolean onMenuItemSelected(MenuItem menuItem) {
 
             Step step = new Step();
-            String creatorId = step.getCreatorId();
+
+            CreatedBy createdBy = new CreatedBy();
+            createdBy.setCreatorType(CreatorType.JOURNEY);
+            createdBy.setId(mJourney.getJourneyId());
+            createdBy.setName(mJourney.getName());
+            createdBy.setImageUrl(mJourney.getProfileImage());
+
+            step.setCreatedBy(createdBy);
+
             switch (menuItem.getItemId()){
                 case R.id.fab_menu_add_text:
                     Intent intent = new Intent(getBaseContext(), CreateStepTextActivity.class);
                     intent.putExtra(STEP_EXTRA_DATA, step);
-                    intent.putExtra(JOURNEY_EXTRA_DATA, mJourney);
                     startActivity(intent);
                     break;
                 case R.id.fab_menu_add_photo:

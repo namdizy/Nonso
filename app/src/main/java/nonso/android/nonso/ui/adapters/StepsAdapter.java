@@ -30,10 +30,6 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     private Context mContext;
     private StepsAdapterOnClickListener mAdapterOnClickListener;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String DATABASE_COLLECTION_USERS = "users/";
-    private DocumentReference mUserRef;
-    private User mCreator;
     public interface StepsAdapterOnClickListener{
         void onStepItemClick();
     }
@@ -59,25 +55,9 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
 
         Step step = mSteps.get(position);
 
-        String creatorId = step.getCreatorId();
-        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(creatorId);
-
         holder.mStepTitle.setText(step.getTitle());
         holder.mStepDescription.setText(step.getDescription());
 
-        mUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot snapshot = task.getResult();
-                    mCreator = snapshot.toObject(User.class);
-
-                    //holder.mCreatorName.setText(mCreator.getUserName());
-                }else{
-
-                }
-            }
-        });
     }
 
 

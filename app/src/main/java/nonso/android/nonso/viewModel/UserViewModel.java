@@ -14,7 +14,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import nonso.android.nonso.data.FirebaseDocumentLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
 import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 
 public class UserViewModel extends ViewModel {
@@ -57,6 +59,16 @@ public class UserViewModel extends ViewModel {
             }
 
             @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
             public void authorizationResult(FirebaseUser user) {
 
             }
@@ -67,6 +79,16 @@ public class UserViewModel extends ViewModel {
         firebaseUtils.saveUserImage(userId, bitmap, new Callback() {
             @Override
             public void result(Result result) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
 
             }
 

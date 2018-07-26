@@ -41,7 +41,9 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.viewModel.AuthorizationViewModel;
 
@@ -156,6 +158,16 @@ public class SignUpActivity extends AppCompatActivity {
         mProgressBarContainer.setVisibility(View.VISIBLE);
 
         mViewModel.createUser(_email, _password, _username, new Callback() {
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
             @Override
             public void result(Result result) {
                 switch (result){

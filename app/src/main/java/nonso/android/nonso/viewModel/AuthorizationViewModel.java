@@ -6,7 +6,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import nonso.android.nonso.data.FirebaseUtils;
 import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 
 public class AuthorizationViewModel extends ViewModel {
 
@@ -32,6 +34,16 @@ public class AuthorizationViewModel extends ViewModel {
             }
 
             @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
             public void authorizationResult(FirebaseUser user) {
                 callback.authorizationResult(user);
             }
@@ -44,6 +56,16 @@ public class AuthorizationViewModel extends ViewModel {
            @Override
            public void result(Result result) {
                callback.result(result);
+           }
+
+           @Override
+           public void journeyResult(Journey journey) {
+
+           }
+
+           @Override
+           public void stepResult(Step step) {
+
            }
 
            @Override

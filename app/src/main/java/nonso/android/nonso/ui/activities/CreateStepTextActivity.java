@@ -43,22 +43,16 @@ public class CreateStepTextActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private DocumentReference mUserRef;
-    //private StorageReference mStorageRef;
-    private DocumentReference mJourneyRef;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    //private static final String STORAGE_IMAGE_BUCKET = "images/";
-    private static final String DATABASE_COLLECTION_JOURNEYS = "journeys";
     private static final String DATABASE_COLLECTION_STEPS = "steps";
     private static final String DATABASE_COLLECTION_USERS = "users";
 
     private final String STEP_EXTRA_DATA = "step_extra";
-    private final String JOURNEY_EXTRA_DATA = "journey_extra";
 
     private KRichEditorFragment editorFragment;
 
     private Step mStep;
-    private Journey mJourney;
     private final  String TAG = getClass().getSimpleName();
 
     @Override
@@ -74,7 +68,6 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mStep = intent.getParcelableExtra(STEP_EXTRA_DATA);
-        mJourney = intent.getParcelableExtra(JOURNEY_EXTRA_DATA);
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -162,8 +155,6 @@ public class CreateStepTextActivity extends AppCompatActivity {
                 return true;
             case R.id.action_publish:
                 return true;
-            case R.id.action_settings:
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -184,8 +175,6 @@ public class CreateStepTextActivity extends AppCompatActivity {
                         mStep.setBodyText(text);
                         mStep.setStepType(StepType.TEXT);
                         mStep.setPublish(false);
-                        mStep.setCreatorId(mUserRef.getId());
-                        mStep.setJourneyId(mJourney.getJourneyId());
 
                         db.collection(DATABASE_COLLECTION_STEPS)
                             .add(mStep)
@@ -194,7 +183,6 @@ public class CreateStepTextActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentReference documentReference) {
 
                                     String stepId = documentReference.getId();
-                                    updateJourney(stepId);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -209,21 +197,10 @@ public class CreateStepTextActivity extends AppCompatActivity {
         });
     }
 
-    public void updateJourney(String stepId){
-        mJourneyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).document(mJourney.getJourneyId());
-        Map<String, Boolean> s = mJourney.getSteps();
-        s.put(stepId, true);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-        mJourneyRef.update("steps", s).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
     }
 }

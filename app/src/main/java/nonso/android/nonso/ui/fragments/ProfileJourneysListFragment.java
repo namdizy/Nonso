@@ -24,6 +24,7 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
 import nonso.android.nonso.viewModel.JourneyViewModel;
 
@@ -128,6 +129,16 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
             }
 
             @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
             public void result(Result result) {
                 switch (result){
                     case SUCCESS:
@@ -163,7 +174,7 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
      */
     public interface OnProfileJourneysListInteractionListener {
         // TODO: Update argument type and name
-        void onProfileJourneysListItemInteractionListener(String journeyId);
+        void onProfileJourneysListItemInteractionListener(String journeyId );
     }
 
 }

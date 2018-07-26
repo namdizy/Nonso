@@ -19,10 +19,7 @@ public class Step implements Parcelable {
     private String videoUrl;
     private String bodyText;
     private String description;
-    private String journeyId;
-    private String creatorId;
     private Boolean publish;
-    private Boolean updateFlag;
     private CreatedBy createdBy;
     @ServerTimestamp private Date createdAt;
     private Date updatedAt;
@@ -88,21 +85,6 @@ public class Step implements Parcelable {
         this.description = description;
     }
 
-    public String getJourneyId() {
-        return journeyId;
-    }
-
-    public void setJourneyId(String journeyId) {
-        this.journeyId = journeyId;
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String userId) {
-        this.creatorId = userId;
-    }
 
     public Boolean getPublish() {
         return publish;
@@ -120,13 +102,6 @@ public class Step implements Parcelable {
         StepId = stepId;
     }
 
-    public Boolean getUpdateFlag() {
-        return updateFlag;
-    }
-
-    public void setUpdateFlag(Boolean updateFlag) {
-        this.updateFlag = updateFlag;
-    }
 
     public CreatedBy getCreatedBy() {
         return createdBy;
@@ -175,10 +150,7 @@ public class Step implements Parcelable {
         dest.writeString(this.videoUrl);
         dest.writeString(this.bodyText);
         dest.writeString(this.description);
-        dest.writeString(this.journeyId);
-        dest.writeString(this.creatorId);
         dest.writeValue(this.publish);
-        dest.writeValue(this.updateFlag);
         dest.writeParcelable(this.createdBy, flags);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
@@ -206,10 +178,7 @@ public class Step implements Parcelable {
         this.videoUrl = in.readString();
         this.bodyText = in.readString();
         this.description = in.readString();
-        this.journeyId = in.readString();
-        this.creatorId = in.readString();
         this.publish = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.updateFlag = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.createdBy = in.readParcelable(CreatedBy.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);

@@ -25,7 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.viewModel.UserViewModel;
 
 public class DialogEditGoalsActivity extends AppCompatActivity {
@@ -64,6 +66,16 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
 
         String goals = mGoalsText.getText().toString();
         viewModel.updateUserGoals(mUserId, goals, new Callback() {
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
             @Override
             public void result(Result result) {
                 switch (result){

@@ -3,18 +3,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="26dp">
 
-        <include
-            layout="@layout/vertical_timeline_divider"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="center"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,7 +19,7 @@
         <include
             layout="@layout/vertical_timeline_divider"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"/>
    </LinearLayout>
 
@@ -51,9 +48,10 @@
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_20dp"
                 android:src="@drawable/ic_more_dark"
                 android:background="@null"
+                android:scaleType="centerInside"
                 android:layout_gravity="end"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"/>
@@ -63,8 +61,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:textSize="24sp"
+                android:textSize="@dimen/h4"
                 android:textStyle="bold"
                 android:layout_below="@id/step_created_time"/>
             <TextView
@@ -74,7 +73,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:textSize="13sp"
+                android:textSize="@dimen/h6"
                 android:layout_below="@id/step_item_title"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
         </RelativeLayout>

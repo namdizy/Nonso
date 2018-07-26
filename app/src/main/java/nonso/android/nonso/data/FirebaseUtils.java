@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -26,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.utils.ImageUtils;
 
@@ -57,6 +59,17 @@ public class FirebaseUtils {
         return mUser;
     }
 
+    public void getJourney(String journeyId, final Callback callback){
+
+        DocumentReference docRef = db.collection(DATABASE_COLLECTION_JOURNEYS).document(journeyId);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                callback.journeyResult(documentSnapshot.toObject(Journey.class));
+            }
+        });
+    }
+
     public void saveJourney(Journey journey, final Callback callback){
 
         sJourney = journey;
@@ -77,6 +90,16 @@ public class FirebaseUtils {
                 }
 
                 @Override
+                public void journeyResult(Journey journey) {
+
+                }
+
+                @Override
+                public void stepResult(Step step) {
+
+                }
+
+                @Override
                 public void imageResult(Uri downloadUrl) {
                     createJourney(downloadUrl, new Callback() {
                         @Override
@@ -92,6 +115,16 @@ public class FirebaseUtils {
                         public void authorizationResult(FirebaseUser user) {
 
                         }
+
+                        @Override
+                        public void journeyResult(Journey journey) {
+
+                        }
+
+                        @Override
+                        public void stepResult(Step step) {
+
+                        }
                     });
                 }
             });
@@ -104,12 +137,22 @@ public class FirebaseUtils {
                 }
 
                 @Override
+                public void journeyResult(Journey journey) {
+
+                }
+
+                @Override
                 public void authorizationResult(FirebaseUser user) {
 
                 }
 
                 @Override
                 public void imageResult(Uri downloadUrl) {
+
+                }
+
+                @Override
+                public void stepResult(Step step) {
 
                 }
             });
@@ -179,6 +222,8 @@ public class FirebaseUtils {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     Log.w(TAG, "Document upload complete");
+
+                    documentReference.update("journeyId", documentReference.getId());
                     callback.result(Result.SUCCESS);
                 }
             })
@@ -299,6 +344,16 @@ public class FirebaseUtils {
             }
 
             @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
             public void imageResult(Uri downloadUrl) {
                 updateUserImage(userId, downloadUrl, new Callback() {
                     @Override
@@ -313,6 +368,16 @@ public class FirebaseUtils {
 
                     @Override
                     public void authorizationResult(FirebaseUser user) {
+
+                    }
+
+                    @Override
+                    public void journeyResult(Journey journey) {
+
+                    }
+
+                    @Override
+                    public void stepResult(Step step) {
 
                     }
                 });

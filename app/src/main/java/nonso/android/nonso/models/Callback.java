@@ -9,6 +9,9 @@ public interface Callback {
     void result(Result result);
     void imageResult(Uri downloadUrl);
     void authorizationResult(FirebaseUser user);
-
+    void journeyResult(Journey journey);
+    void stepResult(Step step);
 }
+
+
 

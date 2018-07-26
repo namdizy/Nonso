@@ -24,10 +24,15 @@ import nonso.android.nonso.data.FirebaseUtils;
 import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 
 public class JourneyViewModel extends ViewModel {
 
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
+    private static final String DATABASE_COLLECTION_USERS = "users/";
+
+    private static final String DATABASE_SUBCOLLECTION_JOURNEYS = "journeyIds/";
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private String TAG = JourneyViewModel.class.getSimpleName();
@@ -49,7 +54,8 @@ public class JourneyViewModel extends ViewModel {
 
     public void setJourneysList(String userId){
 
-        journeyListRef = db.collection(DATABASE_COLLECTION_JOURNEYS).whereEqualTo("createdBy.id", userId);
+        journeyListRef = db.collection(DATABASE_COLLECTION_USERS).document(userId)
+                            .collection(DATABASE_SUBCOLLECTION_JOURNEYS);
         jListLiveData = new FirebaseQueryLiveData(journeyListRef);
         journeyListLiveData = Transformations.map(jListLiveData, new Deserializer());
     }
@@ -64,7 +70,7 @@ public class JourneyViewModel extends ViewModel {
         return journeyItemLiveData;
     }
 
-    public void saveJourney(Journey journey, final Callback callback){
+    public void createJourney(Journey journey, final Callback callback){
         firebaseUtils.saveJourney(journey, new Callback() {
             @Override
             public void result(Result result) {
@@ -81,6 +87,16 @@ public class JourneyViewModel extends ViewModel {
             public void authorizationResult(FirebaseUser user) {
 
             }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
         });
     }
 
@@ -93,12 +109,22 @@ public class JourneyViewModel extends ViewModel {
             }
 
             @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
             public void authorizationResult(FirebaseUser user) {
 
             }
 
             @Override
             public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
 
             }
         });
@@ -114,12 +140,36 @@ public class JourneyViewModel extends ViewModel {
         public ArrayList<Journey> apply(QuerySnapshot input) {
 
             List<DocumentSnapshot> temp = input.getDocuments();
-            ArrayList<Journey> returnJourney = new ArrayList<>();
+            final ArrayList<Journey> returnJourney = new ArrayList<>();
 
             for (DocumentSnapshot snapshot: temp) {
-                Journey t = snapshot.toObject(Journey.class);
-                t.setJourneyId(snapshot.getId());
-                returnJourney.add(t);
+                String journeyId = snapshot.get("journeyId").toString();
+                firebaseUtils.getJourney(journeyId, new Callback() {
+                    @Override
+                    public void result(Result result) {
+
+                    }
+
+                    @Override
+                    public void imageResult(Uri downloadUrl) {
+
+                    }
+
+                    @Override
+                    public void authorizationResult(FirebaseUser user) {
+
+                    }
+
+                    @Override
+                    public void stepResult(Step step) {
+
+                    }
+
+                    @Override
+                    public void journeyResult(Journey journey) {
+                        returnJourney.add(journey);
+                    }
+                });
             }
             return returnJourney;
         }

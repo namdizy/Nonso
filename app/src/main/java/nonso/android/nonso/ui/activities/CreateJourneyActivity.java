@@ -23,6 +23,7 @@ import nonso.android.nonso.models.CreatedBy;
 import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.StepperAdapter;
 import nonso.android.nonso.ui.fragments.createJourneys.DescriptionStepperFragment;
@@ -87,9 +88,19 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         createdBy.setCreatorType(CreatorType.USER);
         mJourney.setCreatedBy(createdBy);
 
-        viewModel.saveJourney(mJourney, new Callback() {
+        viewModel.createJourney(mJourney, new Callback() {
             @Override
             public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
 
             }
 

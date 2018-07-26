@@ -46,7 +46,6 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     private final String JOURNEY_ID_KEY = "journey_pref";
 
     private final String TAG = JourneyTimelineFragment.class.getSimpleName();
-    private ListenerRegistration listenerRegistration;
 
     private OnJourneyTimelineListener mListener;
 
@@ -55,7 +54,6 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     private ArrayList<Step> mStepsList = new ArrayList<Step>();
     private StepsAdapter stepsAdapter;
     private RecyclerView.LayoutManager stepsLayoutManager;
-    private SharedPreferences mPref;
     private String mJourneyId;
 
     public JourneyTimelineFragment() { }
@@ -84,22 +82,21 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
         View view =  inflater.inflate(R.layout.fragment_journey_timeline, container, false);
         ButterKnife.bind(this, view);
 
-        mPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         mJourney = new Journey();
-        //stepsLayoutManager = new LinearLayoutManager(getContext());
-        //stepsRecyclerView.setLayoutManager(stepsLayoutManager);
-        //stepsRecyclerView.setHasFixedSize(true);
+        stepsLayoutManager = new LinearLayoutManager(getContext());
+        stepsRecyclerView.setLayoutManager(stepsLayoutManager);
+        stepsRecyclerView.setHasFixedSize(true);
 
-        //stepsAdapter = new StepsAdapter(getContext(),this);
-        //stepsRecyclerView.setAdapter(stepsAdapter);
+        stepsAdapter = new StepsAdapter(getContext(),this);
+        stepsRecyclerView.setAdapter(stepsAdapter);
 
-        //setStepsList();
+        setStepsList();
         return view;
     }
 
     private void setStepsList(){
 
-        db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("journeyId", mJourney.getJourneyId())
+        db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("journeyId", mJourneyId)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

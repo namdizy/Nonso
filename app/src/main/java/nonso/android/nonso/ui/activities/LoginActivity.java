@@ -24,7 +24,9 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
 import nonso.android.nonso.viewModel.AuthorizationViewModel;
 
 public class LoginActivity extends AppCompatActivity {
@@ -89,6 +91,16 @@ public class LoginActivity extends AppCompatActivity {
         mViewModel.signIn(email, password, new Callback() {
             @Override
             public void result(Result result) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
 
             }
 
