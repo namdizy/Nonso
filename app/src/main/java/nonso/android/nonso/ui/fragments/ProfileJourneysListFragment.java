@@ -12,8 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
@@ -37,6 +40,8 @@ import nonso.android.nonso.viewModel.JourneyViewModel;
 public class ProfileJourneysListFragment extends Fragment implements JourneysAdapter.JourneysAdapterOnClickHandler{
 
     @BindView(R.id.profile_recycler_view_journeys) RecyclerView mJourneysRecyclerView;
+    @BindView(R.id.profile_journeys_not_found_container)
+    LinearLayout mJourneysNotFound;
 
     private final String TAG = ProfileJourneysListFragment.class.getSimpleName();
     private OnProfileJourneysListInteractionListener mListener;
@@ -76,24 +81,37 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
         mViewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
         mViewModel.setJourneysList(mUserId);
-        mViewModel.getJourneyListLiveData().observe(this, new Observer<ArrayList<Journey>>() {
+        mViewModel.getJourneyListLiveData().observe(this, new Observer<Task<ArrayList<Journey>>>() {
             @Override
-            public void onChanged(@Nullable ArrayList<Journey> journeys) {
-                updateUI(journeys);
+            public void onChanged(@Nullable Task<ArrayList<Journey>> arrayListTask) {
+                arrayListTask.addOnSuccessListener(new OnSuccessListener<ArrayList<Journey>>() {
+                    @Override
+                    public void onSuccess(ArrayList<Journey> journeys) {
+                        updateUI(journeys);
+                    }
+                });
             }
         });
         return view;
     }
 
     private void updateUI(ArrayList<Journey> journeys){
-        journeysLayoutManager = new LinearLayoutManager(getContext());
-        mJourneysRecyclerView.setLayoutManager(journeysLayoutManager);
-        mJourneysRecyclerView.setHasFixedSize(true);
 
-        journeysAdapter = new JourneysAdapter(getContext(), this);
-        mJourneysRecyclerView.setAdapter(journeysAdapter);
+        if(journeys != null && journeys.size() > 0){
 
-        journeysAdapter.setJourneysData(journeys);
+            mJourneysNotFound.setVisibility(View.GONE);
+            journeysLayoutManager = new LinearLayoutManager(getContext());
+            mJourneysRecyclerView.setLayoutManager(journeysLayoutManager);
+            mJourneysRecyclerView.setHasFixedSize(true);
+
+            journeysAdapter = new JourneysAdapter(getContext(), this);
+            mJourneysRecyclerView.setAdapter(journeysAdapter);
+
+            journeysAdapter.setJourneysData(journeys);
+        } else{
+            mJourneysNotFound.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

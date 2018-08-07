@@ -5,18 +5,31 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
+import com.google.gson.Gson;
+import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Locale;
+import java.util.Map;
+
 
 import nonso.android.nonso.data.FirebaseDocumentLiveData;
 import nonso.android.nonso.data.FirebaseQueryLiveData;
@@ -34,12 +47,13 @@ public class JourneyViewModel extends ViewModel {
     private static final String DATABASE_SUBCOLLECTION_JOURNEYS = "journeyIds/";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
 
     private String TAG = JourneyViewModel.class.getSimpleName();
 
     private Query journeyListRef;
     private FirebaseQueryLiveData jListLiveData;
-    private LiveData<ArrayList<Journey>> journeyListLiveData;
+    private LiveData<Task<ArrayList<Journey>>> journeyListLiveData;
 
     private DocumentReference journeyItemRef;
     private FirebaseDocumentLiveData jItemLiveData;
@@ -55,7 +69,7 @@ public class JourneyViewModel extends ViewModel {
     public void setJourneysList(String userId){
 
         journeyListRef = db.collection(DATABASE_COLLECTION_USERS).document(userId)
-                            .collection(DATABASE_SUBCOLLECTION_JOURNEYS);
+                .collection(DATABASE_SUBCOLLECTION_JOURNEYS);
         jListLiveData = new FirebaseQueryLiveData(journeyListRef);
         journeyListLiveData = Transformations.map(jListLiveData, new Deserializer());
     }
@@ -131,50 +145,69 @@ public class JourneyViewModel extends ViewModel {
 
     }
 
-    public LiveData<ArrayList<Journey>> getJourneyListLiveData(){
+    public LiveData<Task<ArrayList<Journey>>> getJourneyListLiveData(){
         return journeyListLiveData;
     }
 
-    private class Deserializer implements Function<QuerySnapshot, ArrayList<Journey>>{
+
+    private class Deserializer implements Function<QuerySnapshot, Task<ArrayList<Journey>>>{
         @Override
-        public ArrayList<Journey> apply(QuerySnapshot input) {
+        public Task<ArrayList<Journey>> apply(QuerySnapshot input) {
 
             List<DocumentSnapshot> temp = input.getDocuments();
-            final ArrayList<Journey> returnJourney = new ArrayList<>();
+            final ArrayList<String> journeyIds = new ArrayList<>();
 
             for (DocumentSnapshot snapshot: temp) {
-                String journeyId = snapshot.get("journeyId").toString();
-                firebaseUtils.getJourney(journeyId, new Callback() {
-                    @Override
-                    public void result(Result result) {
 
+                if(snapshot.get("journeyId") != null && !snapshot.getId().equals("initialization")){
+                    String journeyId = snapshot.get("journeyId").toString();
+                    if(journeyId != null && !journeyId.isEmpty()){
+                        journeyIds.add(journeyId);
                     }
-
-                    @Override
-                    public void imageResult(Uri downloadUrl) {
-
-                    }
-
-                    @Override
-                    public void authorizationResult(FirebaseUser user) {
-
-                    }
-
-                    @Override
-                    public void stepResult(Step step) {
-
-                    }
-
-                    @Override
-                    public void journeyResult(Journey journey) {
-                        returnJourney.add(journey);
-                    }
-                });
+                }
             }
-            return returnJourney;
-        }
-        public Journey apply(DocumentSnapshot input) {
-            return input.toObject(Journey.class);
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("ids", journeyIds);
+            return mFunctions.getHttpsCallable("getJourneys")
+                    .call(data)
+                    .continueWith(new Continuation<HttpsCallableResult, ArrayList<Journey>>() {
+                        @Override
+                        public ArrayList then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            Exception e = task.getException();
+                            Log.e(TAG, "Exception has occurred getting journeys: ", e.getCause());
+                            return null;
+                        }
+                        else{
+                            Object fromdb =  task.getResult().getData();
+                            ArrayList<Journey> journeys = new ArrayList<>();
+                            Gson gson = new Gson();
+
+                            for(Object d: (ArrayList)fromdb){
+                                String jsonStr = gson.toJson(d);
+                                JSONObject jsonObject = new JSONObject(jsonStr);
+
+                                String createdAt = jsonObject.get("createdAt").toString();
+                                try {
+                                    DateFormat df = new SimpleDateFormat("EEE MMM dd yyyy hh:mm:ss z", Locale.ENGLISH);
+                                    Date result =  df.parse(createdAt);
+                                    jsonObject.put("createdAt", null);
+
+                                    jsonStr = jsonObject.toString();
+
+                                    Journey journey = gson.fromJson(jsonStr, Journey.class);
+                                    journey.setCreatedAt(result);
+                                    journeys.add(journey);
+                                } catch (Exception e) {
+                                    Log.w(TAG, "Error serializing Journey Object: ", e.getCause());
+                                    return null;
+                                }
+                            }
+                            return journeys;
+                        }
+                        }
+                    });
         }
     }
 

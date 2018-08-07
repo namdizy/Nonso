@@ -53,6 +53,7 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:16.0.2"
     implementation "com.google.firebase:firebase-storage:16.0.1"
     implementation "com.google.firebase:firebase-firestore:17.0.2"
+    implementation 'com.google.firebase:firebase-functions:16.1.0'
 
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
@@ -89,6 +90,8 @@ dependencies {
     implementation 'com.github.daothanhduy305:KRichEditor:-SNAPSHOT'
 
     //credit Startup image By Nikita Golubev from flaticon
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
 }
 

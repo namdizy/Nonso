@@ -1,10 +1,13 @@
 package nonso.android.nonso.ui.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -28,6 +33,7 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.ui.adapters.StepsAdapter;
+import nonso.android.nonso.viewModel.StepsViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,11 +45,16 @@ import nonso.android.nonso.ui.adapters.StepsAdapter;
 public class JourneyTimelineFragment extends Fragment implements StepsAdapter.StepsAdapterOnClickListener{
 
     @BindView(R.id.journey_profile_recycler_view_steps) RecyclerView stepsRecyclerView;
+    @BindView(R.id.steps_list_container)
+    LinearLayout mStepsContainer;
+    @BindView(R.id.steps_not_found_container) LinearLayout mStepsNotFound;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String DATABASE_COLLECTION_STEPS = "steps/";
     private final String JOURNEY_ID_KEY = "journey_pref";
+
+    private StepsViewModel viewModel;
 
     private final String TAG = JourneyTimelineFragment.class.getSimpleName();
 
@@ -90,31 +101,39 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
         stepsAdapter = new StepsAdapter(getContext(),this);
         stepsRecyclerView.setAdapter(stepsAdapter);
 
-        setStepsList();
+        viewModel = ViewModelProviders.of(this).get(StepsViewModel.class);
+        viewModel.setStepsList(mJourneyId);
+        viewModel.getStepsListLiveData().observe(this, new Observer<Task<ArrayList<Step>>>() {
+            @Override
+            public void onChanged(@Nullable Task<ArrayList<Step>> arrayListTask) {
+                if(arrayListTask != null){
+                    arrayListTask.addOnSuccessListener(new OnSuccessListener<ArrayList<Step>>() {
+                        @Override
+                        public void onSuccess(ArrayList<Step> steps) {
+                            setSteps(steps);
+                        }
+                    });
+                }
+                else{
+                    setSteps(null);
+                }
+            }
+        });
         return view;
     }
 
-    private void setStepsList(){
+    public void setSteps(ArrayList steps){
 
-        db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("journeyId", mJourneyId)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+        if(steps != null){
+            mStepsContainer.setVisibility(View.VISIBLE);
+            mStepsNotFound.setVisibility(View.GONE);
+            mStepsList = steps;
+            stepsAdapter.setStepsData(mStepsList);
+        }else{
+            mStepsNotFound.setVisibility(View.VISIBLE);
+            mStepsContainer.setVisibility(View.GONE);
+        }
 
-                        for(QueryDocumentSnapshot snapshot: queryDocumentSnapshots){
-                            mStepsList.add(snapshot.toObject(Step.class));
-                        }
-                        if(mStepsList != null){
-                            stepsAdapter.setStepsData(mStepsList);
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error retrieving steps"+ e.getLocalizedMessage());
-                    }
-                });
     }
 
     @Override

@@ -48,6 +48,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
     private static final String DATABASE_COLLECTION_STEPS = "steps";
     private static final String DATABASE_COLLECTION_USERS = "users";
 
+    private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
     private final String STEP_EXTRA_DATA = "step_extra";
 
     private KRichEditorFragment editorFragment;
@@ -201,6 +202,9 @@ public class CreateStepTextActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-
+        Intent intent = new Intent(this, JourneyProfileActivity.class);
+        intent.putExtra(JOURNEY_EXTRA_ID_KEY, mStep.getCreatedBy().getId());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

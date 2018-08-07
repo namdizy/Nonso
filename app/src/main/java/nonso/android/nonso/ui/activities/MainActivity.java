@@ -85,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         Fragment fragment = null;
         int index = mBottomNavigationView.getMenuItemPosition(item);
 
+        SharedPreferences.Editor prefEditor = pref.edit();
+
+        prefEditor.putInt(ITEM_PREFERENCE_KEY, index);
+        prefEditor.apply();
+
         switch (item.getItemId()){
             case R.id.menu_home:
                 fragment = getSupportFragmentManager().findFragmentByTag(TAG_JOURNEY);

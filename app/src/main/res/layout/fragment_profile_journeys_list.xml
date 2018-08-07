@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/profile_container"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.ProfileJourneysListFragment"
-    android:background="@color/colorGreyLight"
-    android:orientation="vertical">
+    android:background="@color/colorGreyLight">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/profile_recycler_view_journeys"
@@ -32,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="It looks Empty! Follow a Journey" />
+            android:text="It looks Empty! Go on a Journey" />
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
