@@ -157,9 +157,12 @@ public class JourneyViewModel extends ViewModel {
             List<DocumentSnapshot> temp = input.getDocuments();
             final ArrayList<String> journeyIds = new ArrayList<>();
 
-            for (DocumentSnapshot snapshot: temp) {
+            if(temp.isEmpty()){
+                return null;
+            }
 
-                if(snapshot.get("journeyId") != null && !snapshot.getId().equals("initialization")){
+            for (DocumentSnapshot snapshot: temp) {
+                if(snapshot.get("journeyId") != null ){
                     String journeyId = snapshot.get("journeyId").toString();
                     if(journeyId != null && !journeyId.isEmpty()){
                         journeyIds.add(journeyId);
@@ -173,7 +176,7 @@ public class JourneyViewModel extends ViewModel {
                     .call(data)
                     .continueWith(new Continuation<HttpsCallableResult, ArrayList<Journey>>() {
                         @Override
-                        public ArrayList then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        public ArrayList<Journey> then(@NonNull Task<HttpsCallableResult> task) throws Exception {
                         if (!task.isSuccessful()) {
                             Exception e = task.getException();
                             Log.e(TAG, "Exception has occurred getting journeys: ", e.getCause());

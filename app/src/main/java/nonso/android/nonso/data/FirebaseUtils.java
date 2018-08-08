@@ -13,7 +13,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,6 +40,7 @@ public class FirebaseUtils {
     private static final String DATABASE_COLLECTION_USERS = "users/";
     private static final String DATABASE_STORAGE_IMAGE_BUCKET = "images/";
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
+    private static final String DATABASE_COLLECTION_STEPS = "steps/";
     private static final String TAG = FirebaseUtils.class.getSimpleName();
 
     private Journey sJourney;
@@ -211,7 +211,6 @@ public class FirebaseUtils {
         });
     }
 
-
     public void createJourney(Uri downloadUri, final Callback callback){
 
         if(downloadUri != null){
@@ -236,6 +235,23 @@ public class FirebaseUtils {
             });
     }
 
+    public void saveStep(Step step, final Callback callback){
+
+        db.collection(DATABASE_COLLECTION_STEPS).add(step)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    documentReference.update("stepId", documentReference.getId());
+                    callback.result(Result.SUCCESS);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                   callback.result(Result.FAILED);
+                }
+            });
+    }
     public void login(String email, String password, final Callback callback){
 
         mAuth.signInWithEmailAndPassword(email, password)

@@ -1,7 +1,9 @@
 package nonso.android.nonso.ui.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,30 +11,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ebolo.krichtexteditor.RichEditor;
 import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
 import com.ebolo.krichtexteditor.fragments.Options;
 import com.ebolo.krichtexteditor.ui.widgets.EditorButton;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.StepType;
+import nonso.android.nonso.viewModel.StepsViewModel;
 
 public class CreateStepTextActivity extends AppCompatActivity {
 
@@ -40,16 +37,11 @@ public class CreateStepTextActivity extends AppCompatActivity {
     EditText mStepTitle;
     @BindView(R.id.create_step_text_description) EditText mStepDescription;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-    private DocumentReference mUserRef;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static final String DATABASE_COLLECTION_STEPS = "steps";
-    private static final String DATABASE_COLLECTION_USERS = "users";
 
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
     private final String STEP_EXTRA_DATA = "step_extra";
+
+    private StepsViewModel viewModel;
 
     private KRichEditorFragment editorFragment;
 
@@ -70,10 +62,8 @@ public class CreateStepTextActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mStep = intent.getParcelableExtra(STEP_EXTRA_DATA);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        viewModel = ViewModelProviders.of(this).get(StepsViewModel.class);
 
-        mUserRef = db.collection(DATABASE_COLLECTION_USERS).document(mUser.getEmail());
 
         editorFragment = (KRichEditorFragment) getSupportFragmentManager().findFragmentByTag("EDITOR");
 
@@ -155,47 +145,76 @@ public class CreateStepTextActivity extends AppCompatActivity {
             case  R.id.action_discard:
                 return true;
             case R.id.action_publish:
+                publish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void saveAsDraft(){
-
+    public void save(){
+        final Context context = this;
         editorFragment.getEditor().getContents(new RichEditor.OnContentsReturned() {
             @Override
             public void process(@NonNull final String text) {
                 runOnUiThread( new Runnable() {
                     @Override
                     public void run() {
-                        Log.v(TAG, "this is the content: " + text);
-
                         mStep.setTitle(mStepTitle.getText().toString());
                         mStep.setDescription(mStepDescription.getText().toString());
                         mStep.setBodyText(text);
                         mStep.setStepType(StepType.TEXT);
-                        mStep.setPublish(false);
 
-                        db.collection(DATABASE_COLLECTION_STEPS)
-                            .add(mStep)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
+                        viewModel.saveStep(mStep, new Callback() {
+                            @Override
+                            public void result(Result result) {
+                                switch (result){
+                                    case FAILED:
+                                        Toast.makeText(context, "Oops looks like there was a problems saving this step!", Toast.LENGTH_LONG).show();
+                                        finish();
+                                        break;
+                                    case SUCCESS:
+                                        if(mStep.getPublish()){
+                                            finish();
+                                        }
+                                        break;
+                                }
+                            }
 
-                                    String stepId = documentReference.getId();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Failure Listener: Failed to create step text");
-                                }
-                            });
+                            @Override
+                            public void imageResult(Uri downloadUrl) {
+
+                            }
+
+                            @Override
+                            public void authorizationResult(FirebaseUser user) {
+
+                            }
+
+                            @Override
+                            public void journeyResult(Journey journey) {
+
+                            }
+
+                            @Override
+                            public void stepResult(Step step) {
+
+                            }
+                        });
                     }
                 } );
             }
         });
+    }
+
+    public void saveAsDraft(){
+        mStep.setPublish(false);
+        save();
+    }
+
+    public void publish(){
+        mStep.setPublish(true);
+        save();
     }
 
     @Override

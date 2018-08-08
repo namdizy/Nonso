@@ -84,12 +84,17 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
         mViewModel.getJourneyListLiveData().observe(this, new Observer<Task<ArrayList<Journey>>>() {
             @Override
             public void onChanged(@Nullable Task<ArrayList<Journey>> arrayListTask) {
-                arrayListTask.addOnSuccessListener(new OnSuccessListener<ArrayList<Journey>>() {
-                    @Override
-                    public void onSuccess(ArrayList<Journey> journeys) {
-                        updateUI(journeys);
-                    }
-                });
+                if(arrayListTask != null){
+                    arrayListTask.addOnSuccessListener(new OnSuccessListener<ArrayList<Journey>>() {
+                        @Override
+                        public void onSuccess(ArrayList<Journey> journeys) {
+                            updateUI(journeys);
+                        }
+                    });
+                }else{
+                    updateUI(null);
+                }
+
             }
         });
         return view;

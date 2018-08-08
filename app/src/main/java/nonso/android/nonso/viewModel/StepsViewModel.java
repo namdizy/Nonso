@@ -4,11 +4,13 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,7 +32,9 @@ import java.util.Map;
 
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 
 public class StepsViewModel extends ViewModel {
@@ -68,6 +72,37 @@ public class StepsViewModel extends ViewModel {
         return stepsListLiveData;
     }
 
+
+    public void saveStep(Step step, final Callback callback){
+        firebaseUtils.saveStep(step, new Callback() {
+            @Override
+            public void result(Result result) {
+                callback.result(result);
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+        });
+    }
+
+
     private class Deserializer implements Function<QuerySnapshot, Task<ArrayList<Step>>>{
 
         @Override
@@ -76,8 +111,12 @@ public class StepsViewModel extends ViewModel {
             List<DocumentSnapshot> temp = input.getDocuments();
             final ArrayList<String> stepIds = new ArrayList<>();
 
+            if(temp.isEmpty()){
+                return null;
+            }
+
             for(DocumentSnapshot snapshot: temp){
-                if(snapshot.get("stepId") != null && !snapshot.getId().equals("initialization")){
+                if(snapshot.get("stepId") != null){
                     String stepId = snapshot.get("stepId").toString();
                     if(stepId != null && !stepId.isEmpty()){
                         stepIds.add(stepId);
@@ -88,11 +127,11 @@ public class StepsViewModel extends ViewModel {
             Map<String, Object> data = new HashMap<>();
             data.put("ids",stepIds);
 
-            mFunctions.getHttpsCallable("getSteps")
+            return mFunctions.getHttpsCallable("getSteps")
                     .call(data)
-                    .continueWith(new Continuation<HttpsCallableResult, Object>() {
+                    .continueWith(new Continuation<HttpsCallableResult, ArrayList<Step>>() {
                         @Override
-                        public Object then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        public ArrayList<Step> then(@NonNull Task<HttpsCallableResult> task) throws Exception {
 
                             if(!task.isSuccessful()){
                                 Exception e = task.getException();
@@ -131,7 +170,6 @@ public class StepsViewModel extends ViewModel {
                             }
                         }
                     });
-            return null;
         }
     }
 }

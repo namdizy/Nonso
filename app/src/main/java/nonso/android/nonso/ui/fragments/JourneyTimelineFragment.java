@@ -49,19 +49,13 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     LinearLayout mStepsContainer;
     @BindView(R.id.steps_not_found_container) LinearLayout mStepsNotFound;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static final String DATABASE_COLLECTION_STEPS = "steps/";
     private final String JOURNEY_ID_KEY = "journey_pref";
-
     private StepsViewModel viewModel;
 
     private final String TAG = JourneyTimelineFragment.class.getSimpleName();
 
     private OnJourneyTimelineListener mListener;
 
-    private Step mStep;
-    private Journey mJourney;
     private ArrayList<Step> mStepsList = new ArrayList<Step>();
     private StepsAdapter stepsAdapter;
     private RecyclerView.LayoutManager stepsLayoutManager;
@@ -93,7 +87,6 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
         View view =  inflater.inflate(R.layout.fragment_journey_timeline, container, false);
         ButterKnife.bind(this, view);
 
-        mJourney = new Journey();
         stepsLayoutManager = new LinearLayoutManager(getContext());
         stepsRecyclerView.setLayoutManager(stepsLayoutManager);
         stepsRecyclerView.setHasFixedSize(true);
