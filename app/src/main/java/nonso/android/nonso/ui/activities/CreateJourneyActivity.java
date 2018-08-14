@@ -58,7 +58,6 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
         mStepperLayout.setListener(this);
 
-
         mJourney = new Journey();
     }
 
@@ -96,6 +95,11 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
             @Override
             public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
 
             }
 

@@ -3,6 +3,7 @@ package nonso.android.nonso.ui.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,6 +33,8 @@ import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Step;
+import nonso.android.nonso.ui.activities.CreateStepTextActivity;
+import nonso.android.nonso.ui.activities.TextStepActivity;
 import nonso.android.nonso.ui.adapters.StepsAdapter;
 import nonso.android.nonso.viewModel.StepsViewModel;
 
@@ -50,6 +53,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     @BindView(R.id.steps_not_found_container) LinearLayout mStepsNotFound;
 
     private final String JOURNEY_ID_KEY = "journey_pref";
+    private final String STEP_EXTRA = "step_extra";
     private StepsViewModel viewModel;
 
     private final String TAG = JourneyTimelineFragment.class.getSimpleName();
@@ -147,8 +151,32 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     }
 
     @Override
-    public void onStepItemClick() {
+    public void onMenuEditClick(Step step) {
+        switch (step.getStepType()){
+            case TEXT:
+                Intent intent = new Intent(getContext(), CreateStepTextActivity.class);
+                intent.putExtra(STEP_EXTRA, step);
+                startActivity(intent);
+            case IMAGES:
+                break;
+            case VIDEO:
+                break;
+        }
+    }
 
+    @Override
+    public void onStepItemClick(Step step) {
+        switch (step.getStepType()){
+            case TEXT:
+                Intent intent = new Intent(getContext(), TextStepActivity.class);
+                intent.putExtra(STEP_EXTRA, step);
+                startActivity(intent);
+                break;
+            case VIDEO:
+                break;
+            case IMAGES:
+                break;
+        }
     }
 
 

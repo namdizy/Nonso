@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,12 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -70,14 +67,13 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
 
         DateUtils dateUtils = new DateUtils();
         holder.mJourneyCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
-        //holder.mJourneyCreatedTime.setText(new SimpleDateFormat().format(date));
 
         holder.mMoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu menu = new PopupMenu(mContext, holder.mMoreBtn);
                 MenuInflater inflater = menu.getMenuInflater();
-                inflater.inflate(R.menu.profile_journy_item_menu, menu.getMenu());
+                inflater.inflate(R.menu.journey_item_menu, menu.getMenu());
                 menu.show();
 
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

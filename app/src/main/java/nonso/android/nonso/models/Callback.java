@@ -11,6 +11,7 @@ public interface Callback {
     void authorizationResult(FirebaseUser user);
     void journeyResult(Journey journey);
     void stepResult(Step step);
+    void userResult(User user);
 }
 
 

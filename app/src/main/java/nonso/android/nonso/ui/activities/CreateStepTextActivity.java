@@ -29,6 +29,7 @@ import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.StepType;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.viewModel.StepsViewModel;
 
 public class CreateStepTextActivity extends AppCompatActivity {
@@ -63,66 +64,25 @@ public class CreateStepTextActivity extends AppCompatActivity {
         mStep = intent.getParcelableExtra(STEP_EXTRA_DATA);
 
         viewModel = ViewModelProviders.of(this).get(StepsViewModel.class);
+        if (mStep.getDescription() != null){
+            mStepDescription.setText(mStep.getDescription());
+        }
+        if(mStep.getTitle() != null){
+            mStepTitle.setText(mStep.getTitle());
+        }
 
 
         editorFragment = (KRichEditorFragment) getSupportFragmentManager().findFragmentByTag("EDITOR");
 
-        if (editorFragment == null)
-            editorFragment = KRichEditorFragment.getInstance(
-                    new Options()
-                            .placeHolder("Write something cool...")
-                            .onImageButtonClicked(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //ImagePicker.create(JavaActivity.this).start();
-                                }
-                            })
-                            // Un-comment this line and comment out the layout below to
-                            // disable the toolbar
-                            // .showToolbar(false)
-                            .buttonLayout( Arrays.asList(
-                                    EditorButton.UNDO,
-                                    EditorButton.REDO,
-                                    EditorButton.IMAGE,
-                                    EditorButton.LINK,
-                                    EditorButton.BOLD,
-                                    EditorButton.ITALIC,
-                                    EditorButton.UNDERLINE,
-                                    EditorButton.SUBSCRIPT,
-                                    EditorButton.SUPERSCRIPT,
-                                    EditorButton.STRIKETHROUGH,
-                                    EditorButton.JUSTIFY_LEFT,
-                                    EditorButton.JUSTIFY_CENTER,
-                                    EditorButton.JUSTIFY_RIGHT,
-                                    EditorButton.JUSTIFY_FULL,
-                                    EditorButton.ORDERED,
-                                    EditorButton.UNORDERED,
-                                    EditorButton.CHECK,
-                                    EditorButton.NORMAL,
-                                    EditorButton.H1,
-                                    EditorButton.H2,
-                                    EditorButton.H3,
-                                    EditorButton.H4,
-                                    EditorButton.H5,
-                                    EditorButton.H6,
-                                    EditorButton.INDENT,
-                                    EditorButton.OUTDENT,
-                                    EditorButton.BLOCK_QUOTE,
-                                    EditorButton.BLOCK_CODE,
-                                    EditorButton.CODE_VIEW
-                            ) )
-                            .onInitialized(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    if(mStep.getBodyText() != null || mStep.getBodyText() != ""){
-                                        editorFragment.getEditor().setContents(mStep.getBodyText());
-                                    }
-
-                                }
-                            })
-            );
-
+        if (editorFragment == null){
+            editorFragment = KRichEditorFragment.getInstance(new Options().
+                    onInitialized(new Runnable() {
+                        @Override
+                        public void run() {
+                            editorFragment.getEditor().setContents(mStep.getBodyText());
+                        }
+                    }));
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -147,6 +107,12 @@ public class CreateStepTextActivity extends AppCompatActivity {
             case R.id.action_publish:
                 publish();
                 return true;
+            case android.R.id.home:
+                Intent intent = new Intent(this, JourneyProfileActivity.class);
+                intent.putExtra(JOURNEY_EXTRA_ID_KEY, mStep.getCreatedBy().getId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -154,55 +120,55 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
     public void save(){
         final Context context = this;
-        editorFragment.getEditor().getContents(new RichEditor.OnContentsReturned() {
+        editorFragment.getEditor().getHtml(new RichEditor.OnHtmlReturned() {
             @Override
-            public void process(@NonNull final String text) {
-                runOnUiThread( new Runnable() {
+            public void process(String s) {
+                mStep.setTitle(mStepTitle.getText().toString());
+                mStep.setDescription(mStepDescription.getText().toString());
+                mStep.setBodyText(s);
+                mStep.setStepType(StepType.TEXT);
+
+                viewModel.saveStep(mStep, new Callback() {
                     @Override
-                    public void run() {
-                        mStep.setTitle(mStepTitle.getText().toString());
-                        mStep.setDescription(mStepDescription.getText().toString());
-                        mStep.setBodyText(text);
-                        mStep.setStepType(StepType.TEXT);
+                    public void userResult(User user) {
 
-                        viewModel.saveStep(mStep, new Callback() {
-                            @Override
-                            public void result(Result result) {
-                                switch (result){
-                                    case FAILED:
-                                        Toast.makeText(context, "Oops looks like there was a problems saving this step!", Toast.LENGTH_LONG).show();
-                                        finish();
-                                        break;
-                                    case SUCCESS:
-                                        if(mStep.getPublish()){
-                                            finish();
-                                        }
-                                        break;
-                                }
-                            }
-
-                            @Override
-                            public void imageResult(Uri downloadUrl) {
-
-                            }
-
-                            @Override
-                            public void authorizationResult(FirebaseUser user) {
-
-                            }
-
-                            @Override
-                            public void journeyResult(Journey journey) {
-
-                            }
-
-                            @Override
-                            public void stepResult(Step step) {
-
-                            }
-                        });
                     }
-                } );
+
+                    @Override
+                    public void result(Result result) {
+                        switch (result){
+                            case FAILED:
+                                Toast.makeText(context, "Oops looks like there was a problems saving this step!", Toast.LENGTH_LONG).show();
+                                finish();
+                                break;
+                            case SUCCESS:
+                                if(mStep.getPublish()){
+                                    finish();
+                                }
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void imageResult(Uri downloadUrl) {
+
+                    }
+
+                    @Override
+                    public void authorizationResult(FirebaseUser user) {
+
+                    }
+
+                    @Override
+                    public void journeyResult(Journey journey) {
+
+                    }
+
+                    @Override
+                    public void stepResult(Step step) {
+
+                    }
+                });
             }
         });
     }
@@ -226,4 +192,5 @@ public class CreateStepTextActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
 }

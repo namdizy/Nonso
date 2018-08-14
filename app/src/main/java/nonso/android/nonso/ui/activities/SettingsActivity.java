@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -31,8 +38,9 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.tv_settings_privacy_policy) TextView mPrivacyPolicy;
     @BindView(R.id.tv_settings_user_agreement) TextView mUserAgreement;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
+    private FirebaseUtils firebaseUtils;
+    private User mUser;
+
 
 
     @Override
@@ -42,19 +50,60 @@ public class SettingsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        firebaseUtils = new FirebaseUtils();
 
-        mUsername.setText(mUser.getDisplayName());
+         firebaseUtils.getCurrentUser(new Callback() {
+             @Override
+             public void result(Result result) {
+
+             }
+
+             @Override
+             public void imageResult(Uri downloadUrl) {
+
+             }
+
+             @Override
+             public void authorizationResult(FirebaseUser user) {
+
+             }
+
+             @Override
+             public void journeyResult(Journey journey) {
+
+             }
+
+             @Override
+             public void stepResult(Step step) {
+
+             }
+
+             @Override
+             public void userResult(User user) {
+                updateUi(user);
+             }
+         });
+
+
+
+    }
+
+    private void updateUi(User user){
+        mUser = user;
+
+        mUsername.setText(mUser.getUserName());
         mEmail.setText(mUser.getEmail());
     }
 
     @OnClick(R.id.tv_settings_logout)
     public void logoutOnClick(View v){
 
-        mAuth.getInstance().signOut();
+        firebaseUtils.signout();
         Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplication().startActivity(intent);
+
     }
 
     @OnClick(R.id.btn_settings_back)

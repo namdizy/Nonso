@@ -36,6 +36,7 @@ import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
 
 public class StepsViewModel extends ViewModel {
 
@@ -78,6 +79,11 @@ public class StepsViewModel extends ViewModel {
             @Override
             public void result(Result result) {
                 callback.result(result);
+            }
+
+            @Override
+            public void userResult(User user) {
+
             }
 
             @Override

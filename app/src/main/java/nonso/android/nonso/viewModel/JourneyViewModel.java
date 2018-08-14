@@ -38,6 +38,7 @@ import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
 
 public class JourneyViewModel extends ViewModel {
 
@@ -93,6 +94,11 @@ public class JourneyViewModel extends ViewModel {
             }
 
             @Override
+            public void userResult(User user) {
+
+            }
+
+            @Override
             public void imageResult(Uri downloadUrl) {
 
             }
@@ -117,6 +123,11 @@ public class JourneyViewModel extends ViewModel {
     public void deleteJourney(Journey journey, final Callback callback){
 
         firebaseUtils.deleteJourney(journey, new Callback() {
+            @Override
+            public void userResult(User user) {
+
+            }
+
             @Override
             public void result(Result result) {
                 callback.result(result);

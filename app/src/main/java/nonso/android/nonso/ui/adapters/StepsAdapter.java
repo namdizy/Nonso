@@ -1,12 +1,18 @@
 package nonso.android.nonso.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,7 +37,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     private StepsAdapterOnClickListener mAdapterOnClickListener;
 
     public interface StepsAdapterOnClickListener{
-        void onStepItemClick();
+        void onStepItemClick(Step step);
+        void onMenuEditClick(Step step);
     }
 
     public StepsAdapter(Context context, StepsAdapterOnClickListener listener){
@@ -53,10 +60,39 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     @Override
     public void onBindViewHolder(@NonNull final StepsViewHolder holder, int position) {
 
-        Step step = mSteps.get(position);
+        final Step step = mSteps.get(position);
 
         holder.mStepTitle.setText(step.getTitle());
         holder.mStepDescription.setText(step.getDescription());
+
+
+        holder.mStepMoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu menu = new PopupMenu(mContext, holder.mStepMoreBtn);
+                MenuInflater inflater = menu.getMenuInflater();
+                inflater.inflate(R.menu.step_item_menu, menu.getMenu());
+                menu.show();
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                       switch (item.getItemId()){
+                           case R.id.step_item_menu_delete:
+                               return true;
+                           case R.id.step_item_menu_edit:
+                               mAdapterOnClickListener.onMenuEditClick(step);
+                               return true;
+                           case R.id.step_item_menu_make_last:
+                               return true;
+                           default:
+                               return false;
+                       }
+                    }
+                });
+            }
+        });
 
     }
 
@@ -77,6 +113,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
 
         @BindView(R.id.step_item_title) TextView mStepTitle;
         @BindView(R.id.step_item_description) TextView mStepDescription;
+        @BindView(R.id.step_item_more_btn) ImageButton mStepMoreBtn;
 
         public StepsViewHolder(View view){
             super(view);
@@ -86,7 +123,9 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
 
         @Override
         public void onClick(View v) {
-
+            int position = getAdapterPosition();
+            Step step = mSteps.get(position);
+            mAdapterOnClickListener.onStepItemClick(step);
         }
     }
     @Override

@@ -9,14 +9,19 @@ import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
 
 public class AuthorizationViewModel extends ViewModel {
 
 
-    private FirebaseUtils firebaseUtils = new FirebaseUtils();
+    private FirebaseUtils firebaseUtils;
+
+    public AuthorizationViewModel(){
+        firebaseUtils = new FirebaseUtils();
+    }
 
     public FirebaseUser getCurrentUser(){
-        return firebaseUtils.getCurrentUser();
+        return firebaseUtils.getAuthUser();
     }
 
 
@@ -30,6 +35,11 @@ public class AuthorizationViewModel extends ViewModel {
 
             @Override
             public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
 
             }
 
@@ -60,6 +70,11 @@ public class AuthorizationViewModel extends ViewModel {
 
            @Override
            public void journeyResult(Journey journey) {
+
+           }
+
+           @Override
+           public void userResult(User user) {
 
            }
 

@@ -94,10 +94,17 @@
             android:name=".ui.activities.ImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activities.DialogEditGoalsActivity"
+        <activity
+            android:name=".ui.activities.DialogEditGoalsActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.NoActionBar.dialog"
-            />
+            android:theme="@style/AppTheme.NoActionBar.dialog" />
+        <activity android:name=".ui.activities.TextStepActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.JourneyProfileActivity" />
+        </activity>
     </application>
 
 </manifest>

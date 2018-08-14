@@ -325,6 +325,11 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
             }
 
             @Override
+            public void userResult(User user) {
+
+            }
+
+            @Override
             public void stepResult(Step step) {
 
             }

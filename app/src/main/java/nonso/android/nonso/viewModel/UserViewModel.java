@@ -59,6 +59,11 @@ public class UserViewModel extends ViewModel {
             }
 
             @Override
+            public void userResult(User user) {
+
+            }
+
+            @Override
             public void journeyResult(Journey journey) {
 
             }
@@ -89,6 +94,11 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
 
             }
 

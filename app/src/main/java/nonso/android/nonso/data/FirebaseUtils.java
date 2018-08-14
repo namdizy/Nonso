@@ -29,10 +29,11 @@ import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.utils.ImageUtils;
+import nonso.android.nonso.utils.MultiSelectionSpinner;
 
 public class FirebaseUtils {
 
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -47,6 +48,7 @@ public class FirebaseUtils {
 
 
     public FirebaseUtils(){
+        mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
     }
 
@@ -54,9 +56,27 @@ public class FirebaseUtils {
 
         return mUser.getUid();
     }
+    public FirebaseUser getAuthUser(){
+        return mAuth.getCurrentUser();
+    }
 
-    public FirebaseUser getCurrentUser() {
-        return mUser;
+    public void getCurrentUser(final Callback callback){
+        db.collection(DATABASE_COLLECTION_USERS).document(mUser.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        callback.userResult(snapshot.toObject(User.class));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.result(Result.FAILED);
+                    }
+                });
+    }
+
+    public void signout(){
+        mAuth.signOut();
     }
 
     public void getJourney(String journeyId, final Callback callback){
@@ -90,6 +110,11 @@ public class FirebaseUtils {
                 }
 
                 @Override
+                public void userResult(User user) {
+
+                }
+
+                @Override
                 public void journeyResult(Journey journey) {
 
                 }
@@ -106,6 +131,11 @@ public class FirebaseUtils {
                         public void result(Result result) {
                             Log.v(TAG, "Journey Creation in callback result of save Journey");
                             callback.result(result);
+                        }
+
+                        @Override
+                        public void userResult(User user) {
+
                         }
 
                         @Override
@@ -130,6 +160,11 @@ public class FirebaseUtils {
             });
         }else{
             createJourney(null, new Callback() {
+                @Override
+                public void userResult(User user) {
+
+                }
+
                 @Override
                 public void result(Result result) {
                     Log.v(TAG, "Journey Creation in callback result of save Journey");
@@ -370,6 +405,11 @@ public class FirebaseUtils {
             }
 
             @Override
+            public void userResult(User user) {
+
+            }
+
+            @Override
             public void imageResult(Uri downloadUrl) {
                 updateUserImage(userId, downloadUrl, new Callback() {
                     @Override
@@ -379,6 +419,11 @@ public class FirebaseUtils {
 
                     @Override
                     public void imageResult(Uri downloadUrl) {
+
+                    }
+
+                    @Override
+                    public void userResult(User user) {
 
                     }
 

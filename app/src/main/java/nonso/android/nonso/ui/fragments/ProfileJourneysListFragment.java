@@ -28,6 +28,7 @@ import nonso.android.nonso.models.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.adapters.JourneysAdapter;
 import nonso.android.nonso.viewModel.JourneyViewModel;
 
@@ -158,6 +159,11 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
             @Override
             public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
 
             }
 

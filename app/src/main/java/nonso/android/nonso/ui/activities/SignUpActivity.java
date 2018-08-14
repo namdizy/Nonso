@@ -164,6 +164,11 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
+            public void userResult(User user) {
+
+            }
+
+            @Override
             public void stepResult(Step step) {
 
             }
