@@ -8,61 +8,70 @@
     tools:context=".ui.fragments.JourneyTimelineFragment"
     android:background="@color/colorGreyLight">
 
-    <LinearLayout
-        android:id="@+id/steps_list_container"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/margin_5dp">
-            <ImageView
-                android:layout_width="@dimen/_30dp"
-                android:layout_height="@dimen/_30dp"
-                android:layout_gravity="center"
-                android:src="@drawable/hot_air_balloon_start" />
-
-            <include
-                layout="@layout/vertical_timeline_divider"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"/>
-        </LinearLayout>
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/journey_profile_recycler_view_steps"
+        android:layout_height="wrap_content">
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/steps_not_found_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+            <LinearLayout
+                android:id="@+id/steps_list_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/profile_following_not_found_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:src="@drawable/startup"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/margin_5dp">
+                    <ImageView
+                        android:layout_width="@dimen/_30dp"
+                        android:layout_height="@dimen/_30dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/hot_air_balloon_start" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="It looks Empty! Create a step" />
-    </LinearLayout>
+                    <include
+                        layout="@layout/vertical_timeline_divider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
 
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/journey_profile_recycler_view_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/steps_not_found_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/profile_following_not_found_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/startup"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="It looks Empty! Create a step" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </FrameLayout>

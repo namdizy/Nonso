@@ -100,20 +100,10 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
 
         viewModel = ViewModelProviders.of(this).get(StepsViewModel.class);
         viewModel.setStepsList(mJourneyId);
-        viewModel.getStepsListLiveData().observe(this, new Observer<Task<ArrayList<Step>>>() {
+        viewModel.getStepsListLiveData().observe(this, new Observer<ArrayList<Step>>() {
             @Override
-            public void onChanged(@Nullable Task<ArrayList<Step>> arrayListTask) {
-                if(arrayListTask != null){
-                    arrayListTask.addOnSuccessListener(new OnSuccessListener<ArrayList<Step>>() {
-                        @Override
-                        public void onSuccess(ArrayList<Step> steps) {
-                            setSteps(steps);
-                        }
-                    });
-                }
-                else{
-                    setSteps(null);
-                }
+            public void onChanged(@Nullable ArrayList<Step> steps) {
+                setSteps(steps);
             }
         });
         return view;
