@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Journey implements Parcelable {
+import nonso.android.nonso.models.interfaces.JourneyInterface;
+
+public class Journey implements Parcelable, JourneyInterface {
 
     private String journeyId;
     private String name;

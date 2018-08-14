@@ -4,10 +4,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -16,15 +14,12 @@ import android.widget.Toast;
 import com.ebolo.krichtexteditor.RichEditor;
 import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
 import com.ebolo.krichtexteditor.fragments.Options;
-import com.ebolo.krichtexteditor.ui.widgets.EditorButton;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
-import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;

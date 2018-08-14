@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import nonso.android.nonso.R;
-import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.CreatedBy;
 import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;

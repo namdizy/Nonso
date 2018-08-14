@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
-import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
@@ -82,19 +82,9 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
         mViewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
         mViewModel.setJourneysList(mUserId);
-        mViewModel.getJourneyListLiveData().observe(this, new Observer<Task<ArrayList<Journey>>>() {
+        mViewModel.getJourneyListLiveData().observe(this, new Observer<ArrayList<Journey>>() {
             @Override
-            public void onChanged(@Nullable Task<ArrayList<Journey>> arrayListTask) {
-                if(arrayListTask != null){
-                    arrayListTask.addOnSuccessListener(new OnSuccessListener<ArrayList<Journey>>() {
-                        @Override
-                        public void onSuccess(ArrayList<Journey> journeys) {
-                            updateUI(journeys);
-                        }
-                    });
-                }else{
-                    updateUI(null);
-                }
+            public void onChanged(@Nullable ArrayList<Journey> journeys) {
 
             }
         });

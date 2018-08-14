@@ -5,7 +5,7 @@ import android.net.Uri;
 import com.google.firebase.auth.FirebaseUser;
 
 import nonso.android.nonso.data.FirebaseUtils;
-import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;

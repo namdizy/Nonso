@@ -1,8 +1,13 @@
-package nonso.android.nonso.models;
+package nonso.android.nonso.models.interfaces;
 
 import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseUser;
+
+import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
 
 public interface Callback {
 

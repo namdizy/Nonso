@@ -23,13 +23,12 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
-import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.utils.ImageUtils;
-import nonso.android.nonso.utils.MultiSelectionSpinner;
 
 public class FirebaseUtils {
 

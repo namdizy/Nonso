@@ -32,7 +32,7 @@ import java.util.Map;
 
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
-import nonso.android.nonso.models.Callback;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
@@ -52,7 +52,7 @@ public class StepsViewModel extends ViewModel {
 
     private Query stepsListRef;
     private FirebaseQueryLiveData sListLiveData;
-    private LiveData<Task<ArrayList<Step>>> stepsListLiveData;
+    private LiveData<ArrayList<Step>> stepsListLiveData;
 
     private FirebaseUtils firebaseUtils;
 
@@ -62,14 +62,13 @@ public class StepsViewModel extends ViewModel {
 
     public void setStepsList(String journeyId){
 
-        stepsListRef = db.collection(DATABASE_COLLECTIONS_JOURNEYS).document(journeyId)
-                .collection(DATABASE_SUBCOLLECTION_STEPS);
+        stepsListRef = db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("createdBy.id", journeyId);
         sListLiveData = new FirebaseQueryLiveData(stepsListRef);
         stepsListLiveData = Transformations.map(sListLiveData, new Deserializer());
     }
 
 
-    public LiveData<Task<ArrayList<Step>>> getStepsListLiveData() {
+    public LiveData<ArrayList<Step>> getStepsListLiveData() {
         return stepsListLiveData;
     }
 
@@ -109,73 +108,18 @@ public class StepsViewModel extends ViewModel {
     }
 
 
-    private class Deserializer implements Function<QuerySnapshot, Task<ArrayList<Step>>>{
+    private class Deserializer implements Function<QuerySnapshot, ArrayList<Step>>{
 
         @Override
-        public Task<ArrayList<Step>> apply(QuerySnapshot input) {
+        public ArrayList<Step> apply(QuerySnapshot input) {
 
-            List<DocumentSnapshot> temp = input.getDocuments();
-            final ArrayList<String> stepIds = new ArrayList<>();
+            ArrayList<Step> steps = new ArrayList<>();
 
-            if(temp.isEmpty()){
-                return null;
+            for (DocumentSnapshot snapshot : input) {
+                steps.add(snapshot.toObject(Step.class));
             }
 
-            for(DocumentSnapshot snapshot: temp){
-                if(snapshot.get("stepId") != null){
-                    String stepId = snapshot.get("stepId").toString();
-                    if(stepId != null && !stepId.isEmpty()){
-                        stepIds.add(stepId);
-                    }
-                }
-            }
-
-            Map<String, Object> data = new HashMap<>();
-            data.put("ids",stepIds);
-
-            return mFunctions.getHttpsCallable("getSteps")
-                    .call(data)
-                    .continueWith(new Continuation<HttpsCallableResult, ArrayList<Step>>() {
-                        @Override
-                        public ArrayList<Step> then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-
-                            if(!task.isSuccessful()){
-                                Exception e = task.getException();
-                                Log.e(TAG, "Exception has occurred getting journeys: ", e.getCause());
-                                return null;
-                            }else{
-
-                                Object fromdb = task.getResult().getData();
-                                ArrayList<Step> steps = new ArrayList<>();
-                                Gson gson = new Gson();
-
-                                for(Object s: (ArrayList)fromdb){
-                                    String jsonStr = gson.toJson(s);
-                                    JSONObject jsonObject = new JSONObject(jsonStr);
-
-                                    String createdAt = jsonObject.get("createdAt").toString();
-
-                                    try{
-
-                                        DateFormat df = new SimpleDateFormat("EEE MMM dd yyyy hh:mm:ss z", Locale.ENGLISH);
-                                        Date result =  df.parse(createdAt);
-                                        jsonObject.put("createdAt", null);
-
-                                        jsonStr = jsonObject.toString();
-
-                                        Step step = gson.fromJson(jsonStr, Step.class);
-                                        step.setCreatedAt(result);
-                                        steps.add(step);
-
-                                    }catch (Exception e){
-                                        Log.w(TAG, "Error serializing Step Object: ", e.getCause());
-                                        return null;
-                                    }
-                                }
-                                return steps;
-                            }
-                        }
-                    });
+            return steps;
         }
     }
 }
