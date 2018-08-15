@@ -269,22 +269,60 @@ public class FirebaseUtils {
             });
     }
 
+
+
     public void saveStep(Step step, final Callback callback){
 
-        db.collection(DATABASE_COLLECTION_STEPS).add(step)
-            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    documentReference.update("stepId", documentReference.getId());
-                    callback.result(Result.SUCCESS);
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                   callback.result(Result.FAILED);
-                }
-            });
+        if(step.getStepId() == null){
+            db.collection(DATABASE_COLLECTION_STEPS).add(step)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            documentReference.update("stepId", documentReference.getId());
+                            callback.result(Result.SUCCESS);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            callback.result(Result.FAILED);
+                        }
+                    });
+        }else{
+            db.collection(DATABASE_COLLECTION_STEPS).document(step.getStepId()).update("title", step.getTitle(),
+                    "videoUrl", step.getVideoUrl(),
+                                        "bodyText", step.getBodyText(),
+                                        "description", step.getDescription(),
+                                        "publish", step.getPublish(),
+                                        "imageUrls", step.getImageUrls())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            callback.result(Result.SUCCESS);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            callback.result(Result.FAILED);
+                        }
+                    });
+        }
+    }
+
+    public void deleteStep(Step step, final Callback callback){
+
+        db.collection(DATABASE_COLLECTION_STEPS).document(step.getStepId()).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.result(Result.SUCCESS);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.result(Result.FAILED);
+                    }
+                });
     }
     public void login(String email, String password, final Callback callback){
 

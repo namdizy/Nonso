@@ -139,6 +139,8 @@ public class CreateStepTextActivity extends AppCompatActivity {
                             case SUCCESS:
                                 if(mStep.getPublish()){
                                     finish();
+                                }else{
+                                    Toast.makeText(context, "Saved!", Toast.LENGTH_LONG).show();
                                 }
                                 break;
                         }

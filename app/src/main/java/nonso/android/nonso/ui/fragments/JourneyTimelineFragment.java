@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -17,10 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -32,7 +35,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.ui.activities.CreateStepTextActivity;
 import nonso.android.nonso.ui.activities.TextStepActivity;
 import nonso.android.nonso.ui.adapters.StepsAdapter;
@@ -107,6 +113,48 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
             }
         });
         return view;
+    }
+
+    @Override
+    public void onDeleteClick(final Step step) {
+        viewModel.deleteStep(step, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case FAILED:
+                        Toast.makeText(getContext(), "Oops looks like there was an issue deleting "+ step.getTitle(), Toast.LENGTH_LONG).show();
+                        break;
+                    case SUCCESS:
+                        Toast.makeText(getContext(),  step.getTitle() + " Step has been deleted!", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
     }
 
     public void setSteps(ArrayList steps){

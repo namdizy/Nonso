@@ -5,30 +5,14 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.HttpsCallableResult;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
@@ -42,11 +26,8 @@ public class StepsViewModel extends ViewModel {
 
 
     private static final String DATABASE_COLLECTION_STEPS = "steps";
-    private static final String DATABASE_COLLECTIONS_JOURNEYS = "journeys";
-    private static final String DATABASE_SUBCOLLECTION_STEPS =  "stepIds";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
 
     private String TAG = JourneyViewModel.class.getSimpleName();
 
@@ -102,6 +83,41 @@ public class StepsViewModel extends ViewModel {
 
             @Override
             public void stepResult(Step step) {
+
+            }
+        });
+    }
+
+    public void deleteStep(Step step, final Callback callback){
+
+        firebaseUtils.deleteStep(step, new Callback() {
+            @Override
+            public void result(Result result) {
+                callback.result(result);
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
 
             }
         });

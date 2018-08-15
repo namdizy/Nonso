@@ -39,6 +39,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
     public interface StepsAdapterOnClickListener{
         void onStepItemClick(Step step);
         void onMenuEditClick(Step step);
+        void onDeleteClick(Step step);
     }
 
     public StepsAdapter(Context context, StepsAdapterOnClickListener listener){
@@ -80,6 +81,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
                     public boolean onMenuItemClick(MenuItem item) {
                        switch (item.getItemId()){
                            case R.id.step_item_menu_delete:
+                               mAdapterOnClickListener.onDeleteClick(step);
                                return true;
                            case R.id.step_item_menu_edit:
                                mAdapterOnClickListener.onMenuEditClick(step);
