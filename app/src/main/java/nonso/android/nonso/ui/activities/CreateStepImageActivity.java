@@ -1,7 +1,12 @@
 package nonso.android.nonso.ui.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -13,13 +18,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
-import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.ui.adapters.ImagesAdapter;
 
@@ -31,21 +40,20 @@ public class CreateStepImageActivity extends AppCompatActivity {
     private final String TAG = CreateStepImageActivity.class.getSimpleName();
 
     private final String STEP_EXTRA_DATA = "step_extra";
-    private final String JOURNEY_EXTRA_DATA = "journey_extra";
+    private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
+    private static final int REQUEST_IMAGE_CODE = 102;
+    private static final int REQUEST_ID_MULTIPLE_PERMISSIONS =202;
 
-    private final int GALLERY_REQUEST_CODE = 111;
-    private Activity mContext;
     private ImagesAdapter mImagesAdapter;
     StaggeredGridLayoutManager mGridLayoutManager;
     private Step mStep;
-    private Journey mJourney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_step_image);
 
-        getSupportActionBar().setTitle("Image Step");
+        getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -53,16 +61,13 @@ public class CreateStepImageActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mStep = intent.getParcelableExtra(STEP_EXTRA_DATA);
-        mJourney = intent.getParcelableExtra(JOURNEY_EXTRA_DATA);
-
-        mContext= this;
 
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_step_image_video, menu);
+        getMenuInflater().inflate(R.menu.create_step_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -75,7 +80,11 @@ public class CreateStepImageActivity extends AppCompatActivity {
                 return true;
             case R.id.action_publish:
                 return true;
-            case R.id.action_settings:
+            case android.R.id.home:
+                Intent intent = new Intent(this, JourneyProfileActivity.class);
+                intent.putExtra(JOURNEY_EXTRA_ID_KEY, mStep.getCreatedBy().getId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -85,37 +94,73 @@ public class CreateStepImageActivity extends AppCompatActivity {
     @OnClick(R.id.create_step_image_library)
     public void onLibraryClick(){
 
-//        GalleryConfig config = new GalleryConfig.Build()
-//                .limitPickPhoto(6)
-//                .singlePhoto(false)
-//                .hintOfPick("Choose Image")
-//                .filterMimeTypes(new String[]{"image/*" })
-//                .build();
-//        GalleryActivity.openActivity(this, GALLERY_REQUEST_CODE, config);
+        if(checkAndRequestPermissions()){
+            startPicker();
+        }
+    }
+    private void startPicker(){
+        Matisse.from(this)
+                .choose(MimeType.ofImage())
+                .theme(R.style.Matisse_Dracula)
+                .countable(true)
+                .maxSelectable(4)
+                .imageEngine(new PicassoEngine())
+                .forResult(REQUEST_IMAGE_CODE);
+    }
+    private boolean checkAndRequestPermissions(){
+        int camera = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
+        int storage1 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int storage2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (camera != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.CAMERA);
+        }
+        if (storage1 != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (storage2 != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
+        if (!listPermissionsNeeded.isEmpty())
+        {
+            ActivityCompat.requestPermissions(this,listPermissionsNeeded.toArray
+                    (new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if(resultCode == Activity.RESULT_OK && requestCode == GALLERY_REQUEST_CODE){
-//            ArrayList<String> imgs = (ArrayList<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
-//
-//            Log.v(TAG, "URLS: "+ imgs);
-//
-//            if(imgs.size() == 1){
-//                mGridLayoutManager= new StaggeredGridLayoutManager(1, LinearLayout.VERTICAL);
-//            }else{
-//                mGridLayoutManager= new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
-//            }
-//            mRecyclerView.setLayoutManager(mGridLayoutManager);
-//
-//            mImagesAdapter = new ImagesAdapter();
-//            mRecyclerView.setAdapter(mImagesAdapter);
-//
-//            mImagesAdapter.setImagesUrls(imgs);
-//            mRecyclerView.setVisibility(View.VISIBLE);
-//        }
+        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CODE){
+            List<String> imgs = Matisse.obtainPathResult(data);
+
+            if(imgs.size() == 1){
+                mGridLayoutManager= new StaggeredGridLayoutManager(1, LinearLayout.VERTICAL);
+            }else{
+                mGridLayoutManager= new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
+            }
+            mRecyclerView.setLayoutManager(mGridLayoutManager);
+
+            mImagesAdapter = new ImagesAdapter();
+            mRecyclerView.setAdapter(mImagesAdapter);
+            mImagesAdapter.setImagesUrls((ArrayList) imgs);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if(requestCode == REQUEST_ID_MULTIPLE_PERMISSIONS){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                startPicker();
+            }
+        }
     }
 
     @Override

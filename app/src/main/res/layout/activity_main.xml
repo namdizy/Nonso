@@ -16,7 +16,7 @@
     <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/ms_bottom_navigation_bar_height"
         app:menu="@menu/bottom_navigation_man"
         android:layout_alignParentBottom="true"
         android:background="@drawable/grey_border_top"

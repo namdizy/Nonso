@@ -54,8 +54,7 @@ import nonso.android.nonso.viewModel.StepsViewModel;
 public class JourneyTimelineFragment extends Fragment implements StepsAdapter.StepsAdapterOnClickListener{
 
     @BindView(R.id.journey_profile_recycler_view_steps) RecyclerView stepsRecyclerView;
-    @BindView(R.id.steps_list_container)
-    LinearLayout mStepsContainer;
+    @BindView(R.id.steps_list_container) LinearLayout mStepsContainer;
     @BindView(R.id.steps_not_found_container) LinearLayout mStepsNotFound;
 
     private final String JOURNEY_ID_KEY = "journey_pref";
@@ -66,7 +65,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
 
     private OnJourneyTimelineListener mListener;
 
-    private ArrayList<Step> mStepsList = new ArrayList<Step>();
+    private ArrayList<Step> mStepsList = new ArrayList<>();
     private StepsAdapter stepsAdapter;
     private RecyclerView.LayoutManager stepsLayoutManager;
     private String mJourneyId;
@@ -84,7 +83,6 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mJourneyId = getArguments().getString(JOURNEY_ID_KEY);
         }
@@ -116,7 +114,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     }
 
     @Override
-    public void onDeleteClick(final Step step) {
+    public void onMenuDeleteClick(final Step step) {
         viewModel.deleteStep(step, new Callback() {
             @Override
             public void result(Result result) {

@@ -32,14 +32,14 @@ import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
+import nonso.android.nonso.ui.fragments.JourneyArchiveFragment;
 import nonso.android.nonso.ui.fragments.JourneyCommunityFragment;
 import nonso.android.nonso.ui.fragments.JourneyTimelineFragment;
-import nonso.android.nonso.ui.fragments.JourneyAboutFragment;
 import nonso.android.nonso.viewModel.JourneyViewModel;
 
 
 public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnJourneyTimelineListener,
-        JourneyAboutFragment.OnFragmentInteractionListener, JourneyCommunityFragment.OnFragmentInteractionListener{
+        JourneyArchiveFragment.OnFragmentInteractionListener, JourneyCommunityFragment.OnFragmentInteractionListener{
 
     @BindView(R.id.journey_page_image) ImageView mImageView;
     @BindView(R.id.journey_page_appbar) AppBarLayout appBarLayout;
@@ -97,7 +97,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         Picasso.with(this).load(mJourney.getCreatedBy().getImageUrl()).placeholder(R.drawable.profile_image_placeholder).
                 error(R.drawable.profile_image_placeholder).into(mJourneyCreatorImage);
 
-        mViewPager.setAdapter(new JourneyProfilePagerAdapter(getSupportFragmentManager(), mJourney.getJourneyId()));
+        mViewPager.setAdapter(new JourneyProfilePagerAdapter(getSupportFragmentManager(), mJourney.getJourneyId(), mJourney.getCreatedBy().getId()));
         mTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -191,6 +191,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
                     break;
                 case R.id.fab_menu_add_photo:
                     Intent intentImage = new Intent(getBaseContext(), CreateStepImageActivity.class);
+                    intentImage.putExtra(STEP_EXTRA_DATA, step);
                     startActivity(intentImage);
                     break;
                 case R.id.fab_menu_add_video:

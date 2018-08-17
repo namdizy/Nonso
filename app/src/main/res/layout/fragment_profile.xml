@@ -98,17 +98,18 @@
                             android:gravity="center_vertical"
                             android:ellipsize="end"
                             android:layout_toStartOf="@id/profile_edit_btn" />
+
                         <ImageButton
                             android:id="@+id/profile_edit_btn"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
                             android:layout_marginEnd="@dimen/_20dp"
                             android:background="@android:color/transparent"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_editor_light"
-                            android:layout_alignParentEnd="true"
                             android:gravity="center"
-                            android:layout_centerInParent="true"/>
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_editor_dark" />
                     </RelativeLayout>
 
                 </LinearLayout>

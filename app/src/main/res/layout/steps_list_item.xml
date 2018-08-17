@@ -35,17 +35,18 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_horizontal_margin">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/step_created_time"
+                android:id="@+id/step_item_created_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/margin_5dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:textSize="@dimen/h7"
+                android:textStyle="italic"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignBottom="@id/step_item_more_btn"/>
 
             <ImageButton
                 android:id="@+id/step_item_more_btn"
@@ -55,6 +56,7 @@
                 android:background="@null"
                 android:scaleType="centerInside"
                 android:layout_gravity="end"
+                android:layout_marginTop="@dimen/margin_8dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"/>
 
@@ -64,10 +66,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/margin_5dp"
+                android:layout_marginTop="@dimen/margin_8dp"
                 android:textSize="@dimen/h4"
                 android:textStyle="bold"
-                android:layout_below="@id/step_created_time"/>
+                android:layout_below="@id/step_item_more_btn"/>
             <TextView
                 android:id="@+id/step_item_description"
                 android:layout_width="match_parent"
@@ -77,9 +79,58 @@
                 android:layout_marginTop="@dimen/margin_5dp"
                 android:textSize="@dimen/h6"
                 android:layout_below="@id/step_item_title"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+                android:layout_marginBottom="@dimen/activity_horizontal_margin" />
+
+            <LinearLayout
+                android:id="@+id/step_item_cheer_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/step_item_description"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/step_item_cheer_image"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@android:drawable/ic_menu_day" />
+                <TextView
+                    android:id="@+id/step_item_cheer_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:text="99"
+                    android:textSize="@dimen/h5"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/step_item_comments_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/step_item_cheer_container"
+                android:layout_below="@id/step_item_description"
+                android:layout_marginStart="@dimen/activity_horizontal_margin">
+                <ImageView
+                    android:id="@+id/step_item_comments_image"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_comment_dark" />
+                <TextView
+                    android:id="@+id/step_item_comments_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:text="99"
+                    android:textSize="@dimen/h5"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
-
 </LinearLayout>

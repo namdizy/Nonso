@@ -76,6 +76,9 @@
     <string name="create_journey_settings_disclaimer">These settings can be changed at any time after creating this journey</string>
     <string name="create_journey_progress_bar_string">Taking the first step..</string>
 
+    <!-- Journey Profile Community-->
+    <string name="journey_profile_add_comment">Add a comment</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -88,7 +91,6 @@
     <string name="dialog_title">Update goals</string>
     <string name="dialog_update">Update</string>
     <string name="discard">Discard</string>
-
 
     <!-- Date Util -->
     <string name="date_util_term_less">less than</string>

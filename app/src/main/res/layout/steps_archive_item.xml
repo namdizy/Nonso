@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/step_archive_item_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:layout_marginStart="@dimen/margin_8dp"
+        android:layout_marginBottom="2dp"
+        app:cardCornerRadius="@dimen/margin_5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/step_archive_item_created_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:textSize="@dimen/h7"
+                android:textStyle="italic"
+                android:layout_alignParentStart="true"
+                android:layout_alignBottom="@id/step_archive_item_more_btn"/>
+
+            <ImageButton
+                android:id="@+id/step_archive_item_more_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_20dp"
+                android:src="@drawable/ic_more_dark"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"/>
+
+            <TextView
+                android:id="@+id/step_archive_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:textSize="@dimen/h4"
+                android:textStyle="bold"
+                android:layout_below="@id/step_archive_item_more_btn"/>
+            <TextView
+                android:id="@+id/step_archive_item_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:textSize="@dimen/h6"
+                android:layout_below="@id/step_archive_item_title"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</FrameLayout>

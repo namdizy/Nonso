@@ -35,6 +35,10 @@ public class StepsViewModel extends ViewModel {
     private FirebaseQueryLiveData sListLiveData;
     private LiveData<ArrayList<Step>> stepsListLiveData;
 
+    private Query stepsArchiveListRef;
+    private FirebaseQueryLiveData sArchiveListLiveData;
+    private LiveData<ArrayList<Step>> stepsArchiveListLiveData;
+
     private FirebaseUtils firebaseUtils;
 
     public StepsViewModel(){
@@ -43,9 +47,17 @@ public class StepsViewModel extends ViewModel {
 
     public void setStepsList(String journeyId){
 
-        stepsListRef = db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("createdBy.id", journeyId);
+        stepsListRef = db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("createdBy.id", journeyId)
+                .whereEqualTo("publish", true);
         sListLiveData = new FirebaseQueryLiveData(stepsListRef);
         stepsListLiveData = Transformations.map(sListLiveData, new Deserializer());
+    }
+
+    public void setStepsArchiveList(String journeyId){
+        stepsArchiveListRef = db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("createdBy.id", journeyId)
+                .whereEqualTo("publish", false);
+        sArchiveListLiveData = new FirebaseQueryLiveData(stepsArchiveListRef);
+        stepsArchiveListLiveData = Transformations.map(sArchiveListLiveData, new Deserializer());
     }
 
 
@@ -53,6 +65,9 @@ public class StepsViewModel extends ViewModel {
         return stepsListLiveData;
     }
 
+    public LiveData<ArrayList<Step>> getStepsArchiveListLiveData() {
+        return stepsArchiveListLiveData;
+    }
 
     public void saveStep(Step step, final Callback callback){
         firebaseUtils.saveStep(step, new Callback() {

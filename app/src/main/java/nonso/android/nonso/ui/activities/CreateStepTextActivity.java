@@ -87,7 +87,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_step_text, menu);
+        getMenuInflater().inflate(R.menu.create_step_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -138,9 +138,11 @@ public class CreateStepTextActivity extends AppCompatActivity {
                                 break;
                             case SUCCESS:
                                 if(mStep.getPublish()){
+                                    Toast.makeText(context, "Published!", Toast.LENGTH_LONG).show();
                                     finish();
                                 }else{
                                     Toast.makeText(context, "Saved!", Toast.LENGTH_LONG).show();
+                                    finish();
                                 }
                                 break;
                         }
