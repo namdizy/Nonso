@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_10dp" />
                     <ImageButton
-                        android:id="@+id/profile_edit_btn"
+                        android:id="@+id/journey_profile_edit_btn"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="@dimen/_20dp"

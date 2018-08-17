@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/journey_profile_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_title"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/h3"
+        android:layout_marginStart="@dimen/margin_10dp"
+        android:layout_marginTop="@dimen/margin_10dp"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width ="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="30dp"
+        android:layout_marginTop="@dimen/margin_10dp"
+        android:layout_marginStart="@dimen/margin_10dp"
+        android:layout_marginEnd="@dimen/margin_10dp">
+
+        <EditText
+            android:id="@+id/journey_profile_dialog_goals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textColorHint="@color/colorWhite"
+            android:textColor="@color/black"
+            android:inputType="textMultiLine"
+            android:maxLines ="4"
+            android:maxLength="160"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10dp"
+        android:layout_marginBottom="@dimen/margin_10dp"
+        android:gravity="end">
+        <Button
+            android:id="@+id/journey_profile_dialog_discard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/discard"
+            android:textColor="@color/colorPrimary"
+            android:background="@null"/>
+        <Button
+            android:id="@+id/journey_profile_dialog_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_update"
+            android:textColor="@color/colorGray"
+            android:background="@null"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,6 +1,5 @@
 package nonso.android.nonso.ui.adapters;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -31,7 +30,7 @@ public class JourneyProfilePagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new JourneyCommunityFragment();
             case 2:
-                return new JourneyArchiveFragment();
+                return new JourneyArchiveFragment().newInstance(mJourneyId);
             default:
                     return null;
         }

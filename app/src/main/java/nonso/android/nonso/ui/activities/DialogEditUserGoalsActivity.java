@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,7 +25,7 @@ import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.viewModel.UserViewModel;
 
-public class DialogEditGoalsActivity extends AppCompatActivity {
+public class DialogEditUserGoalsActivity extends AppCompatActivity {
 
     @BindView(R.id.dialog_goals) EditText mGoalsText;
     @BindView(R.id.dialog_discard) Button mDiscardBtn;
@@ -33,7 +35,7 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
     private UserViewModel viewModel;
     private String mUserId;
 
-    private final String TAG = DialogEditGoalsActivity.class.getSimpleName();
+    private final String TAG = DialogEditUserGoalsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,7 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        mUserId = intent.getStringExtra(UID_KEY);
+        mUserId = getIntent().getStringExtra(UID_KEY);
 
         viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
@@ -56,6 +57,7 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
 
     @OnClick(R.id.dialog_update)
     public void onUpdateClick(View view){
+        final Context context = this;
 
         String goals = mGoalsText.getText().toString();
         viewModel.updateUserGoals(mUserId, goals, new Callback() {
@@ -81,6 +83,8 @@ public class DialogEditGoalsActivity extends AppCompatActivity {
                         finish();
                         break;
                     case FAILED:
+                        Toast.makeText(context, "Oops something went wrong!", Toast.LENGTH_LONG).show();
+                        finish();
                         break;
 
                 }

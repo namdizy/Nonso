@@ -3,6 +3,7 @@ package nonso.android.nonso.data;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.telecom.Call;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
@@ -55,6 +56,7 @@ public class FirebaseUtils {
 
         return mUser.getUid();
     }
+
     public FirebaseUser getAuthUser(){
         return mAuth.getCurrentUser();
     }
@@ -74,9 +76,31 @@ public class FirebaseUtils {
                 });
     }
 
-    public void signout(){
+    public void signOut(){
         mAuth.signOut();
     }
+
+    public void login(String email, String password, final Callback callback){
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            callback.authorizationResult(mAuth.getCurrentUser());
+
+                        } else {
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            callback.authorizationResult(mAuth.getCurrentUser());
+                        }
+                    }
+                });
+    }
+
+
+
 
     public void getJourney(String journeyId, final Callback callback){
 
@@ -269,6 +293,23 @@ public class FirebaseUtils {
             });
     }
 
+    public void updateJourneyDescription(String journeyId, String description, final Callback callback){
+
+        DocumentReference journeyRef = db.collection(DATABASE_COLLECTION_JOURNEYS).document(journeyId);
+        journeyRef.update("description", description)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.result(Result.SUCCESS);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.result(Result.FAILED);
+                    }
+                });
+    }
+
 
 
     public void saveStep(Step step, final Callback callback){
@@ -324,24 +365,7 @@ public class FirebaseUtils {
                     }
                 });
     }
-    public void login(String email, String password, final Callback callback){
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            callback.authorizationResult(mAuth.getCurrentUser());
-
-                        } else {
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            callback.authorizationResult(mAuth.getCurrentUser());
-                        }
-                    }
-                });
-    }
 
     public void createUser(String email, String password, final String username, final Callback callback){
 

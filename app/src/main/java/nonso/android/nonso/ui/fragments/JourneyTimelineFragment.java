@@ -4,30 +4,19 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -40,7 +29,7 @@ import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.ui.activities.CreateStepTextActivity;
-import nonso.android.nonso.ui.activities.TextStepActivity;
+import nonso.android.nonso.ui.activities.StepDetailsActivity;
 import nonso.android.nonso.ui.adapters.StepsAdapter;
 import nonso.android.nonso.viewModel.StepsViewModel;
 
@@ -204,7 +193,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     public void onStepItemClick(Step step) {
         switch (step.getStepType()){
             case TEXT:
-                Intent intent = new Intent(getContext(), TextStepActivity.class);
+                Intent intent = new Intent(getContext(), StepDetailsActivity.class);
                 intent.putExtra(STEP_EXTRA, step);
                 startActivity(intent);
                 break;

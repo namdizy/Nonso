@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.JourneyArchiveFragment">
+    tools:context=".ui.fragments.JourneyArchiveFragment"
+    android:background="@color/colorGreyLight">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/journey_archive_recycler_view_steps"

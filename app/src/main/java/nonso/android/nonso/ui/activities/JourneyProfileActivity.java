@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.CreatedBy;
@@ -39,7 +41,7 @@ import nonso.android.nonso.viewModel.JourneyViewModel;
 
 
 public class JourneyProfileActivity extends AppCompatActivity implements JourneyTimelineFragment.OnJourneyTimelineListener,
-        JourneyArchiveFragment.OnFragmentInteractionListener, JourneyCommunityFragment.OnFragmentInteractionListener{
+        JourneyArchiveFragment.OnArchiveInteractionListener, JourneyCommunityFragment.OnFragmentInteractionListener{
 
     @BindView(R.id.journey_page_image) ImageView mImageView;
     @BindView(R.id.journey_page_appbar) AppBarLayout appBarLayout;
@@ -47,6 +49,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
     @BindView(R.id.journey_page_description) TextView mJourneyDescription;
     @BindView(R.id.journey_creator_image) ImageView mJourneyCreatorImage;
     @BindView(R.id.journey_creator_name) TextView mJourneyCreatorName;
+    @BindView(R.id.journey_profile_edit_btn) ImageButton mEditDescription;
     @BindView(R.id.journey_profile_tabs) TabLayout mTabLayout;
     @BindView(R.id.journey_profile_viewPager) ViewPager mViewPager;
     @BindView(R.id.journey_profile_fab) FabSpeedDial mFab;
@@ -79,7 +82,6 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         });
 
     }
-
 
     public void updateUI(Journey journey){
 
@@ -207,6 +209,14 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         }
     };
 
+
+    @OnClick(R.id.journey_profile_edit_btn)
+    public void onEditClick(View view){
+        Intent intent = new Intent(this, DialogEditJourneyDescription.class);
+        intent.putExtra(JOURNEY_EXTRA_ID_KEY, mJourney.getJourneyId());
+        startActivity(intent);
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -221,6 +231,11 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
     @Override
     public void onJourneyTimelineInteraction(Step step) {
+
+    }
+
+    @Override
+    public void onArchiveInteraction(Uri uri) {
 
     }
 }

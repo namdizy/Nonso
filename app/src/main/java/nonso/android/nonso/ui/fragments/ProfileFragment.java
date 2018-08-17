@@ -50,7 +50,7 @@ import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreateJourneyActivity;
-import nonso.android.nonso.ui.activities.DialogEditGoalsActivity;
+import nonso.android.nonso.ui.activities.DialogEditUserGoalsActivity;
 import nonso.android.nonso.ui.activities.ImageViewActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.ui.adapters.ProfilePagerAdapter;
@@ -283,7 +283,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     @OnClick(R.id.profile_edit_btn)
     public void onEditGoalsClick(View view){
 
-        Intent intent = new Intent(getContext(), DialogEditGoalsActivity.class);
+        Intent intent = new Intent(getContext(), DialogEditUserGoalsActivity.class);
         intent.putExtra(UID_KEY, mUserId);
         startActivity(intent);
     }
@@ -299,9 +299,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
     public void setProfileImage(String imagePath){
         ImageUtils imageUtils = new ImageUtils();
-
         Bitmap bitmap = imageUtils.decodeFile(imagePath);
-
         mUserProfileImage.setImageBitmap(bitmap);
         uploadToFirebase(bitmap);
     }

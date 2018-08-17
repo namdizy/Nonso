@@ -138,6 +138,40 @@ public class JourneyViewModel extends ViewModel {
 
     }
 
+    public void updateJourneyDescription(String journeyId, String description, final Callback callback){
+        firebaseUtils.updateJourneyDescription(journeyId, description, new Callback() {
+            @Override
+            public void result(Result result) {
+                callback.result(result);
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
+    }
+
     public LiveData<ArrayList<Journey>> getJourneyListLiveData(){
         return journeyListLiveData;
     }

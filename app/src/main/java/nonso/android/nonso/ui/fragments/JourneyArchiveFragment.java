@@ -26,7 +26,7 @@ import nonso.android.nonso.viewModel.StepsViewModel;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link JourneyArchiveFragment.OnFragmentInteractionListener} interface
+ * {@link JourneyArchiveFragment.OnArchiveInteractionListener} interface
  * to handle interaction events.
  * Use the {@link JourneyArchiveFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -43,7 +43,7 @@ public class JourneyArchiveFragment extends Fragment implements StepsArchiveAdap
     private ArrayList<Step> mSteps = new ArrayList<>();
     private StepsViewModel viewModel;
 
-    private OnFragmentInteractionListener mListener;
+    private OnArchiveInteractionListener mListener;
     private StepsArchiveAdapter stepsArchiveAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
@@ -104,8 +104,8 @@ public class JourneyArchiveFragment extends Fragment implements StepsArchiveAdap
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnArchiveInteractionListener) {
+            mListener = (OnArchiveInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -143,8 +143,8 @@ public class JourneyArchiveFragment extends Fragment implements StepsArchiveAdap
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnArchiveInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onArchiveInteraction(Uri uri);
     }
 }
