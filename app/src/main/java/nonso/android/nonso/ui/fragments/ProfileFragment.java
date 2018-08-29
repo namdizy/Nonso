@@ -44,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
@@ -55,6 +56,7 @@ import nonso.android.nonso.ui.activities.ImageViewActivity;
 import nonso.android.nonso.ui.activities.SettingsActivity;
 import nonso.android.nonso.ui.adapters.ProfilePagerAdapter;
 import nonso.android.nonso.utils.ImageUtils;
+import nonso.android.nonso.utils.StringGenerator;
 import nonso.android.nonso.viewModel.UserViewModel;
 
 
@@ -120,12 +122,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         viewModel.init(mUserId);
 
-        viewModel.getUserLiveData().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(@Nullable User user) {
-                updateUI(user);
-            }
-        });
+        viewModel.getUserLiveData().observe(this, this::updateUI);
 
         mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), mUserId));
         mTabLayout.setupWithViewPager(mViewPager);
@@ -164,7 +161,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         mUsername.setText(user.getUserName());
         mUserGoals.setText(user.getGoal());
 
-        Picasso.with(getContext()).load(mUser.getImageUri()).placeholder(R.drawable.profile_image_placeholder)
+        Picasso.with(getContext()).load(mUser.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
                 .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);
 
     }
@@ -214,7 +211,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
         Intent intent = new Intent(getContext(), CreateJourneyActivity.class);
         intent.putExtra(EXTRA_CREATOR, mUser);
-        getActivity().startActivity(intent);
+        startActivity(intent);
     }
 
 
@@ -222,8 +219,8 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     public void onProfileImageClick(){
         Intent intent = new Intent(getContext(), ImageViewActivity.class);
 
-        intent.putExtra(PROFILE_IMAGE_EXTRA, mUser.getImageUri().toString());
-        getActivity().startActivity(intent);
+        intent.putExtra(PROFILE_IMAGE_EXTRA, mUser.getImage().getImageUrl());
+        startActivity(intent);
     }
 
     @OnClick(R.id.profile_edit_profile_image)
@@ -306,8 +303,11 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
     private void uploadToFirebase(Bitmap bitmap){
 
+        Image image = new Image();
+        image.setImageReference("images/" + new StringGenerator().getRandomString() + ".png");
+        image.setImageUrl(new ImageUtils().BitMapToString(bitmap));
 
-        viewModel.saveUserImage(mUserId, bitmap, new Callback() {
+        viewModel.saveUserImage(mUserId, image, new Callback() {
             @Override
             public void result(Result result) {
 

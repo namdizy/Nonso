@@ -59,6 +59,32 @@
                 android:layout_marginTop="@dimen/margin_8dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"/>
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/step_item_exo_player"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="@dimen/step_item_video_height"
+                android:layout_below="@id/step_item_created_time"/>
+
+            <RelativeLayout
+                android:id="@+id/step_item_images_container"
+                android:layout_below="@id/step_item_created_time"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:visibility="gone"
+                android:layout_height="256dp">
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/step_item_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    />
+                <me.relex.circleindicator.CircleIndicator
+                    android:id="@+id/step_item_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/step_item_title"
@@ -69,7 +95,7 @@
                 android:layout_marginTop="@dimen/margin_8dp"
                 android:textSize="@dimen/h4"
                 android:textStyle="bold"
-                android:layout_below="@id/step_item_more_btn"/>
+                android:layout_below="@id/step_item_exo_player"/>
             <TextView
                 android:id="@+id/step_item_description"
                 android:layout_width="match_parent"
@@ -83,52 +109,50 @@
 
             <LinearLayout
                 android:id="@+id/step_item_cheer_container"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/step_item_description"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/dp_10"
                 android:layout_alignParentStart="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:background="@color/colorGreyLight">
 
-                <ImageView
-                    android:id="@+id/step_item_cheer_image"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@android:drawable/ic_menu_day" />
                 <TextView
                     android:id="@+id/step_item_cheer_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/margin_5dp"
-                    android:text="99"
+                    android:text="99 cheers"
                     android:textSize="@dimen/h5"
-                    android:gravity="center"
-                    />
+                    android:gravity="center" />
+                <View android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:id="@+id/step_item_add_cheer_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/step_item_add_cheer_image"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
+                        android:src="@drawable/ic_cheer_dark"
+                        />
+                    <TextView
+                        android:id="@+id/step_item_add_cheer_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin_5dp"
+                        android:text="CHEER"
+                        android:textSize="@dimen/h5"
+                        android:gravity="center"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/step_item_comments_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/step_item_cheer_container"
-                android:layout_below="@id/step_item_description"
-                android:layout_marginStart="@dimen/activity_horizontal_margin">
-                <ImageView
-                    android:id="@+id/step_item_comments_image"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/ic_comment_dark" />
-                <TextView
-                    android:id="@+id/step_item_comments_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    android:text="99"
-                    android:textSize="@dimen/h5"
-                    android:gravity="center"
-                    />
-            </LinearLayout>
+
 
         </RelativeLayout>
 

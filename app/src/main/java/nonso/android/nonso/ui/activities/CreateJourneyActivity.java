@@ -66,7 +66,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
         mJourney.setName(journey.getName());
         mJourney.setDescription(journey.getDescription());
         mJourney.setCategories(journey.getCategories());
-        mJourney.setProfileImage(journey.getProfileImage());
+        mJourney.setImage(journey.getImage());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CreateJourneyActivity extends AppCompatActivity implements Descript
 
         CreatedBy createdBy = new CreatedBy();
         createdBy.setId(mCreator.getUserId());
-        createdBy.setImageUrl(mCreator.getImageUri());
+        createdBy.setImageUrl(mCreator.getImage().getImageUrl());
         createdBy.setName(mCreator.getUserName());
         createdBy.setCreatorType(CreatorType.USER);
         mJourney.setCreatedBy(createdBy);

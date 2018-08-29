@@ -147,4 +147,6 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
         getSupportFragmentManager().putFragment(outState, ProfileFragment.class.getSimpleName(), new ProfileFragment());
     }
+
+
 }

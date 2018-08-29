@@ -1,14 +1,21 @@
 package nonso.android.nonso.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.ui.activities.CreatePostActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,14 +26,13 @@ import nonso.android.nonso.R;
  * create an instance of this fragment.
  */
 public class JourneyCommunityFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    @BindView(R.id.journey_profile_community_post) TextView mAddPost;
+
+    private static final String JOURNEY_ID = "journey_id";
+
+    private String mJourneyId;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,16 +44,14 @@ public class JourneyCommunityFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param journeyId Parameter 1.
      * @return A new instance of fragment JourneyCommunityFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static JourneyCommunityFragment newInstance(String param1, String param2) {
+    public static JourneyCommunityFragment newInstance(String journeyId) {
         JourneyCommunityFragment fragment = new JourneyCommunityFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(JOURNEY_ID, journeyId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +60,7 @@ public class JourneyCommunityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mJourneyId = getArguments().getString(JOURNEY_ID);
         }
     }
 
@@ -65,7 +68,9 @@ public class JourneyCommunityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_journey_community, container, false);
+        View view = inflater.inflate(R.layout.fragment_journey_community, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -73,6 +78,13 @@ public class JourneyCommunityFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @OnClick(R.id.journey_profile_community_post)
+    public void onCreatePostClick(View view){
+        Intent intent = new Intent(getContext(), CreatePostActivity.class );
+        intent.putExtra(JOURNEY_ID, mJourneyId);
+        startActivity(intent);
     }
 
     @Override

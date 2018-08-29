@@ -4,11 +4,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import nonso.android.nonso.models.Image;
 
 public class ImageUtils {
 
@@ -36,7 +43,7 @@ public class ImageUtils {
 //            }
             // decode with inSampleSize
             BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = 2;
+            o2.inSampleSize = 4;
             Bitmap bm = BitmapFactory.decodeFile(path, o2);
             Bitmap bitmap = bm;
 

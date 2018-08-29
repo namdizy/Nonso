@@ -15,8 +15,8 @@ public class Step implements Parcelable {
     private String title;
     private StepType stepType;
     private Map<String, Boolean> likes;
-    private Map<String, Boolean> imageUrls;
-    private String videoUrl;
+    private Map<String, Image> images;
+    private Video video;
     private String bodyText;
     private String description;
     private Boolean publish;
@@ -25,8 +25,8 @@ public class Step implements Parcelable {
     private Date updatedAt;
 
     public Step(){
+        this.images = new HashMap<>();
         this.likes = new HashMap<>();
-        this.imageUrls = new HashMap<>();
     }
 
     public String getTitle() {
@@ -53,20 +53,12 @@ public class Step implements Parcelable {
         this.likes = likes;
     }
 
-    public Map<String, Boolean> getImageUrls() {
-        return imageUrls;
+    public Map<String, Image> getImages() {
+        return images;
     }
 
-    public void setImageUrls(Map<String, Boolean> imageUrls) {
-        this.imageUrls = imageUrls;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public void setImages(Map<String, Image> images) {
+        this.images = images;
     }
 
     public String getBodyText() {
@@ -85,6 +77,14 @@ public class Step implements Parcelable {
         this.description = description;
     }
 
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public void setVideo(Video video) {
+        this.video = video;
+    }
 
     public Boolean getPublish() {
         return publish;
@@ -142,12 +142,12 @@ public class Step implements Parcelable {
             dest.writeString(entry.getKey());
             dest.writeValue(entry.getValue());
         }
-        dest.writeInt(this.imageUrls.size());
-        for (Map.Entry<String, Boolean> entry : this.imageUrls.entrySet()) {
+        dest.writeInt(this.images.size());
+        for (Map.Entry<String, Image> entry : this.images.entrySet()) {
             dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
+            dest.writeParcelable(entry.getValue(), flags);
         }
-        dest.writeString(this.videoUrl);
+        dest.writeParcelable(this.video, flags);
         dest.writeString(this.bodyText);
         dest.writeString(this.description);
         dest.writeValue(this.publish);
@@ -168,14 +168,14 @@ public class Step implements Parcelable {
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
             this.likes.put(key, value);
         }
-        int imageUrlsSize = in.readInt();
-        this.imageUrls = new HashMap<String, Boolean>(imageUrlsSize);
-        for (int i = 0; i < imageUrlsSize; i++) {
+        int imagesSize = in.readInt();
+        this.images = new HashMap<String, Image>(imagesSize);
+        for (int i = 0; i < imagesSize; i++) {
             String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.imageUrls.put(key, value);
+            Image value = in.readParcelable(Image.class.getClassLoader());
+            this.images.put(key, value);
         }
-        this.videoUrl = in.readString();
+        this.video = in.readParcelable(Video.class.getClassLoader());
         this.bodyText = in.readString();
         this.description = in.readString();
         this.publish = (Boolean) in.readValue(Boolean.class.getClassLoader());

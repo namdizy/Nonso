@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +21,7 @@ import nonso.android.nonso.R;
 public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImagesAdapterViewHolder>{
 
 
-    private ArrayList<String> mImagesUrls;
+    private ArrayList<Bitmap> mImagesUrls;
 
     public ImagesAdapter(){
 
@@ -39,9 +40,9 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImagesAdap
     @Override
     public void onBindViewHolder(@NonNull ImagesAdapterViewHolder holder, int position) {
 
-        String imageUrl = mImagesUrls.get(position);
+        Bitmap imageBtmp = mImagesUrls.get(position);
 
-        holder.mImageView.setImageURI(Uri.parse(imageUrl));
+        holder.mImageView.setImageBitmap(imageBtmp);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImagesAdap
         }
     }
 
-    public void setImagesUrls(ArrayList images){
+    public void setImagesUrls(@NonNull ArrayList<Bitmap> images){
         mImagesUrls = images;
         notifyDataSetChanged();
     }

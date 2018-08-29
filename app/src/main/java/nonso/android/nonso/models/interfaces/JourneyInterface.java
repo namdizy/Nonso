@@ -6,13 +6,14 @@ import java.util.Date;
 import java.util.Map;
 
 import nonso.android.nonso.models.CreatedBy;
+import nonso.android.nonso.models.Image;
 
 public interface JourneyInterface {
 
     String getJourneyId();
     String getName();
     String getDescription();
-    String getProfileImage();
+    Image getImage();
     boolean isPermissions();
     boolean isMatureContent();
     boolean isSubscriptions();

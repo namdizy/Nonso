@@ -28,6 +28,7 @@ import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
+import nonso.android.nonso.ui.activities.CheerActivity;
 import nonso.android.nonso.ui.activities.CreateStepTextActivity;
 import nonso.android.nonso.ui.activities.StepDetailsActivity;
 import nonso.android.nonso.ui.adapters.StepsAdapter;
@@ -93,12 +94,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
 
         viewModel = ViewModelProviders.of(this).get(StepsViewModel.class);
         viewModel.setStepsList(mJourneyId);
-        viewModel.getStepsListLiveData().observe(this, new Observer<ArrayList<Step>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<Step> steps) {
-                setSteps(steps);
-            }
-        });
+        viewModel.getStepsListLiveData().observe(this, this::setSteps);
         return view;
     }
 
@@ -146,7 +142,7 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
 
     public void setSteps(ArrayList steps){
 
-        if(steps != null){
+        if(steps.size() != 0){
             mStepsContainer.setVisibility(View.VISIBLE);
             mStepsNotFound.setVisibility(View.GONE);
             mStepsList = steps;
@@ -173,6 +169,12 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onAddCheerClick(Step step) {
+        Intent intent = new Intent(getContext(), CheerActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -203,15 +205,6 @@ public class JourneyTimelineFragment extends Fragment implements StepsAdapter.St
                 break;
         }
     }
-
-
-//    private void createText(){
-//        if (mListener != null) {
-//            Step step = new Step();
-//            step.setStepType(StepType.TEXT);
-//            mListener.onJourneyTimelineInteraction(step);
-//        }
-//    }
 
     /**
      * This interface must be implemented by activities that contain this

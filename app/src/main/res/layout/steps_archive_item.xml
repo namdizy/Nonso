@@ -43,6 +43,34 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"/>
 
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/step_archive_item_exo_player"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="256dp"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:layout_below="@id/step_archive_item_created_time"/>
+
+            <RelativeLayout
+                android:id="@+id/step_archive_item_images_container"
+                android:layout_below="@id/step_archive_item_created_time"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:visibility="gone"
+                android:layout_height="512dp">
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    />
+                <me.relex.circleindicator.CircleIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/step_archive_item_title"
                 android:layout_width="match_parent"
@@ -52,7 +80,7 @@
                 android:layout_marginTop="@dimen/margin_8dp"
                 android:textSize="@dimen/h4"
                 android:textStyle="bold"
-                android:layout_below="@id/step_archive_item_more_btn"/>
+                android:layout_below="@id/step_archive_item_exo_player" />
             <TextView
                 android:id="@+id/step_archive_item_description"
                 android:layout_width="match_parent"

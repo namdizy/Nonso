@@ -29,8 +29,7 @@ import nonso.android.nonso.viewModel.StepsViewModel;
 
 public class CreateStepTextActivity extends AppCompatActivity {
 
-    @BindView(R.id.create_step_text_title)
-    EditText mStepTitle;
+    @BindView(R.id.create_step_text_title) EditText mStepTitle;
     @BindView(R.id.create_step_text_description) EditText mStepDescription;
 
 
@@ -71,12 +70,9 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
         if (editorFragment == null){
             editorFragment = KRichEditorFragment.getInstance(new Options().
-                    onInitialized(new Runnable() {
-                        @Override
-                        public void run() {
-                            editorFragment.getEditor().setContents(mStep.getBodyText());
-                        }
-                    }));
+                    onInitialized(()->
+                            editorFragment.getEditor().setContents(mStep.getBodyText())
+                    ));
         }
 
         getSupportFragmentManager()
@@ -95,12 +91,14 @@ public class CreateStepTextActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save_as_draft:
-                saveAsDraft();
+                save();
                 return true;
             case  R.id.action_discard:
+                delete();
                 return true;
             case R.id.action_publish:
-                publish();
+                mStep.setPublish(true);
+                save();
                 return true;
             case android.R.id.home:
                 Intent intent = new Intent(this, JourneyProfileActivity.class);
@@ -112,12 +110,53 @@ public class CreateStepTextActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    public void delete(){
+        final Context context = this;
+
+        viewModel.deleteStep(mStep, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
+                        finish();
+                        break;
+                    case FAILED:
+                        Toast.makeText(context, "Oops looks like something went wrong", Toast.LENGTH_LONG).show();
+                        finish();
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
+    }
 
     public void save(){
         final Context context = this;
-        editorFragment.getEditor().getHtml(new RichEditor.OnHtmlReturned() {
-            @Override
-            public void process(String s) {
+        editorFragment.getEditor().getHtml(s -> {
                 mStep.setTitle(mStepTitle.getText().toString());
                 mStep.setDescription(mStepDescription.getText().toString());
                 mStep.setBodyText(s);
@@ -137,13 +176,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
                                 finish();
                                 break;
                             case SUCCESS:
-                                if(mStep.getPublish()){
-                                    Toast.makeText(context, "Published!", Toast.LENGTH_LONG).show();
-                                    finish();
-                                }else{
-                                    Toast.makeText(context, "Saved!", Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
+                                finish();
                                 break;
                         }
                     }
@@ -168,18 +201,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
                     }
                 });
-            }
         });
-    }
-
-    public void saveAsDraft(){
-        mStep.setPublish(false);
-        save();
-    }
-
-    public void publish(){
-        mStep.setPublish(true);
-        save();
     }
 
     @Override

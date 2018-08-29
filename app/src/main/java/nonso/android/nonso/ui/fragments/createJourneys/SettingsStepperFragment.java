@@ -8,10 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
@@ -79,7 +77,7 @@ public class SettingsStepperFragment extends Fragment implements Step {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings_step, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_journey_settings_step, container, false);
 
         ButterKnife.bind(this, view);
         return view;

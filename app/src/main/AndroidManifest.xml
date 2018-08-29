@@ -106,9 +106,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-        <activity android:name=".ui.activities.DialogEditJourneyDescription"
+        <activity
+            android:name=".ui.activities.DialogEditJourneyDescription"
             android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.NoActionBar.dialog"/>
+            android:theme="@style/AppTheme.NoActionBar.dialog" />
+        <activity
+            android:name=".ui.activities.CheerActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/AppTheme.NoActionBar.dialogTransparent" />
+        <activity
+            android:name=".ui.activities.CreateVideoActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.JourneyProfileActivity" />
+        </activity>
+        <activity android:name=".ui.activities.CreatePostActivity"></activity>
     </application>
 
 </manifest>

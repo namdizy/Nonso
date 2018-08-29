@@ -168,6 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
                         break;
                     case FAILED:
                         onSignUpFailed();
+                        break;
                 }
             }
 

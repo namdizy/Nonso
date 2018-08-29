@@ -82,6 +82,12 @@
     <dimen name="crate_journey_settings_disclaimer">9sp</dimen>
     <dimen name="create_journeys_settings_subscriptions_tier_header_text_size">12sp</dimen>
 
+    <!--Create Step Videos -->
+    <dimen name="create_step_video_video_height">256dp</dimen>
+    <dimen name="step_item_video_height">194dp</dimen>
+
+
+
 
     <!-- Journeys Profile Page -->
 

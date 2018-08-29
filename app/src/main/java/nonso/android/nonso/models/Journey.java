@@ -16,7 +16,7 @@ public class Journey implements Parcelable, JourneyInterface {
     private String journeyId;
     private String name;
     private String description;
-    private String profileImage;
+    private Image image;
     private boolean permissions;
     private boolean matureContent;
     private boolean subscriptions;
@@ -26,9 +26,9 @@ public class Journey implements Parcelable, JourneyInterface {
     @ServerTimestamp private Date createdAt;
     private Date updatedAt;
 
-
     public Journey(){
         this.categories = new HashMap<>();
+        this.image = new Image();
     }
 
     public Map<String, Boolean> getCategories() {
@@ -39,21 +39,16 @@ public class Journey implements Parcelable, JourneyInterface {
         this.categories = categories;
     }
 
-    public String getProfileImage() {
-        return profileImage;
-    }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
+    public Image getImage() { return image; }
+
+    public void setImage(Image image) { this.image = image; }
 
     public boolean isDisplayFollowers() {
         return displayFollowers;
     }
 
-    public void setDisplayFollowers(boolean displayFollowers) {
-        this.displayFollowers = displayFollowers;
-    }
+    public void setDisplayFollowers(boolean displayFollowers) { this.displayFollowers = displayFollowers; }
 
     public CreatedBy getCreatedBy() {
         return createdBy;
@@ -86,7 +81,6 @@ public class Journey implements Parcelable, JourneyInterface {
     public void setMatureContent(boolean matureContent) {
         this.matureContent = matureContent;
     }
-
 
     public String getName() {
         return name;
@@ -138,7 +132,7 @@ public class Journey implements Parcelable, JourneyInterface {
         dest.writeString(this.journeyId);
         dest.writeString(this.name);
         dest.writeString(this.description);
-        dest.writeString(this.profileImage);
+        dest.writeParcelable(this.image, flags);
         dest.writeByte(this.permissions ? (byte) 1 : (byte) 0);
         dest.writeByte(this.matureContent ? (byte) 1 : (byte) 0);
         dest.writeByte(this.subscriptions ? (byte) 1 : (byte) 0);
@@ -157,7 +151,7 @@ public class Journey implements Parcelable, JourneyInterface {
         this.journeyId = in.readString();
         this.name = in.readString();
         this.description = in.readString();
-        this.profileImage = in.readString();
+        this.image = in.readParcelable(Image.class.getClassLoader());
         this.permissions = in.readByte() != 0;
         this.matureContent = in.readByte() != 0;
         this.subscriptions = in.readByte() != 0;

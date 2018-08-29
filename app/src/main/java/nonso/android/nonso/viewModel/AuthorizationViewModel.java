@@ -62,37 +62,7 @@ public class AuthorizationViewModel extends ViewModel {
     }
 
     public void createUser(String email, String password, String userName, final Callback callback){
-       firebaseUtils.createUser(email, password, userName, new Callback() {
-           @Override
-           public void result(Result result) {
-               callback.result(result);
-           }
-
-           @Override
-           public void journeyResult(Journey journey) {
-
-           }
-
-           @Override
-           public void userResult(User user) {
-
-           }
-
-           @Override
-           public void stepResult(Step step) {
-
-           }
-
-           @Override
-           public void imageResult(Uri downloadUrl) {
-
-           }
-
-           @Override
-           public void authorizationResult(FirebaseUser user) {
-
-           }
-       });
+       firebaseUtils.createUser(email, password, userName, callback);
     }
 }
 

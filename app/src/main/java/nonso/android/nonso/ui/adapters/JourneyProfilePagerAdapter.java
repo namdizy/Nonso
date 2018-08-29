@@ -28,7 +28,7 @@ public class JourneyProfilePagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new JourneyTimelineFragment().newInstance(mJourneyId);
             case 1:
-                return new JourneyCommunityFragment();
+                return new JourneyCommunityFragment().newInstance(mJourneyId);
             case 2:
                 return new JourneyArchiveFragment().newInstance(mJourneyId);
             default:

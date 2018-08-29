@@ -70,72 +70,11 @@ public class StepsViewModel extends ViewModel {
     }
 
     public void saveStep(Step step, final Callback callback){
-        firebaseUtils.saveStep(step, new Callback() {
-            @Override
-            public void result(Result result) {
-                callback.result(result);
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-        });
+        firebaseUtils.saveStep(step, callback);
     }
 
     public void deleteStep(Step step, final Callback callback){
-
-        firebaseUtils.deleteStep(step, new Callback() {
-            @Override
-            public void result(Result result) {
-                callback.result(result);
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-        });
+        firebaseUtils.deleteStep(step, callback);
     }
 
 

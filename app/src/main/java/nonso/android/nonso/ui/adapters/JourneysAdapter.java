@@ -96,7 +96,7 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
             }
         });
 
-        Picasso.with(mContext).load(journey.getProfileImage()).placeholder(R.drawable.image_view_placeholder)
+        Picasso.with(mContext).load(journey.getImage().getImageUrl()).placeholder(R.drawable.image_view_placeholder)
                 .error(R.drawable.image_view_placeholder).into(holder.mJourneyImage);
         Picasso.with(mContext).load(journey.getCreatedBy().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
                 .error(R.drawable.profile_image_placeholder).into(holder.mJourneyCreatorImage);

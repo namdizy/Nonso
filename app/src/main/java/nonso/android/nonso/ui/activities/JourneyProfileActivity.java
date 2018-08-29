@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -74,12 +75,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
         viewModel.setUpJourneyItem(journeyId);
 
-        viewModel.getJourneyItemLiveData().observe(this, new Observer<Journey>() {
-            @Override
-            public void onChanged(@Nullable Journey journey) {
-                updateUI(journey);
-            }
-        });
+        viewModel.getJourneyItemLiveData().observe(this,this::updateUI);
 
     }
 
@@ -95,7 +91,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         mJourneyDescription.setText(mJourney.getDescription());
         mJourneyCreatorName.setText(mJourney.getCreatedBy().getName());
 
-        Picasso.with(this).load(mJourney.getProfileImage()).into(mImageView);
+        Picasso.with(this).load(mJourney.getImage().getImageUrl()).into(mImageView);
         Picasso.with(this).load(mJourney.getCreatedBy().getImageUrl()).placeholder(R.drawable.profile_image_placeholder).
                 error(R.drawable.profile_image_placeholder).into(mJourneyCreatorImage);
 
@@ -121,6 +117,9 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
                     case 1:
                         hideFab(cx, cy, radius);
                         break;
+                    case 2:
+                        showFab(cx, cy, radius);
+                        break;
                 }
             }
 
@@ -132,6 +131,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
         mFab.setMenuListener(menuListener);
     }
+
 
     public void showFab(int cx, int cy, float finalRadius){
 
@@ -181,9 +181,10 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
             createdBy.setCreatorType(CreatorType.JOURNEY);
             createdBy.setId(mJourney.getJourneyId());
             createdBy.setName(mJourney.getName());
-            createdBy.setImageUrl(mJourney.getProfileImage());
+            createdBy.setImageUrl(mJourney.getImage().getImageUrl());
 
             step.setCreatedBy(createdBy);
+            step.setPublish(false);
 
             switch (menuItem.getItemId()){
                 case R.id.fab_menu_add_text:
@@ -197,6 +198,9 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
                     startActivity(intentImage);
                     break;
                 case R.id.fab_menu_add_video:
+                    Intent intentVideo = new Intent(getBaseContext(), CreateVideoActivity.class);
+                    intentVideo.putExtra(STEP_EXTRA_DATA, step);
+                    startActivity(intentVideo);
                     break;
 
             }

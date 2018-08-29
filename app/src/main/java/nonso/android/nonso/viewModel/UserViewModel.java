@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import nonso.android.nonso.data.FirebaseDocumentLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
@@ -47,71 +48,11 @@ public class UserViewModel extends ViewModel {
 
     public void updateUserGoals(String userId, String goals, final Callback callback){
 
-        firebaseUtils.updateUserGoals(userId, goals, new Callback() {
-            @Override
-            public void result(Result result) {
-                callback.result(result);
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-        });
+        firebaseUtils.updateUserGoals(userId, goals,callback);
     }
 
-    public void saveUserImage(String userId, Bitmap bitmap, Callback callback){
-        firebaseUtils.saveUserImage(userId, bitmap, new Callback() {
-            @Override
-            public void result(Result result) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-        });
+    public void saveUserImage(String userId, Image image, Callback callback){
+        firebaseUtils.saveUserImage(userId, image, callback);
     }
 
     private class Deserializer implements Function<DocumentSnapshot, User>{

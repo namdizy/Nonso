@@ -6,16 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +31,6 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,10 +41,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.ui.activities.MainActivity;
 import nonso.android.nonso.utils.ImageUtils;
 import nonso.android.nonso.utils.MultiSelectionSpinner;
+import nonso.android.nonso.utils.StringGenerator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -127,7 +125,7 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_description_step, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_journey_description_step, container, false);
         ButterKnife.bind(this, view);
 
         mCategoriesRef  = db.collection(DATABASE_COLLECTION_CATEGORIES).document(DATABASE_DOCUMENT_CATEGORIES);
@@ -315,7 +313,10 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
         mJourneysImage.setImageBitmap(bitmap);
 
         String bitmapString = imageUtils.BitMapToString(bitmap);
-        mJourney.setProfileImage(bitmapString);
+        Image image = new Image();
+        image.setImageReference("images/" + new StringGenerator().getRandomString() +".jpg");
+        image.setImageUrl(bitmapString);
+        mJourney.setImage(image);
 
         mJourneysImage.setVisibility(View.VISIBLE);
         if(mListener != null){

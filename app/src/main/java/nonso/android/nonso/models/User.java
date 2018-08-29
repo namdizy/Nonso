@@ -14,40 +14,21 @@ public class User implements Parcelable {
     private String email;
     private String goal;
     private String userId;
-    private String imageUri;
+    private Image image;
     @ServerTimestamp private Date createdAt;
     private Date updatedAt;
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-
-
     public User(){
+        this.image = new Image();
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setImage(Image image) {
+        this.image = image;
     }
-
-
 
     public String getUserName() {
         return userName;
@@ -81,6 +62,22 @@ public class User implements Parcelable {
         this.userId = userId;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -92,7 +89,7 @@ public class User implements Parcelable {
         dest.writeString(this.email);
         dest.writeString(this.goal);
         dest.writeString(this.userId);
-        dest.writeString(this.imageUri);
+        dest.writeParcelable(this.image, flags);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -102,7 +99,7 @@ public class User implements Parcelable {
         this.email = in.readString();
         this.goal = in.readString();
         this.userId = in.readString();
-        this.imageUri = in.readString();
+        this.image = in.readParcelable(Image.class.getClassLoader());
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

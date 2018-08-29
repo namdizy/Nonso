@@ -68,108 +68,17 @@ public class JourneyViewModel extends ViewModel {
     }
 
     public void createJourney(Journey journey, final Callback callback){
-        firebaseUtils.saveJourney(journey, new Callback() {
-            @Override
-            public void result(Result result) {
-                Log.v(TAG, "Journey Creation in callback saveJourney");
-                callback.result(result);
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-        });
+        firebaseUtils.saveJourney(journey, callback);
     }
 
     public void deleteJourney(Journey journey, final Callback callback){
 
-        firebaseUtils.deleteJourney(journey, new Callback() {
-            @Override
-            public void userResult(User user) {
-
-            }
-
-            @Override
-            public void result(Result result) {
-                callback.result(result);
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-        });
+        firebaseUtils.deleteJourney(journey, callback);
 
     }
 
     public void updateJourneyDescription(String journeyId, String description, final Callback callback){
-        firebaseUtils.updateJourneyDescription(journeyId, description, new Callback() {
-            @Override
-            public void result(Result result) {
-                callback.result(result);
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-        });
+        firebaseUtils.updateJourneyDescription(journeyId, description, callback);
     }
 
     public LiveData<ArrayList<Journey>> getJourneyListLiveData(){
