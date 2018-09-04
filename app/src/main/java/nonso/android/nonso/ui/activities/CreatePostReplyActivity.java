@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,40 +27,47 @@ import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.viewModel.PostViewModel;
 
-public class CreatePostActivity extends AppCompatActivity {
+public class CreatePostReplyActivity extends AppCompatActivity {
+
+    @BindView(R.id.create_post_reply_title)
+    TextView mPostTitle;
+    @BindView(R.id.create_post_reply_body)
+    EditText mPostBody;
 
 
-    @BindView(R.id.create_post_body) EditText mPostBody;
-    @BindView(R.id.create_post_text_title) EditText mPostTitle;
 
-    private String mJourneyId;
-    private String JOURNEY_ID = "journey_id";
-    private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
+    private Post mParentPost;
+    private String PARENT_POST = "parent_post";
     private final String TAB_POSITION_EXTRA = "tab_position_extra";
+    private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
 
     private User mUser;
     private PostViewModel mViewModel;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_post);
+        setContentView(R.layout.activity_create_post_reply);
 
         ButterKnife.bind(this);
 
-        mJourneyId = getIntent().getStringExtra(JOURNEY_ID);
+        mParentPost = getIntent().getParcelableExtra(PARENT_POST);
         mViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
+
+        mPostTitle.setText(mParentPost.getTitle());
 
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getUser();
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.create_post_reply_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     public void getUser(){
         mViewModel.getCurrentUser(new Callback() {
@@ -94,14 +103,6 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_post_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.create_post_menu_publish:
@@ -109,7 +110,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 return true;
             case android.R.id.home:
                 Intent intent = new Intent(this, JourneyProfileActivity.class);
-                intent.putExtra(JOURNEY_EXTRA_ID_KEY, mJourneyId);
+                intent.putExtra(JOURNEY_EXTRA_ID_KEY, mParentPost.getJourneyId());
                 intent.putExtra(TAB_POSITION_EXTRA, 1);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -121,28 +122,28 @@ public class CreatePostActivity extends AppCompatActivity {
 
     public void publish(){
         Post post = new Post();
+        post.setParentId(mParentPost.getParentId());
+        post.setBody(mPostBody.getText().toString());
+        post.setJourneyId(mParentPost.getJourneyId());
 
         CreatedBy createdBy = new CreatedBy();
-        createdBy.setImageUrl(mUser.getImage().getImageUrl());
-        createdBy.setName(mUser.getUserName());
         createdBy.setId(mUser.getUserId());
-        createdBy.setCreatorType(CreatorType.JOURNEY);
+        createdBy.setCreatorType(CreatorType.USER);
+        createdBy.setName(mUser.getUserName());
+        createdBy.setImageUrl(mUser.getImage().getImageUrl());
 
-        post.setBody(mPostBody.getText().toString());
-        post.setTitle(mPostTitle.getText().toString());
-        post.setJourneyId(mJourneyId);
         post.setCreatedBy(createdBy);
 
         Context context = this;
+        mViewModel.savePostReply(mParentPost, post, new Callback() {
 
-        mViewModel.savePost(post, new Callback() {
             @Override
             public void result(Result result) {
                 switch (result){
                     case SUCCESS:
 
                         Intent intent = new Intent(context, JourneyProfileActivity.class);
-                        intent.putExtra(JOURNEY_EXTRA_ID_KEY, mJourneyId);
+                        intent.putExtra(JOURNEY_EXTRA_ID_KEY, mParentPost.getJourneyId());
                         intent.putExtra(TAB_POSITION_EXTRA, 1);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -178,5 +179,4 @@ public class CreatePostActivity extends AppCompatActivity {
             }
         });
     }
-
 }

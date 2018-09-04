@@ -101,12 +101,9 @@ public class JourneyArchiveFragment extends Fragment implements StepsArchiveAdap
 
         viewModel = ViewModelProviders.of(this).get(StepsViewModel.class);
         viewModel.setStepsArchiveList(mJourneyId);
-        viewModel.getStepsArchiveListLiveData().observe(this, new Observer<ArrayList<Step>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<Step> steps) {
-                stepsArchiveAdapter.setStep(steps);
-            }
-        });
+        viewModel.getStepsArchiveListLiveData().observe(this, steps ->
+                stepsArchiveAdapter.setStep(steps)
+        );
 
         return view;
     }

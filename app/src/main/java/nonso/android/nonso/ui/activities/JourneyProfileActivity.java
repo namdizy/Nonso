@@ -58,9 +58,11 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
     private Journey mJourney;
     private JourneyViewModel viewModel;
+    private int mTabPosition;
 
     private final String STEP_EXTRA_DATA = "step_extra";
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
+    private final String TAB_POSITION_EXTRA = "tab_position_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
 
         Intent intent = getIntent();
         String journeyId = intent.getStringExtra(JOURNEY_EXTRA_ID_KEY);
+        mTabPosition = intent.getIntExtra(TAB_POSITION_EXTRA, 0);
 
         viewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
         viewModel.setUpJourneyItem(journeyId);
@@ -96,6 +99,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
                 error(R.drawable.profile_image_placeholder).into(mJourneyCreatorImage);
 
         mViewPager.setAdapter(new JourneyProfilePagerAdapter(getSupportFragmentManager(), mJourney.getJourneyId(), mJourney.getCreatedBy().getId()));
+        mViewPager.setCurrentItem(mTabPosition);
         mTabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

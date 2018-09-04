@@ -41,7 +41,6 @@ public class StepDetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mStep = intent.getParcelableExtra(STEP_EXTRA);
-
         mStepTitle.setText(mStep.getTitle());
 
         RichTextDocumentElement element = RichTextV2.textFromHtml(this, mStep.getBodyText());

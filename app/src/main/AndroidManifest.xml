@@ -121,7 +121,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-        <activity android:name=".ui.activities.CreatePostActivity"></activity>
+        <activity android:name=".ui.activities.CreatePostActivity" />
+        <activity android:name=".ui.activities.CreatePostReplyActivity"></activity>
     </application>
 
 </manifest>

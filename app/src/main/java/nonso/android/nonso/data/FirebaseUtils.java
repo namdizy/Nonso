@@ -7,6 +7,7 @@ import android.telecom.Call;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import nonso.android.nonso.models.Image;
+import nonso.android.nonso.models.Post;
 import nonso.android.nonso.models.Video;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
@@ -55,6 +57,7 @@ public class FirebaseUtils {
     private static final String DATABASE_STORAGE_VIDEO_BUCKET = "videos/";
     private static final String DATABASE_COLLECTION_JOURNEYS = "journeys/";
     private static final String DATABASE_COLLECTION_STEPS = "steps/";
+    private static final String DATABASE_COLLECTION_POST = "post/";
     private static final String TAG = FirebaseUtils.class.getSimpleName();
 
     private Journey sJourney;
@@ -162,7 +165,6 @@ public class FirebaseUtils {
         mUserRef.update("image.imageReference", image.getImageReference(), "image.imageUrl", image.getImageUrl() )
                 .addOnSuccessListener(Void ->
                         callback.result(Result.SUCCESS)
-
                 )
                 .addOnFailureListener(e ->
                         callback.result(Result.FAILED)
@@ -544,5 +546,34 @@ public class FirebaseUtils {
     }
 
 
+    /*
+     * POST SECTION
+     */
+
+    public void savePost(Post post, Callback callback){
+        db.collection(DATABASE_COLLECTION_POST).add(post).addOnSuccessListener(documentReference -> {
+            documentReference.update("postId", documentReference.getId());
+            callback.result(Result.SUCCESS);
+        }).addOnFailureListener(e ->
+            callback.result(Result.FAILED
+        ));
+    }
+
+    public void savePostReply(Post parent, Post child, Callback callback){
+
+
+        Map<String, Boolean> map = parent.getComments();
+
+        db.collection(DATABASE_COLLECTION_POST).add(child).addOnSuccessListener(documentReference -> {
+            documentReference.update("postId", documentReference.getId());
+
+            map.put(documentReference.getId(), true);
+
+            db.collection(DATABASE_COLLECTION_POST).document(parent.getPostId())
+                    .update("comments", map);
+        }).addOnFailureListener(e ->
+            callback.result(Result.FAILED
+        ));
+    }
 
 }

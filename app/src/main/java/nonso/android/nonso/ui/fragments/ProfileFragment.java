@@ -71,6 +71,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     @BindView(R.id.profile_image) ImageView mUserProfileImage;
     @BindView(R.id.profile_username) TextView mUsername;
     @BindView(R.id.profile_goals) TextView mUserGoals;
+    @BindView(R.id.profile_edit_btn) ImageButton mEditProfileGoals;
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
     private static final String PROFILE_IMAGE_EXTRA = "profile_image_url";
@@ -81,6 +82,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     private static final String EXTRA_CREATOR = "user";
 
     private String mUserId;
+    private String mCurrentUserId;
     private User mUser;
     private UserViewModel viewModel;
 
@@ -123,6 +125,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         viewModel.init(mUserId);
 
         viewModel.getUserLiveData().observe(this, this::updateUI);
+        mCurrentUserId =  viewModel.getCurrentUserId();
 
         mViewPager.setAdapter(new ProfilePagerAdapter(getFragmentManager(), mUserId));
         mTabLayout.setupWithViewPager(mViewPager);
@@ -152,6 +155,12 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
             }
         });
+
+        if(!mUserId.equals(mCurrentUserId)){
+            mCreateFab.setVisibility(View.GONE);
+            mEditProfileImage.setVisibility(View.GONE);
+            mEditProfileGoals.setVisibility(View.GONE);
+        }
     }
 
 
@@ -310,7 +319,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         viewModel.saveUserImage(mUserId, image, new Callback() {
             @Override
             public void result(Result result) {
-
+                //TODO: do something with result show message or a spinner
             }
 
             @Override

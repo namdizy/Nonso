@@ -61,4 +61,8 @@ public class UserViewModel extends ViewModel {
             return input.toObject(User.class);
         }
     }
+
+    public String getCurrentUserId(){
+       return firebaseUtils.getCurrentUserId();
+    }
 }

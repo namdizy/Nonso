@@ -41,8 +41,7 @@ import nonso.android.nonso.viewModel.JourneyViewModel;
 public class ProfileJourneysListFragment extends Fragment implements JourneysAdapter.JourneysAdapterOnClickHandler{
 
     @BindView(R.id.profile_recycler_view_journeys) RecyclerView mJourneysRecyclerView;
-    @BindView(R.id.profile_journeys_not_found_container)
-    LinearLayout mJourneysNotFound;
+    @BindView(R.id.profile_journeys_not_found_container) LinearLayout mJourneysNotFound;
 
     private final String TAG = ProfileJourneysListFragment.class.getSimpleName();
     private OnProfileJourneysListInteractionListener mListener;
@@ -82,12 +81,7 @@ public class ProfileJourneysListFragment extends Fragment implements JourneysAda
 
         mViewModel = ViewModelProviders.of(this).get(JourneyViewModel.class);
         mViewModel.setJourneysList(mUserId);
-        mViewModel.getJourneyListLiveData().observe(this, new Observer<ArrayList<Journey>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<Journey> journeys) {
-                updateUI(journeys);
-            }
-        });
+        mViewModel.getJourneyListLiveData().observe(this, this::updateUI);
         return view;
     }
 

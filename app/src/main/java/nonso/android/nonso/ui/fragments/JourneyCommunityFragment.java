@@ -1,21 +1,30 @@
 package nonso.android.nonso.ui.fragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Post;
 import nonso.android.nonso.ui.activities.CreatePostActivity;
+import nonso.android.nonso.ui.activities.CreatePostReplyActivity;
+import nonso.android.nonso.ui.adapters.PostAdapter;
+import nonso.android.nonso.viewModel.PostViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,16 +34,25 @@ import nonso.android.nonso.ui.activities.CreatePostActivity;
  * Use the {@link JourneyCommunityFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JourneyCommunityFragment extends Fragment {
+public class JourneyCommunityFragment extends Fragment implements PostAdapter.PostAdapterOnclickHandler {
 
 
     @BindView(R.id.journey_profile_community_post) TextView mAddPost;
+    @BindView(R.id.journey_profile_community_post_recyclerview) RecyclerView mRecyclerView;
 
     private static final String JOURNEY_ID = "journey_id";
+    private static final String POST_ID = "post_id";
+    private String PARENT_POST = "parent_post";
 
     private String mJourneyId;
 
+    private PostAdapter mPostAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private PostViewModel viewModel;
+
     private OnFragmentInteractionListener mListener;
+
+
 
     public JourneyCommunityFragment() {
         // Required empty public constructor
@@ -70,13 +88,27 @@ public class JourneyCommunityFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_journey_community, container, false);
         ButterKnife.bind(this, view);
+
+        viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
+        viewModel.setPostList(mJourneyId);
+        viewModel.getPost().observe(this, this::updateUI);
+
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
+    public void updateUI(ArrayList<Post> posts){
+
+        if(posts != null && posts.size() > 0){
+            mLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setHasFixedSize(true);
+
+            mPostAdapter = new PostAdapter(getContext(), this);
+            mRecyclerView.setAdapter(mPostAdapter);
+            mPostAdapter.setPostList(posts);
+        }else{
+
         }
     }
 
@@ -96,6 +128,19 @@ public class JourneyCommunityFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onReplyClick(Post post) {
+
+        Intent intent = new Intent(getContext(), CreatePostReplyActivity.class);
+        intent.putExtra(PARENT_POST, post);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onCommentClick(Post post) {
+
     }
 
     @Override

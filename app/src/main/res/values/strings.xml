@@ -32,6 +32,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_publish">Publish</string>
+    <string name="menu_post">Post</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -80,6 +81,7 @@
     <!-- Journey Profile Community-->
     <string name="journey_profile_add_post">Add a post</string>
     <string name="create_text_post_add_post">Type your post here</string>
+    <string name="comments">comments</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -4,6 +4,7 @@
     <!-- GENERAL-->
 
     <dimen name="small_image_size">40dp</dimen>
+    <dimen name="small_image_size_small">20dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
     <dimen name="margin_10dp">10dp</dimen>
     <dimen name="margin_8dp">8dp</dimen>
