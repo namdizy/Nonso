@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.PostDetailsActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/post_details_creator_image"
+                android:layout_width="@dimen/small_image_size_small"
+                android:layout_height="@dimen/small_image_size_small"
+
+                android:gravity="center_vertical"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:src="@drawable/profile_image_placeholder" />
+
+            <TextView
+                android:id="@+id/post_details_creator_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_8dp" />
+
+            <TextView
+                android:id="@+id/post_details_created_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_8dp"
+                android:textSize="@dimen/h7"
+                android:textStyle="italic" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/post_details_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/h3"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
+        <TextView
+            android:id="@+id/post_details_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
+        <LinearLayout
+            android:id="@+id/post_details_reply_container_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_5dp"
+            android:paddingBottom="@dimen/margin_5dp"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:background="@drawable/grey_border_bottom_light_grey_background"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            >
+
+            <TextView
+                android:id="@+id/post_details_replies"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/h5"
+                android:gravity="center" />
+            <View android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/post_details_reply_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/post_details_reply_image"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:src="@drawable/ic_reply_dark"
+                    />
+                <TextView
+                    android:id="@+id/post_details_reply_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:text="Reply"
+                    android:textSize="@dimen/h5"
+                    android:gravity="center"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/post_details_comments_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+</ScrollView>

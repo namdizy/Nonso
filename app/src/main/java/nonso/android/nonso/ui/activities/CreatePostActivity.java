@@ -133,7 +133,7 @@ public class CreatePostActivity extends AppCompatActivity {
         post.setJourneyId(mJourneyId);
         post.setCreatedBy(createdBy);
 
-        Context context = this;
+        final Context context = this;
 
         mViewModel.savePost(post, new Callback() {
             @Override

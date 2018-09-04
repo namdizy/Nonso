@@ -80,7 +80,8 @@
 
     <!-- Journey Profile Community-->
     <string name="journey_profile_add_post">Add a post</string>
-    <string name="create_text_post_add_post">Type your post here</string>
+    <string name="create_text_post_add_post">Your Post</string>
+    <string name="reply_post"> Your Reply</string>
     <string name="comments">comments</string>
 
 

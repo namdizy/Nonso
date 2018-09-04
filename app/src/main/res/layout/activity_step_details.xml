@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_weight="1"
-            android:src="@drawable/ic_close_dark"
+            android:src="@drawable/ic_arrow_back"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"

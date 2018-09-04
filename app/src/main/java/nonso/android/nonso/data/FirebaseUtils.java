@@ -559,8 +559,7 @@ public class FirebaseUtils {
         ));
     }
 
-    public void savePostReply(Post parent, Post child, Callback callback){
-
+    public void savePostReply(Post parent, Post child, final Callback callback){
 
         Map<String, Boolean> map = parent.getComments();
 
@@ -570,7 +569,13 @@ public class FirebaseUtils {
             map.put(documentReference.getId(), true);
 
             db.collection(DATABASE_COLLECTION_POST).document(parent.getPostId())
-                    .update("comments", map);
+                    .update("comments", map).addOnSuccessListener(aVoid -> {
+                        Log.v(TAG, "Success: Updated user goal");
+                        callback.result(Result.SUCCESS);
+                    }).addOnFailureListener(e -> {
+                        Log.w(TAG, "Failed: Update user goal failed", e);
+                        callback.result(Result.FAILED);
+                    });
         }).addOnFailureListener(e ->
             callback.result(Result.FAILED
         ));

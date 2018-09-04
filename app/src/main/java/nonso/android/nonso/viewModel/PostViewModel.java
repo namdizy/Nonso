@@ -48,8 +48,8 @@ public class PostViewModel extends ViewModel {
     }
 
     public void setPostList(String journeyId){
-        postListRef = db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("journeyId", journeyId );
-                //.whereEqualTo("parent", null);
+        postListRef = db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("journeyId", journeyId )
+                .whereEqualTo("parentId", null);
         pListLiveData = new FirebaseQueryLiveData(postListRef);
         postLiveData = Transformations.map(pListLiveData, new Deserializer());
     }

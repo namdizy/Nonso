@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +41,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public interface PostAdapterOnclickHandler{
         void onReplyClick(Post post);
         void onCommentClick(Post post);
+        void onMenuDeleteClick(Post post);
+        void onMenuEditClick(Post post);
     }
 
     public PostAdapter(Context context, PostAdapterOnclickHandler handler){
@@ -55,29 +61,52 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
 
-        Post post = mPostList.get(position);
+        final Post post = mPostList.get(position);
         currentPost = post;
         holder.mPostTitle.setText(post.getTitle());
         holder.mPostBody.setText(post.getBody());
         holder.mPostCreatorName.setText(post.getCreatedBy().getName());
 
-        String size = "0 " + "comments";
         if(!post.getComments().isEmpty()){
-           size =  String.valueOf(post.getComments().size()) + "comments";
+           String size =  String.valueOf(post.getComments().size()) + " comments";
+           holder.mComments.setText(size);
+        }else{
+            holder.mComments.setVisibility(View.GONE);
         }
 
-        holder.mComments.setText(size);
 
         Date date = post.getCreatedAt();
         DateUtils dateUtils = new DateUtils();
         holder.mPostCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
 
-        holder.mReplyBtn.setOnClickListener(this::replyOnclick);
+        holder.mReplyBtn.setOnClickListener(this::onReplyClick);
         holder.mComments.setOnClickListener(this::onCommentsClick);
+
+        holder.mMoreBtn.setOnClickListener(v -> {
+
+            PopupMenu menu = new PopupMenu(mContext, holder.mMoreBtn);
+            MenuInflater inflater = menu.getMenuInflater();
+            inflater.inflate(R.menu.post_item_menu, menu.getMenu());
+            menu.show();
+
+            menu.setOnMenuItemClickListener(item -> {
+
+                switch (item.getItemId()){
+                    case R.id.post_item_menu_edit:
+                        onclickHandler.onMenuEditClick(post);
+                        return true;
+                    case R.id.post_item_menu_delete:
+                        onclickHandler.onMenuDeleteClick(post);
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+        });
 
     }
 
-    public void replyOnclick(View v){
+    public void onReplyClick(View v){
         onclickHandler.onReplyClick(currentPost);
     }
 
@@ -114,6 +143,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         @BindView(R.id.post_creator_image) CircleImageView mCreatorImage;
         @BindView(R.id.post_item_reply_container) LinearLayout mReplyBtn;
         @BindView(R.id.post_item_replies) TextView mComments;
+        @BindView(R.id.post_item_more_btn) ImageButton mMoreBtn;
 
 
         public PostViewHolder(View view){

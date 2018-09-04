@@ -105,7 +105,7 @@ public class CreatePostReplyActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.create_post_menu_publish:
+            case R.id.create_post_reply_menu_post:
                 publish();
                 return true;
             case android.R.id.home:
@@ -125,6 +125,7 @@ public class CreatePostReplyActivity extends AppCompatActivity {
         post.setParentId(mParentPost.getParentId());
         post.setBody(mPostBody.getText().toString());
         post.setJourneyId(mParentPost.getJourneyId());
+        post.setParentId(mParentPost.getPostId());
 
         CreatedBy createdBy = new CreatedBy();
         createdBy.setId(mUser.getUserId());
@@ -134,14 +135,12 @@ public class CreatePostReplyActivity extends AppCompatActivity {
 
         post.setCreatedBy(createdBy);
 
-        Context context = this;
+        final Context context = this;
         mViewModel.savePostReply(mParentPost, post, new Callback() {
-
             @Override
             public void result(Result result) {
                 switch (result){
                     case SUCCESS:
-
                         Intent intent = new Intent(context, JourneyProfileActivity.class);
                         intent.putExtra(JOURNEY_EXTRA_ID_KEY, mParentPost.getJourneyId());
                         intent.putExtra(TAB_POSITION_EXTRA, 1);
@@ -149,6 +148,7 @@ public class CreatePostReplyActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case FAILED:
+                        Toast.makeText(context, "Failed to save post.. ", Toast.LENGTH_LONG).show();
                         break;
                 }
             }

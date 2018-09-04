@@ -23,6 +23,7 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Post;
 import nonso.android.nonso.ui.activities.CreatePostActivity;
 import nonso.android.nonso.ui.activities.CreatePostReplyActivity;
+import nonso.android.nonso.ui.activities.PostDetailsActivity;
 import nonso.android.nonso.ui.adapters.PostAdapter;
 import nonso.android.nonso.viewModel.PostViewModel;
 
@@ -140,6 +141,18 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
 
     @Override
     public void onCommentClick(Post post) {
+        Intent intent = new Intent(getContext(), PostDetailsActivity.class);
+        intent.putExtra(PARENT_POST, post);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onMenuDeleteClick(Post post) {
+
+    }
+
+    @Override
+    public void onMenuEditClick(Post post) {
 
     }
 
