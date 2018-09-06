@@ -68,7 +68,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mPostCreatorName.setText(post.getCreatedBy().getName());
 
         if(!post.getComments().isEmpty()){
-           String size =  String.valueOf(post.getComments().size()) + " comments";
+            String size;
+            if(post.getComments().size() == 1){
+                size =  1 + " reply";
+            }
+            else{
+                size =  String.valueOf(post.getComments().size()) + " replies";
+            }
+
            holder.mComments.setText(size);
         }else{
             holder.mComments.setVisibility(View.GONE);
