@@ -1,8 +1,10 @@
 package nonso.android.nonso.ui.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -18,9 +21,12 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Post;
+import nonso.android.nonso.ui.adapters.PostAdapter;
+import nonso.android.nonso.ui.adapters.RepliesAdapter;
 import nonso.android.nonso.utils.DateUtils;
+import nonso.android.nonso.viewModel.PostViewModel;
 
-public class PostDetailsActivity extends AppCompatActivity {
+public class PostDetailsActivity extends AppCompatActivity implements RepliesAdapter.RepliesAdapterOnClickHandler {
 
 
     @BindView(R.id.post_details_title) TextView mTitle;
@@ -32,6 +38,7 @@ public class PostDetailsActivity extends AppCompatActivity {
     @BindView(R.id.post_details_comments_recyclerview) RecyclerView mRecyclerView;
 
     private Post mPost;
+    private PostViewModel mViewModel;
 
     private String PARENT_POST = "parent_post";
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
@@ -48,12 +55,15 @@ public class PostDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mPost = getIntent().getParcelableExtra(PARENT_POST);
+        mViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
         updateUI();
 
     }
 
     public void updateUI(){
+
+
 
         mCreatorName.setText(mPost.getCreatedBy().getName());
         mBody.setText(mPost.getBody());
@@ -72,8 +82,28 @@ public class PostDetailsActivity extends AppCompatActivity {
         }
 
 
+        mViewModel.setRepliesList(mPost.getPostId());
+        mViewModel.getReplies().observe(this, this::updateRecyclerView);
+
+
+
         Picasso.with(this).load(mPost.getCreatedBy().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
                 .error(R.drawable.profile_image_placeholder).into(mCreatorImage);
+    }
+
+    public void updateRecyclerView(ArrayList<Post> replies){
+        RecyclerView.LayoutManager repliesLayoutManager;
+        RepliesAdapter mRepliesAdapter;
+
+        repliesLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(repliesLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+        mRepliesAdapter = new RepliesAdapter(this, this);
+        mRecyclerView.setAdapter(mRepliesAdapter);
+
+        mRepliesAdapter.setReplies(replies);
+
     }
 
     @Override

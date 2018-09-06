@@ -21,7 +21,7 @@ import nonso.android.nonso.models.interfaces.Callback;
 
 public class PostViewModel extends ViewModel {
 
-    private static final String DATABASE_COLLECTION_STEPS = "post";
+    private static final String DATABASE_COLLECTION_POST = "post";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -30,6 +30,10 @@ public class PostViewModel extends ViewModel {
     private Query postListRef;
     private FirebaseQueryLiveData pListLiveData;
     private LiveData<ArrayList<Post>> postLiveData;
+
+    private Query repliesListRef;
+    private FirebaseQueryLiveData repliesLiveData;
+    private LiveData<ArrayList<Post>> repliesData;
 
     public PostViewModel(){
         firebaseUtils = new FirebaseUtils();
@@ -48,15 +52,24 @@ public class PostViewModel extends ViewModel {
     }
 
     public void setPostList(String journeyId){
-        postListRef = db.collection(DATABASE_COLLECTION_STEPS).whereEqualTo("journeyId", journeyId )
+        postListRef = db.collection(DATABASE_COLLECTION_POST).whereEqualTo("journeyId", journeyId )
                 .whereEqualTo("parentId", null);
         pListLiveData = new FirebaseQueryLiveData(postListRef);
         postLiveData = Transformations.map(pListLiveData, new Deserializer());
     }
 
+    public void setRepliesList(String parentId){
+        repliesListRef = db.collection(DATABASE_COLLECTION_POST).whereEqualTo("parentId", parentId);
+        repliesLiveData = new FirebaseQueryLiveData(repliesListRef);
+        repliesData = Transformations.map(repliesLiveData, new Deserializer());
+    }
+
+
+
     public LiveData<ArrayList<Post>> getPost(){
         return postLiveData;
     }
+    public LiveData<ArrayList<Post>> getReplies() {return repliesData;}
 
     private class Deserializer implements Function<QuerySnapshot, ArrayList<Post>> {
 

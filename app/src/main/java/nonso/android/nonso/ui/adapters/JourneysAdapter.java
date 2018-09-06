@@ -68,32 +68,25 @@ public class JourneysAdapter extends RecyclerView.Adapter<JourneysAdapter.Journe
         DateUtils dateUtils = new DateUtils();
         holder.mJourneyCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
 
-        holder.mMoreBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu menu = new PopupMenu(mContext, holder.mMoreBtn);
-                MenuInflater inflater = menu.getMenuInflater();
-                inflater.inflate(R.menu.journey_item_menu, menu.getMenu());
-                menu.show();
+        holder.mMoreBtn.setOnClickListener(v -> {
+            PopupMenu menu = new PopupMenu(mContext, holder.mMoreBtn);
+            MenuInflater inflater = menu.getMenuInflater();
+            inflater.inflate(R.menu.journey_item_menu, menu.getMenu());
+            menu.show();
 
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId()){
-                            case R.id.journey_item_menu_delete:
-                                mOnClickListener.onMenuDeleteClick(journey);
-                                return true;
-                            case R.id.journey_item_menu_settings:
-                                mOnClickListener.onMenuSettingClick(journey);
-                                return true;
-                            default:
-                                return false;
+            menu.setOnMenuItemClickListener(item -> {
+                switch(item.getItemId()){
+                    case R.id.journey_item_menu_delete:
+                        mOnClickListener.onMenuDeleteClick(journey);
+                        return true;
+                    case R.id.journey_item_menu_settings:
+                        mOnClickListener.onMenuSettingClick(journey);
+                        return true;
+                    default:
+                        return false;
 
-                        }
-                    }
-                });
-
-            }
+                }
+            });
         });
 
         Picasso.with(mContext).load(journey.getImage().getImageUrl()).placeholder(R.drawable.image_view_placeholder)

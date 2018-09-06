@@ -13,7 +13,6 @@ android:layout_height="@dimen/border_width">
         <stroke
             android:width="@dimen/border_width"
             android:color="@color/colorGreyLight"/>
-        <solid android:color="@color/white"/>
     </shape>
 </item>
 </layer-list>
