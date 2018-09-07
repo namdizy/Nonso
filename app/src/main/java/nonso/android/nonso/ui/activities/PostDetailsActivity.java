@@ -63,8 +63,6 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
 
     public void updateUI(){
 
-
-
         mCreatorName.setText(mPost.getCreatedBy().getName());
         mBody.setText(mPost.getBody());
         mTitle.setText(mPost.getTitle());

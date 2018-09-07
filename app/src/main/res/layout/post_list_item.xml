@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -116,27 +117,22 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1" />
 
-                <LinearLayout
-                    android:id="@+id/post_item_reply_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:id="@+id/post_item_reply_image"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
-                        android:src="@drawable/ic_reply_dark"
-                        />
-                    <TextView
-                        android:id="@+id/post_item_reply_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/margin_5dp"
-                        android:text="Reply"
-                        android:textSize="@dimen/h5"
-                        android:gravity="center"
-                        />
-                </LinearLayout>
 
+                <ImageButton
+                    android:id="@+id/post_item_like"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_like_outline"
+                    tools:scaleType="center" />
+
+                <ImageView
+                    android:id="@+id/post_item_reply"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:src="@drawable/ic_reply_dark"
+                    android:layout_marginStart="@dimen/margin_10dp"
+                    />
             </LinearLayout>
 
         </RelativeLayout>

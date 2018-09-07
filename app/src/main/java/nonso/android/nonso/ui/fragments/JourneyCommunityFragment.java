@@ -12,15 +12,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Post;
+import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.Step;
+import nonso.android.nonso.models.User;
+import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.ui.activities.CreatePostActivity;
 import nonso.android.nonso.ui.activities.CreatePostReplyActivity;
 import nonso.android.nonso.ui.activities.PostDetailsActivity;
@@ -46,6 +56,7 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     private String PARENT_POST = "parent_post";
 
     private String mJourneyId;
+    private String mCurrentUserId;
 
     private PostAdapter mPostAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -93,10 +104,12 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
         viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
         viewModel.setPostList(mJourneyId);
         viewModel.getPost().observe(this, this::updateUI);
+        mCurrentUserId = viewModel.getCurrentUserId();
 
         return view;
     }
 
+    public void setCurrentUser(){}
 
     public void updateUI(ArrayList<Post> posts){
 
@@ -137,6 +150,50 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
         Intent intent = new Intent(getContext(), CreatePostReplyActivity.class);
         intent.putExtra(PARENT_POST, post);
         startActivity(intent);
+    }
+
+    @Override
+    public void onLikeClick(Post post) {
+        Map<String, Boolean> likes = post.getLikes();
+        likes.put(mCurrentUserId, true);
+        Context context = getContext();
+        viewModel.updatePostLikes(likes, post.getPostId(), new Callback() {
+            @Override
+            public void result(Result result) {
+                switch(result){
+                    case FAILED:
+                        break;
+                    case SUCCESS:
+                        Toast.makeText(context, "Liked", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
     }
 
     @Override

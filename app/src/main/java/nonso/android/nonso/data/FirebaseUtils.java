@@ -581,4 +581,14 @@ public class FirebaseUtils {
         ));
     }
 
+
+    public void updatePostLikes(Map<String, Boolean> likes, String postId, Callback callback){
+        db.collection(DATABASE_COLLECTION_POST).document(postId).update("likes", likes)
+                .addOnSuccessListener(aVoid ->
+                    callback.result(Result.SUCCESS)
+                ).addOnFailureListener(e ->
+                    callback.result(Result.FAILED)
+                );
+    }
+
 }

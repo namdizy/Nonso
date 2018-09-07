@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -33,16 +34,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private Context mContext;
 
     private Post currentPost;
+    private String mUserId;
 
     private String JOURNEY_ID = "journey_id";
     private String POST_ID = "post_id";
-
 
     public interface PostAdapterOnclickHandler{
         void onReplyClick(Post post);
         void onCommentClick(Post post);
         void onMenuDeleteClick(Post post);
         void onMenuEditClick(Post post);
+        void onLikeClick(Post post);
     }
 
     public PostAdapter(Context context, PostAdapterOnclickHandler handler){
@@ -81,12 +83,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             holder.mComments.setVisibility(View.GONE);
         }
 
+        if(!post.getLikes().isEmpty()){
+            if(post.getLikes().get(mUserId)){
+                holder.mLikeBtn.setImageResource(R.drawable.ic_like_filled);
+            }
+        }
+
 
         Date date = post.getCreatedAt();
         DateUtils dateUtils = new DateUtils();
         holder.mPostCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
 
         holder.mReplyBtn.setOnClickListener(this::onReplyClick);
+        holder.mReplyBtn.setOnClickListener(this::onLikeClick);
         holder.mComments.setOnClickListener(this::onCommentsClick);
 
         holder.mMoreBtn.setOnClickListener(v -> {
@@ -113,6 +122,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     }
 
+    public void onLikeClick(View v){
+        onclickHandler.onLikeClick(currentPost);
+    }
+
+
     public void onReplyClick(View v){
         onclickHandler.onReplyClick(currentPost);
     }
@@ -129,6 +143,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void setPostList(List<Post> posts ){
         mPostList = posts;
         notifyDataSetChanged();
+    }
+
+    public void setUserId(String userId){
+        mUserId = userId;
     }
 
     @Override
@@ -148,8 +166,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         @BindView(R.id.post_created_time) TextView mPostCreatedTime;
         @BindView(R.id.post_creator_name) TextView mPostCreatorName;
         @BindView(R.id.post_creator_image) CircleImageView mCreatorImage;
-        @BindView(R.id.post_item_reply_container) LinearLayout mReplyBtn;
         @BindView(R.id.post_item_replies) TextView mComments;
+        @BindView(R.id.post_item_reply) ImageView mReplyBtn;
+        @BindView(R.id.post_item_like) ImageButton mLikeBtn;
         @BindView(R.id.post_item_more_btn) ImageButton mMoreBtn;
 
 

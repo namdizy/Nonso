@@ -11,12 +11,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Post;
+import nonso.android.nonso.utils.DateUtils;
 
 public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesViewHolder> {
 
@@ -50,6 +52,10 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
         holder.mReplyBody.setText(reply.getBody());
         holder.mReplyCreatorName.setText(reply.getCreatedBy().getName());
 
+        Date date = reply.getCreatedAt();
+        DateUtils dateUtils = new DateUtils();
+
+        holder.mReplyDate.setText(dateUtils.getTimeAgo(date, mContext));
 
         Picasso.with(mContext).load(reply.getCreatedBy().getImageUrl()).placeholder(R.drawable.image_view_placeholder)
                 .error(R.drawable.image_view_placeholder).into(holder.mReplyCreatorImage);

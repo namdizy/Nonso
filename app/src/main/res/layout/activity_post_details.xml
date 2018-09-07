@@ -81,26 +81,20 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1" />
 
-            <LinearLayout
-                android:id="@+id/post_details_reply_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:id="@+id/post_details_reply_image"
-                    android:layout_width="@dimen/_20dp"
-                    android:layout_height="@dimen/_20dp"
-                    android:src="@drawable/ic_reply_dark"
-                    />
-                <TextView
-                    android:id="@+id/post_details_reply_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    android:text="Reply"
-                    android:textSize="@dimen/h5"
-                    android:gravity="center"
-                    />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/post_details_like"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:src="@drawable/ic_like_outline"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:scaleType="centerCrop"
+                />
+            <ImageView
+                android:id="@+id/post_details_reply"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:src="@drawable/ic_reply_dark"
+                android:layout_marginStart="@dimen/margin_10dp"/>
 
         </LinearLayout>
 

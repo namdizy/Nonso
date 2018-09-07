@@ -12,6 +12,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
@@ -43,12 +44,20 @@ public class PostViewModel extends ViewModel {
         firebaseUtils.getCurrentUser(callback);
     }
 
+    public String getCurrentUserId(){
+        return firebaseUtils.getCurrentUserId();
+    }
+
     public void savePost(Post post, Callback callback){
         firebaseUtils.savePost(post, callback);
     }
 
     public void savePostReply(Post parent, Post current, Callback callback){
         firebaseUtils.savePostReply(parent, current, callback);
+    }
+
+    public void updatePostLikes(Map<String, Boolean> likes, String postId, Callback callback){
+        firebaseUtils.updatePostLikes(likes, postId, callback);
     }
 
     public void setPostList(String journeyId){
@@ -63,8 +72,6 @@ public class PostViewModel extends ViewModel {
         repliesLiveData = new FirebaseQueryLiveData(repliesListRef);
         repliesData = Transformations.map(repliesLiveData, new Deserializer());
     }
-
-
 
     public LiveData<ArrayList<Post>> getPost(){
         return postLiveData;

@@ -38,7 +38,10 @@
                 <TextView
                     android:id="@+id/reply_date"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:textSize="@dimen/h6"
+                    android:textStyle="italic"/>
 
             </LinearLayout>
 
@@ -72,6 +75,22 @@
                 android:layout_height="1dp"
                 android:layout_weight="1"
                 />
+
+
+            <ImageView
+                android:id="@+id/reply_item_like_image"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:src="@drawable/ic_like_outline"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:scaleType="centerCrop"
+                />
+            <ImageView
+                android:id="@+id/reply_item_reply_image"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:src="@drawable/ic_reply_dark"
+                android:layout_marginStart="@dimen/margin_10dp"/>
             <ImageButton
                 android:id="@+id/reply_more_btn"
                 android:layout_width="wrap_content"
