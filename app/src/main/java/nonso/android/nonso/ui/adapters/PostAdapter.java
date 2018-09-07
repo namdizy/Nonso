@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,14 +79,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 size =  String.valueOf(post.getComments().size()) + " replies";
             }
 
-           holder.mComments.setText(size);
+           holder.mNumComments.setText(size);
         }else{
-            holder.mComments.setVisibility(View.GONE);
+            holder.mNumComments.setVisibility(View.GONE);
         }
 
         if(!post.getLikes().isEmpty()){
             if(post.getLikes().get(mUserId)){
-                holder.mLikeBtn.setImageResource(R.drawable.ic_like_filled);
+                holder.mLikeImage.setImageResource(R.drawable.ic_like_filled);
+                holder.mLikeText.setText("Liked");
             }
         }
 
@@ -94,9 +96,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         DateUtils dateUtils = new DateUtils();
         holder.mPostCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
 
-        holder.mReplyBtn.setOnClickListener(this::onReplyClick);
-        holder.mReplyBtn.setOnClickListener(this::onLikeClick);
-        holder.mComments.setOnClickListener(this::onCommentsClick);
+        holder.mCommentBtn.setOnClickListener(this::onReplyClick);
+        holder.mLikeBtn.setOnClickListener(this::onLikeClick);
+        holder.mNumComments.setOnClickListener(this::onCommentsClick);
 
         holder.mMoreBtn.setOnClickListener(v -> {
 
@@ -166,9 +168,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         @BindView(R.id.post_created_time) TextView mPostCreatedTime;
         @BindView(R.id.post_creator_name) TextView mPostCreatorName;
         @BindView(R.id.post_creator_image) CircleImageView mCreatorImage;
-        @BindView(R.id.post_item_replies) TextView mComments;
-        @BindView(R.id.post_item_reply) ImageView mReplyBtn;
-        @BindView(R.id.post_item_like) ImageButton mLikeBtn;
+        @BindView(R.id.post_item_replies) TextView mNumComments;
+        @BindView(R.id.post_item_comment_container) LinearLayout mCommentBtn;
+        @BindView(R.id.post_item_like_container) LinearLayout mLikeBtn;
+        @BindView(R.id.post_item_like_image) ImageView mLikeImage;
+        @BindView(R.id.post_item_like_text) TextView mLikeText;
         @BindView(R.id.post_item_more_btn) ImageButton mMoreBtn;
 
 

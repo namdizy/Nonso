@@ -82,7 +82,7 @@
                 android:layout_width="@dimen/_20dp"
                 android:layout_height="@dimen/_20dp"
                 android:src="@drawable/ic_like_outline"
-                android:layout_marginStart="@dimen/margin_10dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:scaleType="centerCrop"
                 />
             <ImageView
@@ -90,13 +90,14 @@
                 android:layout_width="@dimen/_20dp"
                 android:layout_height="@dimen/_20dp"
                 android:src="@drawable/ic_reply_dark"
-                android:layout_marginStart="@dimen/margin_10dp"/>
+                android:layout_marginStart="@dimen/activity_horizontal_margin"/>
             <ImageButton
                 android:id="@+id/reply_more_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_20dp"
                 android:src="@drawable/ic_more_dark"
                 android:background="@null"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:scaleType="centerInside"
                 android:layout_gravity="end" />
         </LinearLayout>

@@ -20,51 +20,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/post_list_item_Creator_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/post_creator_image"
+                android:layout_width="@dimen/small_image_size"
+                android:layout_height="@dimen/small_image_size"
+                android:gravity="center_vertical"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:orientation="horizontal">
+                android:src="@drawable/profile_image_placeholder" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/post_creator_image"
-                    android:layout_width="@dimen/small_image_size_small"
-                    android:layout_height="@dimen/small_image_size_small"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:src="@drawable/profile_image_placeholder" />
+            <TextView
+                android:id="@+id/post_creator_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_8dp"
+                android:layout_toEndOf="@id/post_creator_image"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
-                <TextView
-                    android:id="@+id/post_creator_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="@dimen/margin_8dp" />
+            <TextView
+                android:id="@+id/post_created_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_8dp"
+                android:layout_toEndOf="@id/post_creator_image"
+                android:layout_below="@id/post_creator_name"
+                android:textSize="@dimen/h7"
+                android:textStyle="italic" />
 
-                <TextView
-                    android:id="@+id/post_created_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="@dimen/margin_8dp"
-                    android:textSize="@dimen/h7"
-                    android:textStyle="italic" />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"/>
 
-                <ImageButton
-                    android:id="@+id/post_item_more_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_20dp"
-                    android:src="@drawable/ic_more_dark"
-                    android:scaleType="centerInside"
-                    android:gravity="center_vertical"
-                    android:background="@null"/>
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/post_item_more_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_20dp"
+                android:src="@drawable/ic_more_dark"
+                android:scaleType="centerInside"
+                android:gravity="center_vertical"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:background="@null"/>
 
             <TextView
                 android:id="@+id/post_item_title"
@@ -74,7 +72,7 @@
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_below="@id/post_list_item_Creator_container"
+                android:layout_below="@id/post_creator_image"
                 android:textSize="@dimen/h3"
                 android:ellipsize="end"
                 android:textStyle="bold"/>
@@ -92,47 +90,99 @@
                 android:ellipsize="end"
                 android:textSize="@dimen/h6" />
 
+            <LinearLayout
+                android:id="@+id/post_item_replies_likes_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_below="@id/post_item_body">
+                <TextView
+                    android:id="@+id/post_item_replies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/h5"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/post_item_likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:textSize="@dimen/h5"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
 
             <LinearLayout
-                android:id="@+id/post_item_reply_container_main"
+                android:id="@+id/post_item_social_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/post_item_body"
+                android:layout_below="@id/post_item_replies_likes_container"
                 android:layout_alignParentStart="true"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/margin_5dp"
                 android:paddingBottom="@dimen/margin_5dp"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
-                android:background="@color/colorGreyLight">
+                android:background="@drawable/grey_border_top_light">
+                <LinearLayout
+                    android:id="@+id/post_item_like_container"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/post_item_replies"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    android:textSize="@dimen/h5"
-                    android:gravity="center" />
-                <View android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1" />
+                    <ImageView
+                        android:id="@+id/post_item_like_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_like_outline"
+                        android:layout_gravity="center"
+                        />
 
+                    <TextView
+                        android:id="@+id/post_item_like_text"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Like"
+                        android:textSize="@dimen/h5"
+                        android:textAlignment="gravity"
+                        android:textStyle="bold"
+                       />
 
-                <ImageButton
-                    android:id="@+id/post_item_like"
-                    android:layout_width="@dimen/_20dp"
-                    android:layout_height="@dimen/_20dp"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_like_outline"
-                    tools:scaleType="center" />
+                </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/post_item_reply"
-                    android:layout_width="@dimen/_20dp"
-                    android:layout_height="@dimen/_20dp"
-                    android:src="@drawable/ic_reply_dark"
-                    android:layout_marginStart="@dimen/margin_10dp"
-                    />
+                <LinearLayout
+                    android:id="@+id/post_item_comment_container"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/post_item_comment_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_comment_outline"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/post_item_comment_text"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Comment"
+                        android:textSize="@dimen/h5"
+                        android:textAlignment="gravity"
+                        android:textStyle="bold"
+                        />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </RelativeLayout>

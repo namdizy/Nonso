@@ -34,7 +34,6 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
     @BindView(R.id.post_details_creator_name) TextView mCreatorName;
     @BindView(R.id.post_details_body) TextView mBody;
     @BindView(R.id.post_details_created_time) TextView mTimeCreated;
-    @BindView(R.id.post_details_replies) TextView mReplies;
     @BindView(R.id.post_details_comments_recyclerview) RecyclerView mRecyclerView;
 
     private Post mPost;
@@ -72,12 +71,12 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
         DateUtils dateUtils = new DateUtils();
         mTimeCreated.setText(dateUtils.getTimeAgo(date, this));
 
-        if(!mPost.getComments().isEmpty()){
-            String size =  String.valueOf(mPost.getComments().size()) + " comments";
-            mReplies.setText(size);
-        }else{
-            mReplies.setVisibility(View.GONE);
-        }
+//        if(!mPost.getComments().isEmpty()){
+//            String size =  String.valueOf(mPost.getComments().size()) + " comments";
+//            mReplies.setText(size);
+//        }else{
+//            mReplies.setVisibility(View.GONE);
+//        }
 
 
         mViewModel.setRepliesList(mPost.getPostId());

@@ -121,6 +121,7 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
             mPostAdapter = new PostAdapter(getContext(), this);
             mRecyclerView.setAdapter(mPostAdapter);
             mPostAdapter.setPostList(posts);
+            mPostAdapter.setUserId(mCurrentUserId);
         }else{
 
         }
@@ -154,46 +155,46 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
 
     @Override
     public void onLikeClick(Post post) {
-        Map<String, Boolean> likes = post.getLikes();
-        likes.put(mCurrentUserId, true);
-        Context context = getContext();
-        viewModel.updatePostLikes(likes, post.getPostId(), new Callback() {
-            @Override
-            public void result(Result result) {
-                switch(result){
-                    case FAILED:
-                        break;
-                    case SUCCESS:
-                        Toast.makeText(context, "Liked", Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-        });
+//        Map<String, Boolean> likes = post.getLikes();
+//        likes.put(mCurrentUserId, true);
+//        Context context = getContext();
+//        viewModel.updatePostLikes(likes, post.getPostId(), new Callback() {
+//            @Override
+//            public void result(Result result) {
+//                switch(result){
+//                    case FAILED:
+//                        break;
+//                    case SUCCESS:
+//                        Toast.makeText(context, "Liked", Toast.LENGTH_LONG).show();
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void imageResult(Uri downloadUrl) {
+//
+//            }
+//
+//            @Override
+//            public void authorizationResult(FirebaseUser user) {
+//
+//            }
+//
+//            @Override
+//            public void journeyResult(Journey journey) {
+//
+//            }
+//
+//            @Override
+//            public void stepResult(Step step) {
+//
+//            }
+//
+//            @Override
+//            public void userResult(User user) {
+//
+//            }
+//        });
     }
 
     @Override
