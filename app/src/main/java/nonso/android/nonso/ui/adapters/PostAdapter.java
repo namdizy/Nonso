@@ -73,10 +73,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         if(!post.getComments().isEmpty()){
             String size;
             if(post.getComments().size() == 1){
-                size =  1 + " reply";
+                size =  1 + " Comment";
             }
             else{
-                size =  String.valueOf(post.getComments().size()) + " replies";
+                size =  String.valueOf(post.getComments().size()) + " Comments";
             }
 
            holder.mNumComments.setText(size);

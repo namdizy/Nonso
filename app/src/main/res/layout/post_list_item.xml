@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/margin_8dp"
+                android:textStyle="bold"
                 android:layout_toEndOf="@id/post_creator_image"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
@@ -73,7 +74,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_below="@id/post_creator_image"
-                android:textSize="@dimen/h3"
+                android:textSize="@dimen/h4"
                 android:ellipsize="end"
                 android:textStyle="bold"/>
 
@@ -88,7 +89,7 @@
                 android:layout_marginBottom="@dimen/margin_8dp"
                 android:maxLines="4"
                 android:ellipsize="end"
-                android:textSize="@dimen/h6" />
+                android:textSize="@dimen/h5" />
 
             <LinearLayout
                 android:id="@+id/post_item_replies_likes_container"
@@ -120,8 +121,8 @@
                 android:layout_below="@id/post_item_replies_likes_container"
                 android:layout_alignParentStart="true"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/margin_5dp"
-                android:paddingBottom="@dimen/margin_5dp"
+                android:paddingTop="@dimen/margin_10dp"
+                android:paddingBottom="@dimen/margin_10dp"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:background="@drawable/grey_border_top_light">
@@ -135,8 +136,8 @@
 
                     <ImageView
                         android:id="@+id/post_item_like_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
                         android:src="@drawable/ic_like_outline"
                         android:layout_gravity="center"
                         />
@@ -147,9 +148,9 @@
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:text="Like"
-                        android:textSize="@dimen/h5"
+                        android:layout_marginStart="@dimen/margin_5dp"
+                        android:textSize="@dimen/h6"
                         android:textAlignment="gravity"
-                        android:textStyle="bold"
                        />
 
                 </LinearLayout>
@@ -164,8 +165,8 @@
 
                     <ImageView
                         android:id="@+id/post_item_comment_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
                         android:src="@drawable/ic_comment_outline"
                         android:layout_gravity="center"
                         />
@@ -175,10 +176,10 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/margin_5dp"
                         android:text="Comment"
-                        android:textSize="@dimen/h5"
+                        android:textSize="@dimen/h6"
                         android:textAlignment="gravity"
-                        android:textStyle="bold"
                         />
 
                 </LinearLayout>

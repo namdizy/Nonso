@@ -68,29 +68,29 @@ public class DateUtils {
 //    }
 
 
-//    public static String getTimeAgo(Date date, Context ctx) {
-//        Date now = new Date();
-//        long seconds= TimeUnit.MILLISECONDS.toSeconds(now.getTime() - date.getTime());
-//        long minutes=TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime());
-//        long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
-//        long days=TimeUnit.MILLISECONDS.toDays(now.getTime() - date.getTime());
-//
-//
-//        if(seconds<60)
-//        {
-//            return seconds +"s";
-//        }
-//        else if(minutes<60)
-//        {
-//            return minutes + "m";
-//        }
-//        else if(hours<24)
-//        {
-//            return hours +"h";
-//        }
-//        else{
-//            return days + "d";
-//        }
-//    }
+    public static String getTimeAgoShort(Date date) {
+        Date now = new Date();
+        long seconds= TimeUnit.MILLISECONDS.toSeconds(now.getTime() - date.getTime());
+        long minutes=TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime());
+        long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
+        long days=TimeUnit.MILLISECONDS.toDays(now.getTime() - date.getTime());
+
+
+        if(seconds<60)
+        {
+            return seconds +"s";
+        }
+        else if(minutes<60)
+        {
+            return minutes + "m";
+        }
+        else if(hours<24)
+        {
+            return hours +"h";
+        }
+        else{
+            return days + "d";
+        }
+    }
 
 }

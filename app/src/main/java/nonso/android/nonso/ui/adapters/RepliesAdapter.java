@@ -55,7 +55,7 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
         Date date = reply.getCreatedAt();
         DateUtils dateUtils = new DateUtils();
 
-        holder.mReplyDate.setText(dateUtils.getTimeAgo(date, mContext));
+        holder.mReplyDate.setText(dateUtils.getTimeAgoShort(date));
 
         Picasso.with(mContext).load(reply.getCreatedBy().getImageUrl()).placeholder(R.drawable.image_view_placeholder)
                 .error(R.drawable.image_view_placeholder).into(holder.mReplyCreatorImage);
