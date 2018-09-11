@@ -15,7 +15,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.data.AuthDB;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.data.UsersDB;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
@@ -35,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.tv_settings_privacy_policy) TextView mPrivacyPolicy;
     @BindView(R.id.tv_settings_user_agreement) TextView mUserAgreement;
 
-    private FirebaseUtils firebaseUtils;
+    private AuthDB authDB;
     private User mUser;
 
 
@@ -47,9 +49,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        firebaseUtils = new FirebaseUtils();
+        authDB = new AuthDB();
 
-         firebaseUtils.getCurrentUser(new Callback() {
+        authDB.getCurrentUser(new Callback() {
              @Override
              public void result(Result result) {
 
@@ -95,7 +97,7 @@ public class SettingsActivity extends AppCompatActivity {
     @OnClick(R.id.tv_settings_logout)
     public void logoutOnClick(View v){
 
-        firebaseUtils.signOut();
+        authDB.signOut();
         Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         getApplication().startActivity(intent);

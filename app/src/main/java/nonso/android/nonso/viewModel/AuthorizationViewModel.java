@@ -4,7 +4,9 @@ import android.arch.lifecycle.ViewModel;
 import android.net.Uri;
 import com.google.firebase.auth.FirebaseUser;
 
+import nonso.android.nonso.data.AuthDB;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.data.UsersDB;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
@@ -14,20 +16,22 @@ import nonso.android.nonso.models.User;
 public class AuthorizationViewModel extends ViewModel {
 
 
-    private FirebaseUtils firebaseUtils;
+    private AuthDB authDB;
+    private UsersDB usersDB;
 
     public AuthorizationViewModel(){
-        firebaseUtils = new FirebaseUtils();
+        authDB = new AuthDB();
+        usersDB = new UsersDB();
     }
 
     public FirebaseUser getCurrentUser(){
-        return firebaseUtils.getAuthUser();
+        return authDB.getAuthUser();
     }
 
 
     public void signIn(String email, String password, final Callback callback){
 
-        firebaseUtils.login(email, password, new Callback() {
+        authDB.login(email, password, new Callback() {
             @Override
             public void result(Result result) {
 
@@ -62,7 +66,7 @@ public class AuthorizationViewModel extends ViewModel {
     }
 
     public void createUser(String email, String password, String userName, final Callback callback){
-       firebaseUtils.createUser(email, password, userName, callback);
+        usersDB.createUser(email, password, userName, callback);
     }
 }
 

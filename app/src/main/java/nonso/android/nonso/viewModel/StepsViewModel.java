@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.data.StepsDB;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
@@ -39,10 +40,10 @@ public class StepsViewModel extends ViewModel {
     private FirebaseQueryLiveData sArchiveListLiveData;
     private LiveData<ArrayList<Step>> stepsArchiveListLiveData;
 
-    private FirebaseUtils firebaseUtils;
+    private StepsDB stepsDB;
 
     public StepsViewModel(){
-        firebaseUtils = new FirebaseUtils();
+        stepsDB = new StepsDB();
     }
 
     public void setStepsList(String journeyId){
@@ -70,11 +71,11 @@ public class StepsViewModel extends ViewModel {
     }
 
     public void saveStep(Step step, final Callback callback){
-        firebaseUtils.saveStep(step, callback);
+        stepsDB.saveStep(step, callback);
     }
 
     public void deleteStep(Step step, final Callback callback){
-        firebaseUtils.deleteStep(step, callback);
+        stepsDB.deleteStep(step, callback);
     }
 
 

@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import nonso.android.nonso.data.AuthDB;
 import nonso.android.nonso.data.FirebaseUtils;
 import nonso.android.nonso.ui.fragments.JourneyArchiveFragment;
 import nonso.android.nonso.ui.fragments.JourneyCommunityFragment;
@@ -13,13 +14,13 @@ public class JourneyProfilePagerAdapter extends FragmentPagerAdapter {
 
     private String mJourneyId;
     private String mCreatorId;
-    FirebaseUtils firebaseUtils;
+    AuthDB authDB;
 
     public JourneyProfilePagerAdapter(FragmentManager fm, String journeyId, String creatorId) {
         super(fm);
         mJourneyId = journeyId;
         mCreatorId = creatorId;
-        firebaseUtils = new FirebaseUtils();
+        authDB = new AuthDB();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class JourneyProfilePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        String id = firebaseUtils.getCurrentUserId();
+        String id = authDB.getCurrentUserId();
         if(mCreatorId.equals(id)){
             return 3;
         }

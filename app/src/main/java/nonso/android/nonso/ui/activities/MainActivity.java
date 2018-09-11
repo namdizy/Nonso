@@ -18,6 +18,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
+import nonso.android.nonso.data.AuthDB;
 import nonso.android.nonso.ui.fragments.DiscoverFragment;
 import nonso.android.nonso.ui.fragments.JourneysFragment;
 import nonso.android.nonso.ui.fragments.NotificationsFragment;
@@ -52,9 +53,9 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        FirebaseUtils firebaseUtils = new FirebaseUtils();
+        AuthDB authDB = new AuthDB();
 
-        mUserId = firebaseUtils.getCurrentUserId();
+        mUserId = authDB.getCurrentUserId();
 
         mBottomNavigationView.enableShiftingMode(false);
         mBottomNavigationView.setTextVisibility(false);

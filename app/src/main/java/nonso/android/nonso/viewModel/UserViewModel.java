@@ -11,8 +11,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import nonso.android.nonso.data.AuthDB;
 import nonso.android.nonso.data.FirebaseDocumentLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.data.UsersDB;
 import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
@@ -28,10 +31,12 @@ public class UserViewModel extends ViewModel {
     private DocumentReference userRef;
     private FirebaseDocumentLiveData uLiveData;
     private LiveData<User> userLiveData;
-    private FirebaseUtils firebaseUtils;
+    private UsersDB usersDB;
+    private AuthDB authDB;
 
     public UserViewModel(){
-        firebaseUtils = new FirebaseUtils();
+        usersDB = new UsersDB();
+        authDB = new AuthDB();
     }
 
     public void init(String userId){
@@ -48,11 +53,11 @@ public class UserViewModel extends ViewModel {
 
     public void updateUserGoals(String userId, String goals, final Callback callback){
 
-        firebaseUtils.updateUserGoals(userId, goals,callback);
+        usersDB.updateUserGoals(userId, goals,callback);
     }
 
     public void saveUserImage(String userId, Image image, Callback callback){
-        firebaseUtils.saveUserImage(userId, image, callback);
+        usersDB.saveUserImage(userId, image, callback);
     }
 
     private class Deserializer implements Function<DocumentSnapshot, User>{
@@ -63,6 +68,6 @@ public class UserViewModel extends ViewModel {
     }
 
     public String getCurrentUserId(){
-       return firebaseUtils.getCurrentUserId();
+       return authDB.getCurrentUserId();
     }
 }

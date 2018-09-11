@@ -14,8 +14,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
+import nonso.android.nonso.data.AuthDB;
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.data.PostDB;
 import nonso.android.nonso.models.Post;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
@@ -26,7 +28,8 @@ public class PostViewModel extends ViewModel {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private FirebaseUtils firebaseUtils;
+    private PostDB postDB;
+    private AuthDB authDB;
 
     private Query postListRef;
     private FirebaseQueryLiveData pListLiveData;
@@ -37,27 +40,28 @@ public class PostViewModel extends ViewModel {
     private LiveData<ArrayList<Post>> repliesData;
 
     public PostViewModel(){
-        firebaseUtils = new FirebaseUtils();
+        postDB = new PostDB();
+        authDB = new AuthDB();
     }
 
     public void getCurrentUser(Callback callback){
-        firebaseUtils.getCurrentUser(callback);
+        authDB.getCurrentUser(callback);
     }
 
     public String getCurrentUserId(){
-        return firebaseUtils.getCurrentUserId();
+        return authDB.getCurrentUserId();
     }
 
     public void savePost(Post post, Callback callback){
-        firebaseUtils.savePost(post, callback);
+        postDB.savePost(post, callback);
     }
 
     public void savePostReply(Post parent, Post current, Callback callback){
-        firebaseUtils.savePostReply(parent, current, callback);
+        postDB.savePostReply(parent, current, callback);
     }
 
     public void updatePostLikes(Map<String, Boolean> likes, String postId, Callback callback){
-        firebaseUtils.updatePostLikes(likes, postId, callback);
+        postDB.updatePostLikes(likes, postId, callback);
     }
 
     public void setPostList(String journeyId){

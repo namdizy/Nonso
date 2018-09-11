@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import nonso.android.nonso.data.FirebaseDocumentLiveData;
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
+import nonso.android.nonso.data.JourneysDB;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
@@ -43,11 +44,11 @@ public class JourneyViewModel extends ViewModel {
     private FirebaseDocumentLiveData jItemLiveData;
     private LiveData<Journey> journeyItemLiveData;
 
-    private FirebaseUtils firebaseUtils;
+    private JourneysDB journeysDB;
 
 
     public JourneyViewModel(){
-        firebaseUtils = new FirebaseUtils();
+        journeysDB = new JourneysDB();
     }
 
     public void setJourneysList(String userId){
@@ -68,17 +69,17 @@ public class JourneyViewModel extends ViewModel {
     }
 
     public void createJourney(Journey journey, final Callback callback){
-        firebaseUtils.saveJourney(journey, callback);
+        journeysDB.saveJourney(journey, callback);
     }
 
     public void deleteJourney(Journey journey, final Callback callback){
 
-        firebaseUtils.deleteJourney(journey, callback);
+        journeysDB.deleteJourney(journey, callback);
 
     }
 
     public void updateJourneyDescription(String journeyId, String description, final Callback callback){
-        firebaseUtils.updateJourneyDescription(journeyId, description, callback);
+        journeysDB.updateJourneyDescription(journeyId, description, callback);
     }
 
     public LiveData<ArrayList<Journey>> getJourneyListLiveData(){
