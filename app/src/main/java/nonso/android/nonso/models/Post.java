@@ -14,7 +14,6 @@ public class Post implements Parcelable {
     private String postId;
     private String title;
     private String body;
-    private Map<String, Boolean> likes;
     private Map<String, Boolean> comments;
     private String journeyId;
     private CreatedBy createdBy;
@@ -24,7 +23,6 @@ public class Post implements Parcelable {
     private Date updatedAt;
 
     public Post(){
-        this.likes = new HashMap<>();
         this.comments = new HashMap<>();
     }
 
@@ -58,14 +56,6 @@ public class Post implements Parcelable {
 
     public void setJourneyId(String journeyId) {
         this.journeyId = journeyId;
-    }
-
-    public Map<String, Boolean> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Map<String, Boolean> likes) {
-        this.likes = likes;
     }
 
     public Map<String, Boolean> getComments() {
@@ -118,11 +108,6 @@ public class Post implements Parcelable {
         dest.writeString(this.postId);
         dest.writeString(this.title);
         dest.writeString(this.body);
-        dest.writeInt(this.likes.size());
-        for (Map.Entry<String, Boolean> entry : this.likes.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
-        }
         dest.writeInt(this.comments.size());
         for (Map.Entry<String, Boolean> entry : this.comments.entrySet()) {
             dest.writeString(entry.getKey());
@@ -139,13 +124,6 @@ public class Post implements Parcelable {
         this.postId = in.readString();
         this.title = in.readString();
         this.body = in.readString();
-        int likesSize = in.readInt();
-        this.likes = new HashMap<String, Boolean>(likesSize);
-        for (int i = 0; i < likesSize; i++) {
-            String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.likes.put(key, value);
-        }
         int commentsSize = in.readInt();
         this.comments = new HashMap<String, Boolean>(commentsSize);
         for (int i = 0; i < commentsSize; i++) {

@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -18,6 +19,7 @@ import nonso.android.nonso.data.AuthDB;
 import nonso.android.nonso.data.FirebaseQueryLiveData;
 import nonso.android.nonso.data.FirebaseUtils;
 import nonso.android.nonso.data.PostDB;
+import nonso.android.nonso.models.Like;
 import nonso.android.nonso.models.Post;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
@@ -81,6 +83,12 @@ public class PostViewModel extends ViewModel {
         return postLiveData;
     }
     public LiveData<ArrayList<Post>> getReplies() {return repliesData;}
+
+    public void likePost(String postId, Like like, Callback callback){
+        postDB.likePost(postId, like, callback);
+    }
+
+    public Task<Integer> getPostLikes(String postId){return  postDB.getLikes(postId);}
 
     private class Deserializer implements Function<QuerySnapshot, ArrayList<Post>> {
 

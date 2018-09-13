@@ -1,5 +1,7 @@
 package nonso.android.nonso.ui.adapters;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -27,12 +29,15 @@ import nonso.android.nonso.R;
 import nonso.android.nonso.models.Post;
 import nonso.android.nonso.ui.activities.CreatePostReplyActivity;
 import nonso.android.nonso.utils.DateUtils;
+import nonso.android.nonso.viewModel.PostViewModel;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private List<Post> mPostList;
     private PostAdapterOnclickHandler onclickHandler;
     private Context mContext;
+
+    private PostViewModel mViewModel;
 
     private Post currentPost;
     private String mUserId;
@@ -58,6 +63,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.post_list_item, parent, false);
+        
         return new PostViewHolder(view);
     }
 
@@ -84,12 +90,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             holder.mNumComments.setVisibility(View.GONE);
         }
 
-        if(!post.getLikes().isEmpty()){
-            if(post.getLikes().get(mUserId)){
-                holder.mLikeImage.setImageResource(R.drawable.ic_like_filled);
-                holder.mLikeText.setText("Liked");
-            }
-        }
+//        if(!post.getLikes().isEmpty()){
+//            if(post.getLikes().get(mUserId)){
+//                holder.mLikeImage.setImageResource(R.drawable.ic_like_filled);
+//                holder.mLikeText.setText("Liked");
+//            }
+//        }
+
+
 
 
         Date date = post.getCreatedAt();

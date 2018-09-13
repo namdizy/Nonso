@@ -26,6 +26,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.models.Like;
+import nonso.android.nonso.models.LikeType;
 import nonso.android.nonso.models.Post;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
@@ -155,46 +157,49 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
 
     @Override
     public void onLikeClick(Post post) {
-//        Map<String, Boolean> likes = post.getLikes();
-//        likes.put(mCurrentUserId, true);
-//        Context context = getContext();
-//        viewModel.updatePostLikes(likes, post.getPostId(), new Callback() {
-//            @Override
-//            public void result(Result result) {
-//                switch(result){
-//                    case FAILED:
-//                        break;
-//                    case SUCCESS:
-//                        Toast.makeText(context, "Liked", Toast.LENGTH_LONG).show();
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void imageResult(Uri downloadUrl) {
-//
-//            }
-//
-//            @Override
-//            public void authorizationResult(FirebaseUser user) {
-//
-//            }
-//
-//            @Override
-//            public void journeyResult(Journey journey) {
-//
-//            }
-//
-//            @Override
-//            public void stepResult(Step step) {
-//
-//            }
-//
-//            @Override
-//            public void userResult(User user) {
-//
-//            }
-//        });
+        Like like = new Like();
+        like.setCreatorId(mCurrentUserId);
+        like.setLikeType(LikeType.LIKE);
+
+        Context context = getContext();
+        viewModel.likePost(post.getPostId(), like, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
+                        Toast.makeText(context, "Liked!", Toast.LENGTH_LONG).show();
+                        break;
+                    case FAILED:
+                        Toast.makeText(context, "Like failed!", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
     }
 
     @Override
