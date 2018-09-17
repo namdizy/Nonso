@@ -9,6 +9,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
@@ -123,6 +126,12 @@ public class UsersDB {
 
             }
         });
+    }
+
+
+    public void getUsers(ArrayList<String> userid){
+
+
     }
 
 }

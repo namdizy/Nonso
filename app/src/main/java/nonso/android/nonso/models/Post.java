@@ -3,6 +3,7 @@ package nonso.android.nonso.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -14,16 +15,16 @@ public class Post implements Parcelable {
     private String postId;
     private String title;
     private String body;
-    private Map<String, Boolean> comments;
     private String journeyId;
-    private CreatedBy createdBy;
-    private String parentId;
+    private String creatorId;
+    private String documentReference;
+    private int likesCount;
+    private int repliesCount;
     @ServerTimestamp
     private Date createdAt;
     private Date updatedAt;
 
     public Post(){
-        this.comments = new HashMap<>();
     }
 
     public String getPostId() {
@@ -58,28 +59,36 @@ public class Post implements Parcelable {
         this.journeyId = journeyId;
     }
 
-    public Map<String, Boolean> getComments() {
-        return comments;
+    public String getCreatorId() {
+        return creatorId;
     }
 
-    public void setComments(Map<String, Boolean> comments) {
-        this.comments = comments;
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
-    public String getParentId() {
-        return parentId;
+    public String getDocumentReference() {
+        return documentReference;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setDocumentReference(String documentReference) {
+        this.documentReference = documentReference;
     }
 
-    public CreatedBy getCreatedBy() {
-        return createdBy;
+    public int getLikesCount() {
+        return likesCount;
     }
 
-    public void setCreatedBy(CreatedBy createdBy) {
-        this.createdBy = createdBy;
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public int getRepliesCount() {
+        return repliesCount;
+    }
+
+    public void setRepliesCount(int repliesCount) {
+        this.repliesCount = repliesCount;
     }
 
     public Date getCreatedAt() {
@@ -108,14 +117,11 @@ public class Post implements Parcelable {
         dest.writeString(this.postId);
         dest.writeString(this.title);
         dest.writeString(this.body);
-        dest.writeInt(this.comments.size());
-        for (Map.Entry<String, Boolean> entry : this.comments.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeValue(entry.getValue());
-        }
         dest.writeString(this.journeyId);
-        dest.writeParcelable(this.createdBy, flags);
-        dest.writeString(this.parentId);
+        dest.writeString(this.creatorId);
+        dest.writeString(this.documentReference);
+        dest.writeInt(this.likesCount);
+        dest.writeInt(this.repliesCount);
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -124,16 +130,11 @@ public class Post implements Parcelable {
         this.postId = in.readString();
         this.title = in.readString();
         this.body = in.readString();
-        int commentsSize = in.readInt();
-        this.comments = new HashMap<String, Boolean>(commentsSize);
-        for (int i = 0; i < commentsSize; i++) {
-            String key = in.readString();
-            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
-            this.comments.put(key, value);
-        }
         this.journeyId = in.readString();
-        this.createdBy = in.readParcelable(CreatedBy.class.getClassLoader());
-        this.parentId = in.readString();
+        this.creatorId = in.readString();
+        this.documentReference = in.readString();
+        this.likesCount = in.readInt();
+        this.repliesCount = in.readInt();
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

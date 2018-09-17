@@ -4,6 +4,8 @@ public class Shard {
 
     int count;
 
+    public Shard(){}
+
     public Shard(int count) {
         this.count = count;
     }

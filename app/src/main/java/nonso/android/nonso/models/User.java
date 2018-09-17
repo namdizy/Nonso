@@ -15,11 +15,15 @@ public class User implements Parcelable {
     private String goal;
     private String userId;
     private Image image;
+    private Map<String, Boolean> likedPost;
+    private Map<String, Boolean> likedSteps;
     @ServerTimestamp private Date createdAt;
     private Date updatedAt;
 
     public User(){
         this.image = new Image();
+        this.likedPost = new HashMap<>();
+        this.likedSteps = new HashMap<>();
     }
 
     public Image getImage() {
@@ -62,6 +66,22 @@ public class User implements Parcelable {
         this.userId = userId;
     }
 
+    public Map<String, Boolean> getLikedPost() {
+        return likedPost;
+    }
+
+    public void setLikedPost(Map<String, Boolean> likedPost) {
+        this.likedPost = likedPost;
+    }
+
+    public Map<String, Boolean> getLikedSteps() {
+        return likedSteps;
+    }
+
+    public void setLikedSteps(Map<String, Boolean> likedSteps) {
+        this.likedSteps = likedSteps;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -90,6 +110,16 @@ public class User implements Parcelable {
         dest.writeString(this.goal);
         dest.writeString(this.userId);
         dest.writeParcelable(this.image, flags);
+        dest.writeInt(this.likedPost.size());
+        for (Map.Entry<String, Boolean> entry : this.likedPost.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeValue(entry.getValue());
+        }
+        dest.writeInt(this.likedSteps.size());
+        for (Map.Entry<String, Boolean> entry : this.likedSteps.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeValue(entry.getValue());
+        }
         dest.writeLong(this.createdAt != null ? this.createdAt.getTime() : -1);
         dest.writeLong(this.updatedAt != null ? this.updatedAt.getTime() : -1);
     }
@@ -100,6 +130,20 @@ public class User implements Parcelable {
         this.goal = in.readString();
         this.userId = in.readString();
         this.image = in.readParcelable(Image.class.getClassLoader());
+        int likedPostSize = in.readInt();
+        this.likedPost = new HashMap<String, Boolean>(likedPostSize);
+        for (int i = 0; i < likedPostSize; i++) {
+            String key = in.readString();
+            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
+            this.likedPost.put(key, value);
+        }
+        int likedStepsSize = in.readInt();
+        this.likedSteps = new HashMap<String, Boolean>(likedStepsSize);
+        for (int i = 0; i < likedStepsSize; i++) {
+            String key = in.readString();
+            Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());
+            this.likedSteps.put(key, value);
+        }
         long tmpCreatedAt = in.readLong();
         this.createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
         long tmpUpdatedAt = in.readLong();

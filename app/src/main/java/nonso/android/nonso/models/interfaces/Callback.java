@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
@@ -18,6 +20,3 @@ public interface Callback {
     void stepResult(Step step);
     void userResult(User user);
 }
-
-
-

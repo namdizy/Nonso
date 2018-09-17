@@ -122,18 +122,9 @@ public class CreatePostReplyActivity extends AppCompatActivity {
 
     public void publish(){
         Post post = new Post();
-        post.setParentId(mParentPost.getParentId());
         post.setBody(mPostBody.getText().toString());
         post.setJourneyId(mParentPost.getJourneyId());
-        post.setParentId(mParentPost.getPostId());
-
-        CreatedBy createdBy = new CreatedBy();
-        createdBy.setId(mUser.getUserId());
-        createdBy.setCreatorType(CreatorType.USER);
-        createdBy.setName(mUser.getUserName());
-        createdBy.setImageUrl(mUser.getImage().getImageUrl());
-
-        post.setCreatedBy(createdBy);
+        post.setCreatorId(mUser.getUserId());
 
         final Context context = this;
         mViewModel.savePostReply(mParentPost, post, new Callback() {

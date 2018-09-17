@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.functions.HttpsCallableResult;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -33,6 +37,7 @@ import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
+import nonso.android.nonso.models.interfaces.UserListCallback;
 import nonso.android.nonso.ui.activities.CreatePostActivity;
 import nonso.android.nonso.ui.activities.CreatePostReplyActivity;
 import nonso.android.nonso.ui.activities.PostDetailsActivity;
@@ -58,7 +63,8 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     private String PARENT_POST = "parent_post";
 
     private String mJourneyId;
-    private String mCurrentUserId;
+    private User mCurrentUser;
+    private ArrayList<User> mUserList;
 
     private PostAdapter mPostAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -106,12 +112,44 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
         viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
         viewModel.setPostList(mJourneyId);
         viewModel.getPost().observe(this, this::updateUI);
-        mCurrentUserId = viewModel.getCurrentUserId();
 
+        setCurrentUser();
         return view;
     }
 
-    public void setCurrentUser(){}
+    public void setCurrentUser(){
+        viewModel.getCurrentUser(new Callback() {
+            @Override
+            public void result(Result result) {
+
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+                mCurrentUser = user;
+            }
+        });
+    }
 
     public void updateUI(ArrayList<Post> posts){
 
@@ -121,11 +159,32 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
             mRecyclerView.setHasFixedSize(true);
 
             mPostAdapter = new PostAdapter(getContext(), this);
-            mRecyclerView.setAdapter(mPostAdapter);
-            mPostAdapter.setPostList(posts);
-            mPostAdapter.setUserId(mCurrentUserId);
-        }else{
 
+
+            ArrayList<String> userIds = new ArrayList<>();
+            for(Post p: posts){
+                userIds.add(p.getCreatorId());
+            }
+
+            viewModel.getUsers(userIds, new UserListCallback() {
+                @Override
+                public void result(Result result) {
+                    switch (result){
+                        case SUCCESS:
+                            break;
+                        case FAILED:
+
+                    }
+                }
+
+                @Override
+                public void userList(ArrayList<User> users) {
+                    mUserList = users;
+                    mRecyclerView.setAdapter(mPostAdapter);
+                    mPostAdapter.setPostList(posts);
+                    mPostAdapter.setUser(mUserList);
+                }
+            });
         }
     }
 
@@ -148,25 +207,18 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     }
 
     @Override
-    public void onReplyClick(Post post) {
-
-        Intent intent = new Intent(getContext(), CreatePostReplyActivity.class);
-        intent.putExtra(PARENT_POST, post);
-        startActivity(intent);
-    }
-
-    @Override
     public void onLikeClick(Post post) {
         Like like = new Like();
-        like.setCreatorId(mCurrentUserId);
+        like.setCreatorId(mCurrentUser.getUserId());
         like.setLikeType(LikeType.LIKE);
 
         Context context = getContext();
-        viewModel.likePost(post.getPostId(), like, new Callback() {
+        viewModel.likePost(post, like, mCurrentUser, new Callback() {
             @Override
             public void result(Result result) {
                 switch (result){
                     case SUCCESS:
+                        post.setLikesCount(post.getLikesCount() + 1);
                         Toast.makeText(context, "Liked!", Toast.LENGTH_LONG).show();
                         break;
                     case FAILED:

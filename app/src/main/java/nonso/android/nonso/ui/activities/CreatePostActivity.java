@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
@@ -122,16 +123,10 @@ public class CreatePostActivity extends AppCompatActivity {
     public void publish(){
         Post post = new Post();
 
-        CreatedBy createdBy = new CreatedBy();
-        createdBy.setImageUrl(mUser.getImage().getImageUrl());
-        createdBy.setName(mUser.getUserName());
-        createdBy.setId(mUser.getUserId());
-        createdBy.setCreatorType(CreatorType.JOURNEY);
-
         post.setBody(mPostBody.getText().toString());
         post.setTitle(mPostTitle.getText().toString());
         post.setJourneyId(mJourneyId);
-        post.setCreatedBy(createdBy);
+        post.setCreatorId(mUser.getUserId());
 
         final Context context = this;
 
@@ -148,6 +143,7 @@ public class CreatePostActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case FAILED:
+                        Toast.makeText(context, "Looks like something went wrong! did not publish", Toast.LENGTH_LONG).show();
                         break;
                 }
             }

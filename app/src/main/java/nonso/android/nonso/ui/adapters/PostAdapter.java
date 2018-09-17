@@ -19,6 +19,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Post;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.ui.activities.CreatePostReplyActivity;
 import nonso.android.nonso.utils.DateUtils;
 import nonso.android.nonso.viewModel.PostViewModel;
@@ -34,19 +37,12 @@ import nonso.android.nonso.viewModel.PostViewModel;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private List<Post> mPostList;
+    private List<User> mUsersList;
     private PostAdapterOnclickHandler onclickHandler;
     private Context mContext;
-
-    private PostViewModel mViewModel;
-
     private Post currentPost;
-    private String mUserId;
-
-    private String JOURNEY_ID = "journey_id";
-    private String POST_ID = "post_id";
 
     public interface PostAdapterOnclickHandler{
-        void onReplyClick(Post post);
         void onCommentClick(Post post);
         void onMenuDeleteClick(Post post);
         void onMenuEditClick(Post post);
@@ -74,21 +70,43 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         currentPost = post;
         holder.mPostTitle.setText(post.getTitle());
         holder.mPostBody.setText(post.getBody());
-        holder.mPostCreatorName.setText(post.getCreatedBy().getName());
 
-        if(!post.getComments().isEmpty()){
+        for(User user: mUsersList){
+            if(user.getUserId().equals(post.getCreatorId())){
+                holder.mPostCreatorName.setText(user.getUserName());
+                Picasso.with(mContext).load(user.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
+                        .error(R.drawable.profile_image_placeholder).into(holder.mCreatorImage);
+            }
+        }
+
+        if(post.getRepliesCount() > 0){
             String size;
-            if(post.getComments().size() == 1){
-                size =  1 + " Comment";
+            if(post.getRepliesCount() == 1){
+                size = "1 Comment";
             }
             else{
-                size =  String.valueOf(post.getComments().size()) + " Comments";
+                size =  String.valueOf(post.getRepliesCount()) + " Comments";
             }
 
            holder.mNumComments.setText(size);
         }else{
             holder.mNumComments.setVisibility(View.GONE);
         }
+
+        if(post.getLikesCount() > 0){
+            String size;
+            if(post.getRepliesCount() == 1){
+                size =  "1 Like";
+            }
+            else{
+                size =  String.valueOf(post.getLikesCount()) + " Likes";
+            }
+
+            holder.mNumLikes.setText(size);
+        }else{
+            holder.mNumLikes.setVisibility(View.GONE);
+        }
+
 
 //        if(!post.getLikes().isEmpty()){
 //            if(post.getLikes().get(mUserId)){
@@ -97,16 +115,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 //            }
 //        }
 
-
-
-
         Date date = post.getCreatedAt();
         DateUtils dateUtils = new DateUtils();
         holder.mPostCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
 
-        holder.mCommentBtn.setOnClickListener(this::onReplyClick);
+        holder.mCommentBtn.setOnClickListener(this::onCommentsClick);
         holder.mLikeBtn.setOnClickListener(this::onLikeClick);
         holder.mNumComments.setOnClickListener(this::onCommentsClick);
+        holder.mNumLikes.setOnClickListener(this::onCommentsClick);
 
         holder.mMoreBtn.setOnClickListener(v -> {
 
@@ -136,11 +152,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         onclickHandler.onLikeClick(currentPost);
     }
 
-
-    public void onReplyClick(View v){
-        onclickHandler.onReplyClick(currentPost);
-    }
-
     public void onCommentsClick(View v){
         onclickHandler.onCommentClick(currentPost);
     }
@@ -155,8 +166,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         notifyDataSetChanged();
     }
 
-    public void setUserId(String userId){
-        mUserId = userId;
+    public void setUser(List users){
+        mUsersList = users;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -177,6 +189,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         @BindView(R.id.post_creator_name) TextView mPostCreatorName;
         @BindView(R.id.post_creator_image) CircleImageView mCreatorImage;
         @BindView(R.id.post_item_replies) TextView mNumComments;
+        @BindView(R.id.post_item_likes) TextView mNumLikes;
         @BindView(R.id.post_item_comment_container) LinearLayout mCommentBtn;
         @BindView(R.id.post_item_like_container) LinearLayout mLikeBtn;
         @BindView(R.id.post_item_like_image) ImageView mLikeImage;
