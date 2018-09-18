@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
@@ -49,8 +50,9 @@ public class PostDB {
     private static final String DATABASE_COLLECTION_POST = "post";
     private static final String DATABASE_COLLECTION_JOURNEY = "journeys";
     private static final String DATABASE_COLLECTION_LIKES_SHARD = "likes_count_shard";
+    private static final String DATABASE_COLLECTION_REPLIES_SHARD = "replies_count_shard";
     private static final String DATABASE_SUB_COLLECTION_LIKES = "likes";
-    private static final String DATABASE_COLLECTION_REPLIES = "replies";
+    private static final String DATABASE_SUB_COLLECTION_REPLIES = "replies";
     private static final String DATABASE_COLLECTION_USERS = "users";
 
     public void savePost(Post post, Callback callback){
@@ -60,8 +62,13 @@ public class PostDB {
             .add(post).addOnSuccessListener(documentReference -> {
                 documentReference.update("postId", documentReference.getId(), "documentReference", documentReference.getPath());
                 this.createLikesCounter(documentReference,NUMBER_OF_SHARDS)
-                        .addOnSuccessListener(aVoid -> callback.result(Result.SUCCESS))
-                        .addOnFailureListener(e -> callback.result(Result.FAILED));
+                        .addOnSuccessListener(aVoid ->
+                               this.createReplyCounter(documentReference, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid1 ->
+                                    callback.result(Result.SUCCESS)
+                               ).addOnFailureListener(e ->
+                                       callback.result(Result.FAILED)
+                               )
+                        ).addOnFailureListener(e -> callback.result(Result.FAILED));
             }).addOnFailureListener(e ->
                 callback.result(Result.FAILED
             ));
@@ -107,26 +114,92 @@ public class PostDB {
     }
 
     public void unlikePost(Post post, String userId, Callback callback){
-//        DocumentReference ref = root.document(post.getDocumentReference());
-//        ref.collection(DATABASE_SUB_COLLECTION_LIKES).whereEqualTo("creatorId", userId)
-//                .add
+        DocumentReference ref = root.document(post.getDocumentReference());
+        ref.collection(DATABASE_SUB_COLLECTION_LIKES).whereEqualTo("creatorId", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot snapshot: docs){
+                        this.deleteLike(snapshot.getId(), ref, callback);
+                    }
+                }).addOnFailureListener(e -> callback.result(Result.FAILED));
 
+    }
+
+    public void deleteLike(String id, DocumentReference ref, Callback callback){
+
+        ref.collection(DATABASE_SUB_COLLECTION_LIKES).document(id)
+                .delete().addOnSuccessListener(aVoid -> this.reduceLikesCounter(ref, NUMBER_OF_SHARDS, callback))
+                .addOnFailureListener(e -> callback.result(Result.FAILED));
+
+    }
+    private Task<Void> reduceLikesCounter(final DocumentReference ref, final int numShards, Callback callback){
+
+        ref.collection(DATABASE_COLLECTION_LIKES_SHARD).whereGreaterThan("count", 0)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+
+                    DocumentSnapshot snapshot = docs.get(0);
+                    Shard shard = snapshot.toObject(Shard.class);
+
+                    ref.collection(DATABASE_COLLECTION_LIKES_SHARD).document(snapshot.getId())
+                            .update("count", shard.getCount()-1 )
+                            .addOnSuccessListener(aVoid -> callback.result(Result.SUCCESS))
+                            .addOnFailureListener(e -> callback.result(Result.FAILED));
+
+                }).addOnFailureListener(e->
+                    callback.result(Result.FAILED)
+                )
+
+        return null;
     }
 
     public void savePostReply(Post parent, Post child, final Callback callback){
         DocumentReference ref = root.document(parent.getDocumentReference());
-        ref.collection(DATABASE_COLLECTION_REPLIES)
+        ref.collection(DATABASE_SUB_COLLECTION_REPLIES)
             .add(child)
             .addOnSuccessListener(documentReference -> {
                 documentReference.update("postId", documentReference.getId(), "documentReference", documentReference.getPath())
                 .addOnSuccessListener(aVoid ->
-                        callback.result(Result.SUCCESS)
+                        this.incrementRepliesCounter(documentReference, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid1 ->
+                                callback.result(Result.SUCCESS)
+                        ).addOnFailureListener(e -> callback.result(Result.FAILED))
                 ).addOnFailureListener(e ->
                         callback.result(Result.FAILED)
                 );
             }).addOnFailureListener(e ->
                 callback.result(Result.FAILED
             ));
+    }
+
+
+    private Task<Void> createReplyCounter(final DocumentReference ref, final int numShards){
+        List<Task<Void>> tasks = new ArrayList<>();
+
+        for (int i = 0; i < numShards; i++) {
+            Task<Void> makeShard = ref.collection(DATABASE_COLLECTION_REPLIES_SHARD)
+                    .document(String.valueOf(i))
+                    .set(new Shard(0));
+
+            tasks.add(makeShard);
+        }
+        return Tasks.whenAll(tasks);
+    }
+
+    private Task<Void> incrementRepliesCounter(final DocumentReference ref, final int numShards) {
+        int shardId = (int) Math.floor(Math.random() * numShards);
+        final DocumentReference shardRef = ref.collection(DATABASE_COLLECTION_REPLIES_SHARD).document(String.valueOf(shardId));
+
+        return db.runTransaction(new Transaction.Function<Void>() {
+            @Override
+            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                Shard shard = transaction.get(shardRef).toObject(Shard.class);
+                shard.setCount(shard.getCount() +1);
+                transaction.set(shardRef, shard);
+                return null;
+            }
+        });
     }
 
     private Task<Void> createLikesCounter(final DocumentReference ref, final int numShards) {
@@ -159,9 +232,6 @@ public class PostDB {
         });
     }
 
-    private Task<Void> reduceLikesCounter(final DocumentReference ref, final int numShards){
-        return null;
-    }
 
 
     public Task<ArrayList> getUsers(ArrayList<String> userIds){

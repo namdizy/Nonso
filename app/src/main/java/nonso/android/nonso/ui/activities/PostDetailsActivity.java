@@ -34,6 +34,7 @@ import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
+import nonso.android.nonso.models.interfaces.UserListCallback;
 import nonso.android.nonso.ui.adapters.PostAdapter;
 import nonso.android.nonso.ui.adapters.RepliesAdapter;
 import nonso.android.nonso.utils.DateUtils;
@@ -54,10 +55,12 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
     private Post mPost;
     private PostViewModel mViewModel;
     private String mUserId;
+    private User mPostCreator;
 
     private String PARENT_POST = "parent_post";
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
     private final String TAB_POSITION_EXTRA = "tab_position_extra";
+    private String POST_CREATOR = "post_creator";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,7 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mPost = getIntent().getParcelableExtra(PARENT_POST);
+        mPostCreator = getIntent().getParcelableExtra(POST_CREATOR);
         mViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
         mUserId = mViewModel.getCurrentUserId();
@@ -80,7 +84,7 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
 
     public void updateUI(){
 
-        //mCreatorName.setText(mPost.getCreatedBy().getName());
+        mCreatorName.setText(mPostCreator.getUserName());
         mBody.setText(mPost.getBody());
         mTitle.setText(mPost.getTitle());
 
@@ -102,8 +106,8 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
 
 
 
-//        Picasso.with(this).load(mPost.getCreatedBy().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
-//                .error(R.drawable.profile_image_placeholder).into(mCreatorImage);
+        Picasso.with(this).load(mPostCreator.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
+                .error(R.drawable.profile_image_placeholder).into(mCreatorImage);
     }
 
     public void updateRecyclerView(ArrayList<Post> replies){
@@ -117,7 +121,24 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
         mRepliesAdapter = new RepliesAdapter(this, this);
         mRecyclerView.setAdapter(mRepliesAdapter);
 
-        mRepliesAdapter.setReplies(replies);
+        ArrayList<String> userIds = new ArrayList<>();
+        for(Post p: replies){
+            userIds.add(p.getCreatorId());
+        }
+
+        mViewModel.getUsers(userIds, new UserListCallback() {
+            @Override
+            public void result(Result result) {
+
+            }
+
+            @Override
+            public void userList(ArrayList<User> users) {
+                mRepliesAdapter.setReplies(replies);
+                mRepliesAdapter.setUsers(users);
+            }
+        });
+
 
     }
 

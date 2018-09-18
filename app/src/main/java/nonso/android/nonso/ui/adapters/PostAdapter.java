@@ -40,10 +40,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private List<User> mUsersList;
     private PostAdapterOnclickHandler onclickHandler;
     private Context mContext;
+    private User mPostCreator;
     private Post currentPost;
 
     public interface PostAdapterOnclickHandler{
-        void onCommentClick(Post post);
+        void onCommentClick(Post post, User user);
         void onMenuDeleteClick(Post post);
         void onMenuEditClick(Post post);
         void onLikeClick(Post post);
@@ -73,6 +74,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         for(User user: mUsersList){
             if(user.getUserId().equals(post.getCreatorId())){
+                mPostCreator = user;
                 holder.mPostCreatorName.setText(user.getUserName());
                 Picasso.with(mContext).load(user.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
                         .error(R.drawable.profile_image_placeholder).into(holder.mCreatorImage);
@@ -108,12 +110,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
 
-//        if(!post.getLikes().isEmpty()){
-//            if(post.getLikes().get(mUserId)){
-//                holder.mLikeImage.setImageResource(R.drawable.ic_like_filled);
-//                holder.mLikeText.setText("Liked");
-//            }
-//        }
 
         Date date = post.getCreatedAt();
         DateUtils dateUtils = new DateUtils();
@@ -153,7 +149,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public void onCommentsClick(View v){
-        onclickHandler.onCommentClick(currentPost);
+        onclickHandler.onCommentClick(currentPost, mPostCreator);
     }
     @Override
     public int getItemCount() {

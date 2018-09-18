@@ -12,12 +12,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Post;
+import nonso.android.nonso.models.User;
 import nonso.android.nonso.utils.DateUtils;
 
 public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesViewHolder> {
@@ -25,6 +27,8 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
     private ArrayList<Post> mReplies;
     private Context mContext;
     private RepliesAdapterOnClickHandler mOnclickHandler;
+    private List<User> mUsersList;
+    private User mReplyCreator;
 
 
     public interface RepliesAdapterOnClickHandler{
@@ -57,6 +61,45 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
 
         holder.mReplyDate.setText(dateUtils.getTimeAgoShort(date));
 
+
+        for(User user: mUsersList){
+            if(user.getUserId().equals(reply.getCreatorId())){
+                mReplyCreator = user;
+                holder.mReplyCreatorName.setText(user.getUserName());
+                Picasso.with(mContext).load(user.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
+                        .error(R.drawable.profile_image_placeholder).into(holder.mReplyCreatorImage);
+            }
+        }
+
+        if(reply.getRepliesCount() > 0){
+            String size;
+            if(reply.getRepliesCount() == 1){
+                size = "1 Comment";
+            }
+            else{
+                size =  String.valueOf(reply.getRepliesCount()) + " Comments";
+            }
+
+            holder.mReplyReplies.setText(size);
+        }else{
+            holder.mReplyReplies.setVisibility(View.GONE);
+        }
+
+        if(reply.getLikesCount() > 0){
+            String size;
+            if(reply.getRepliesCount() == 1){
+                size =  "1 Like";
+            }
+            else{
+                size =  String.valueOf(reply.getLikesCount()) + " Likes";
+            }
+
+            holder.mReplyLikes.setText(size);
+        }else{
+            holder.mReplyLikes.setVisibility(View.GONE);
+        }
+
+
 //        Picasso.with(mContext).load(reply.getCreatedBy().getImageUrl()).placeholder(R.drawable.image_view_placeholder)
 //                .error(R.drawable.image_view_placeholder).into(holder.mReplyCreatorImage);
     }
@@ -72,12 +115,19 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
         notifyDataSetChanged();
     }
 
+    public void setUsers(List users){
+        mUsersList = users;
+        notifyDataSetChanged();
+    }
+
+
     public class RepliesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.reply_body) TextView mReplyBody;
         @BindView(R.id.reply_creator_name) TextView mReplyCreatorName;
         @BindView(R.id.reply_date) TextView mReplyDate;
         @BindView(R.id.reply_likes) TextView mReplyLikes;
+        @BindView(R.id.reply_replies) TextView mReplyReplies;
         @BindView(R.id.reply_creator_image) CircleImageView mReplyCreatorImage;
 
 

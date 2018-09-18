@@ -61,6 +61,7 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     private static final String JOURNEY_ID = "journey_id";
     private static final String POST_ID = "post_id";
     private String PARENT_POST = "parent_post";
+    private String POST_CREATOR = "post_creator";
 
     private String mJourneyId;
     private User mCurrentUser;
@@ -255,9 +256,10 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     }
 
     @Override
-    public void onCommentClick(Post post) {
+    public void onCommentClick(Post post, User user) {
         Intent intent = new Intent(getContext(), PostDetailsActivity.class);
         intent.putExtra(PARENT_POST, post);
+        intent.putExtra(POST_CREATOR, user);
         startActivity(intent);
     }
 
