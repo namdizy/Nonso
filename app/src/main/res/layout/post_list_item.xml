@@ -136,8 +136,8 @@
 
                     <ImageView
                         android:id="@+id/post_item_like_image"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:src="@drawable/ic_like_outline"
                         android:layout_gravity="center"
                         />
@@ -154,6 +154,35 @@
                        />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/post_item_liked_container"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/post_item_liked_image"
+                        android:layout_width="@dimen/social_width"
+                        android:layout_height="@dimen/social_width"
+                        android:src="@drawable/ic_like_filled"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/post_item_liked_text"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Liked"
+                        android:layout_marginStart="@dimen/margin_5dp"
+                        android:textSize="@dimen/h5"
+                        android:textAlignment="gravity"
+                        />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/post_item_comment_container"
@@ -165,8 +194,8 @@
 
                     <ImageView
                         android:id="@+id/post_item_comment_image"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
+                        android:layout_width="@dimen/social_width"
+                        android:layout_height="@dimen/social_width"
                         android:src="@drawable/ic_comment_outline"
                         android:layout_gravity="center"
                         />
@@ -178,7 +207,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/margin_5dp"
                         android:text="Comment"
-                        android:textSize="@dimen/h6"
+                        android:textSize="@dimen/h5"
                         android:textAlignment="gravity"
                         />
 

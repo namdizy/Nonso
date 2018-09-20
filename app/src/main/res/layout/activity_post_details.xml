@@ -52,7 +52,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_below="@id/post_details_creator_image"
-                android:textSize="@dimen/h4"
+                android:textSize="@dimen/h3"
                 android:ellipsize="end"
                 android:textStyle="bold"/>
 
@@ -67,27 +67,30 @@
                 android:layout_marginBottom="@dimen/margin_8dp"
                 android:maxLines="4"
                 android:ellipsize="end"
-                android:textSize="@dimen/h5" />
+                android:textSize="@dimen/h4" />
 
             <LinearLayout
                 android:id="@+id/post_details_replies_likes_container"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_below="@id/post_details_body">
+                android:orientation="horizontal"
+                android:layout_below="@id/post_details_body"
+                android:layout_alignParentStart="true">
                 <TextView
-                    android:id="@+id/post_details_replies"
+                    android:id="@+id/post_details_comments"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
                     android:textSize="@dimen/h5"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    />
                 <TextView
                     android:id="@+id/post_details_likes"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:layout_height="wrap_content"
                     android:textSize="@dimen/h5"
-                    android:gravity="center" />
+                    android:gravity="center"/>
 
             </LinearLayout>
 
@@ -98,11 +101,11 @@
                 android:layout_below="@id/post_details_replies_likes_container"
                 android:layout_alignParentStart="true"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/margin_5dp"
-                android:paddingBottom="@dimen/margin_5dp"
+                android:paddingTop="@dimen/margin_8dp"
+                android:paddingBottom="@dimen/margin_8dp"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
-                android:background="@drawable/grey_border_top_light">
+                android:background="@drawable/grey_border_light">
                 <LinearLayout
                     android:id="@+id/post_details_like_container"
                     android:layout_width="0dp"
@@ -113,8 +116,8 @@
 
                     <ImageView
                         android:id="@+id/post_details_like_image"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
+                        android:layout_width="@dimen/social_width"
+                        android:layout_height="@dimen/social_width"
                         android:src="@drawable/ic_like_outline"
                         android:layout_gravity="center"
                         />
@@ -126,7 +129,38 @@
                         android:layout_gravity="center"
                         android:text="Like"
                         android:layout_marginStart="@dimen/margin_5dp"
-                        android:textSize="@dimen/h6"
+                        android:textSize="@dimen/h5"
+                        android:textAlignment="gravity"
+                        android:textStyle="bold"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/post_details_liked_container"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/post_details_liked_image"
+                        android:layout_width="@dimen/social_width"
+                        android:layout_height="@dimen/social_width"
+                        android:src="@drawable/ic_like_filled"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/post_details_liked_text"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/liked"
+                        android:layout_marginStart="@dimen/margin_5dp"
+                        android:textSize="@dimen/h5"
                         android:textAlignment="gravity"
                         android:textStyle="bold"
                         />
@@ -143,8 +177,8 @@
 
                     <ImageView
                         android:id="@+id/post_details_comment_image"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
+                        android:layout_width="@dimen/social_width"
+                        android:layout_height="@dimen/social_width"
                         android:src="@drawable/ic_comment_outline"
                         android:layout_gravity="center"
                         />
@@ -156,7 +190,7 @@
                         android:layout_gravity="center"
                         android:text="Comment"
                         android:layout_marginStart="@dimen/margin_5dp"
-                        android:textSize="@dimen/h6"
+                        android:textSize="@dimen/h5"
                         android:textAlignment="gravity"
                         android:textStyle="bold"
                         />
@@ -164,47 +198,90 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/post_details_comments_recyclerview"
+
+            <LinearLayout
+                android:id="@+id/post_details_likes_recyclerview_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:orientation="vertical"
+
                 android:layout_below="@id/post_details_social_container">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:text="@string/likes"
+                    android:textSize="@dimen/h4"
+                    android:textStyle="bold"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/post_details_likes_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/post_details_comments_recyclerview_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/post_details_likes_recyclerview_container">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comments"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/h4"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/post_details_comments_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    />
+            </LinearLayout>
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
     <LinearLayout
         android:id="@+id/journey_profile_community_add_post"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ms_bottom_navigation_bar_height"
+        android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:background="@drawable/grey_border_light">
 
         <EditText
             android:id="@+id/post_details_replies_editor"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"
-            android:layout_margin="@dimen/margin_10dp"
-            android:gravity="center_vertical"
+            android:layout_margin="@dimen/dp_10"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:textSize="@dimen/h4"
+            android:textSize="@dimen/h3"
+            android:maxLines="4"
             android:layout_weight="6"
+            android:inputType="textMultiLine"
             android:hint="@string/add_comment"
             />
-        <ImageButton
-            android:id="@+id/post_details_replies_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_send_dark"
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="25dp"
             android:background="@null"
-            android:layout_weight="1"
-            android:layout_gravity="end|center_vertical"
-            />
+            android:src="@drawable/ic_send_dark"
+            android:layout_weight="1"/>
+        <!--<ImageButton-->
+            <!--android:id="@+id/post_details_replies_post"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/ic_send_dark"-->
+            <!--android:layout_weight="1"-->
+            <!--/>-->
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

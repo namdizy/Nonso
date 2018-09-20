@@ -30,39 +30,7 @@ public class AuthorizationViewModel extends ViewModel {
 
 
     public void signIn(String email, String password, final Callback callback){
-
-        authDB.login(email, password, new Callback() {
-            @Override
-            public void result(Result result) {
-
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-                callback.authorizationResult(user);
-            }
-        });
-
+        authDB.login(email, password, callback);
     }
 
     public void createUser(String email, String password, String userName, final Callback callback){

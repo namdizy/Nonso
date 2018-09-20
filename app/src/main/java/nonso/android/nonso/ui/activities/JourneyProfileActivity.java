@@ -101,6 +101,12 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
         mViewPager.setAdapter(new JourneyProfilePagerAdapter(getSupportFragmentManager(), mJourney.getJourneyId(), mJourney.getCreatedBy().getId()));
         mViewPager.setCurrentItem(mTabPosition);
         mTabLayout.setupWithViewPager(mViewPager);
+        if(mTabPosition == 1){
+            int cx = mFab.getWidth()/2;
+            int cy = mFab.getHeight()/2;
+            float radius = (float)Math.hypot(cx, cy);
+            hideFab(cx, cy, radius);
+        }
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

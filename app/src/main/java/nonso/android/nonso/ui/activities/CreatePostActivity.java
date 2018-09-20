@@ -36,8 +36,10 @@ public class CreatePostActivity extends AppCompatActivity {
     private String JOURNEY_ID = "journey_id";
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
     private final String TAB_POSITION_EXTRA = "tab_position_extra";
+    private String POST_EXTRA = "post_extra";
 
     private User mUser;
+    private Post mPost;
     private PostViewModel mViewModel;
 
 
@@ -50,11 +52,17 @@ public class CreatePostActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mJourneyId = getIntent().getStringExtra(JOURNEY_ID);
+        mPost = getIntent().getParcelableExtra(POST_EXTRA);
         mViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        if(mPost != null){
+            mPostBody.setText(mPost.getBody());
+            mPostTitle.setText(mPost.getTitle());
+        }
 
         getUser();
 
@@ -106,7 +114,12 @@ public class CreatePostActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.create_post_menu_publish:
-                publish();
+
+                if(mPost == null ){
+                    publish();
+                }else{
+                    updatePost();
+                }
                 return true;
             case android.R.id.home:
                 Intent intent = new Intent(this, JourneyProfileActivity.class);
@@ -118,6 +131,55 @@ public class CreatePostActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void updatePost(){
+        final Context context = this;
+        mPost.setBody(mPostBody.getText().toString());
+        mPost.setTitle(mPostTitle.getText().toString());
+        mViewModel.savePost(mPost, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
+
+                        Intent intent = new Intent(context, JourneyProfileActivity.class);
+                        intent.putExtra(JOURNEY_EXTRA_ID_KEY, mJourneyId);
+                        intent.putExtra(TAB_POSITION_EXTRA, 1);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        break;
+                    case FAILED:
+                        Toast.makeText(context, "Looks like something went wrong! did not publish", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
     }
 
     public void publish(){

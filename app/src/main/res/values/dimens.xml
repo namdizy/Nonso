@@ -12,6 +12,7 @@
     <dimen name="text_padding">3dp</dimen>
     <dimen name="_20dp">20dp</dimen>
     <dimen name="_30dp">30dp</dimen>
+    <dimen name="social_width">25dp</dimen>
 
     <dimen name="h1">32sp</dimen>
     <dimen name="h2">24sp</dimen>

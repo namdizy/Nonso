@@ -82,7 +82,7 @@
     <string name="journey_profile_add_post">Add a post</string>
     <string name="create_text_post_add_post">Your Post</string>
     <string name="reply_post"> Your Reply</string>
-    <string name="comments">comments</string>
+    <string name="comments">Comments</string>
     <string name="add_comment">Join the conversation..</string>
 
 
@@ -92,6 +92,9 @@
 
     <string name="people">People</string>
     <string name="journeys">Journeys</string>
+    <string name="likes">Likes</string>
+    <string name="like">Like</string>
+    <string name="liked">Liked</string>
 
     <!--Dialog-->
     <string name="dialog_title">Update goals</string>

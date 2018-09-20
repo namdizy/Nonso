@@ -62,6 +62,7 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     private static final String POST_ID = "post_id";
     private String PARENT_POST = "parent_post";
     private String POST_CREATOR = "post_creator";
+    private String POST_EXTRA = "post_extra";
 
     private String mJourneyId;
     private User mCurrentUser;
@@ -184,6 +185,7 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
                     mRecyclerView.setAdapter(mPostAdapter);
                     mPostAdapter.setPostList(posts);
                     mPostAdapter.setUser(mUserList);
+                    mPostAdapter.setCurrentUser(mCurrentUser);
                 }
             });
         }
@@ -219,11 +221,8 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
             public void result(Result result) {
                 switch (result){
                     case SUCCESS:
-                        post.setLikesCount(post.getLikesCount() + 1);
-                        Toast.makeText(context, "Liked!", Toast.LENGTH_LONG).show();
                         break;
                     case FAILED:
-                        Toast.makeText(context, "Like failed!", Toast.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -256,10 +255,50 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     }
 
     @Override
-    public void onCommentClick(Post post, User user) {
+    public void onUnLikedClick(Post post) {
+        viewModel.unLikePost(post, mCurrentUser, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case SUCCESS:
+                        break;
+                    case FAILED:
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onCommentClick(Post post) {
         Intent intent = new Intent(getContext(), PostDetailsActivity.class);
         intent.putExtra(PARENT_POST, post);
-        intent.putExtra(POST_CREATOR, user);
+        intent.putExtra(POST_CREATOR, mCurrentUser);
         startActivity(intent);
     }
 
@@ -270,7 +309,10 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
 
     @Override
     public void onMenuEditClick(Post post) {
-
+        Intent intent = new Intent(getContext(), CreatePostActivity.class );
+        intent.putExtra(JOURNEY_ID, mJourneyId);
+        intent.putExtra(POST_EXTRA, post);
+        startActivity(intent);
     }
 
     @Override

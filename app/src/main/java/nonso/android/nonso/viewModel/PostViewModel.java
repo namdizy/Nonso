@@ -4,6 +4,7 @@ import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.provider.CallLog;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,13 +35,13 @@ public class PostViewModel extends ViewModel {
     private static final String DATABASE_COLLECTION_POST = "post";
     private static final String DATABASE_COLLECTION_JOURNEY = "journeys";
     private static final String DATABASE_COLLECTION_REPLIES = "replies";
+    private static final String DATABASE_COLLECTION_LIKES = "likes";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseFirestore root = FirebaseFirestore.getInstance();
 
     private PostDB postDB;
     private AuthDB authDB;
-    private UsersDB usersDB;
 
     private Query postListRef;
     private FirebaseQueryLiveData pListLiveData;
@@ -49,6 +50,10 @@ public class PostViewModel extends ViewModel {
     private Query repliesListRef;
     private FirebaseQueryLiveData repliesLiveData;
     private LiveData<ArrayList<Post>> repliesData;
+
+    private Query likesListRef;
+    private FirebaseQueryLiveData likesLiveData;
+    private LiveData<ArrayList<Like>> likesData;
 
     public PostViewModel(){
         postDB = new PostDB();
@@ -64,7 +69,11 @@ public class PostViewModel extends ViewModel {
     }
 
     public void savePost(Post post, Callback callback){
-        postDB.savePost(post, callback);
+        if(post.getPostId() != null){
+            postDB.updatePost(post, callback);
+        }else{
+            postDB.savePost(post, callback);
+        }
     }
 
     public void savePostReply(Post parent, Post current, Callback callback){
@@ -79,22 +88,32 @@ public class PostViewModel extends ViewModel {
     }
 
     public void setRepliesList(String postRef){
-
         DocumentReference ref = root.document(postRef);
         repliesListRef = ref.collection(DATABASE_COLLECTION_REPLIES);
         repliesLiveData = new FirebaseQueryLiveData(repliesListRef);
         repliesData = Transformations.map(repliesLiveData, new Deserializer());
     }
 
+    public void setLikesList(String postRef){
+        DocumentReference ref = root.document(postRef);
+        likesListRef = ref.collection(DATABASE_COLLECTION_LIKES);
+        likesLiveData = new FirebaseQueryLiveData(likesListRef);
+        likesData = Transformations.map(likesLiveData, new LikesDeserializer());
+    }
+
     public LiveData<ArrayList<Post>> getPost(){
         return postLiveData;
     }
     public LiveData<ArrayList<Post>> getReplies() {return repliesData;}
+    public LiveData<ArrayList<Like>> getLikesData() { return likesData; }
 
     public void likePost(Post post, Like like, User user, Callback callback){
         postDB.likePost(post, like, user, callback);
     }
 
+    public void unLikePost(Post post, User user, Callback callback){
+        postDB.unlikePost(post, user, callback);
+    }
 
     public void getUsers(ArrayList<String> userIds, UserListCallback callback){
          postDB.getUsers(userIds)
@@ -103,7 +122,6 @@ public class PostViewModel extends ViewModel {
                  .addOnFailureListener(e -> callback.result(Result.FAILED));
     }
     private class Deserializer implements Function<QuerySnapshot, ArrayList<Post>> {
-
         @Override
         public ArrayList<Post> apply(QuerySnapshot input) {
 
@@ -114,6 +132,21 @@ public class PostViewModel extends ViewModel {
             }
 
             return posts;
+        }
+    }
+
+
+    private class LikesDeserializer implements Function<QuerySnapshot, ArrayList<Like>> {
+        @Override
+        public ArrayList<Like> apply(QuerySnapshot input) {
+
+            ArrayList<Like> likes = new ArrayList<>();
+
+            for (DocumentSnapshot snapshot : input) {
+                likes.add(snapshot.toObject(Like.class));
+            }
+
+            return likes;
         }
     }
 
