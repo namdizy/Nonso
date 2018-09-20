@@ -61,7 +61,7 @@ public class PostDB {
             .collection(DATABASE_COLLECTION_POST)
             .add(post).addOnSuccessListener(documentReference -> {
                 documentReference.update("postId", documentReference.getId(), "documentReference", documentReference.getPath());
-                this.createLikesCounter(documentReference,NUMBER_OF_SHARDS)
+                    this.createLikesCounter(documentReference,NUMBER_OF_SHARDS)
                         .addOnSuccessListener(aVoid ->
                                this.createReplyCounter(documentReference, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid1 ->
                                     callback.result(Result.SUCCESS)
@@ -173,8 +173,13 @@ public class PostDB {
             .addOnSuccessListener(documentReference -> {
                 documentReference.update("postId", documentReference.getId(), "documentReference", documentReference.getPath())
                 .addOnSuccessListener(aVoid ->
-                        this.incrementRepliesCounter(documentReference, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid1 ->
-                                callback.result(Result.SUCCESS)
+                        this.incrementRepliesCounter(ref, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid1 ->
+                                this.createLikesCounter(documentReference, NUMBER_OF_SHARDS)
+                                    .addOnSuccessListener(aVoid2 ->
+                                        this.createReplyCounter(documentReference, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid3 ->
+                                                callback.result(Result.SUCCESS))
+                                        .addOnFailureListener( e -> callback.result(Result.FAILED)))
+                                    .addOnFailureListener(e -> callback.result(Result.FAILED))
                         ).addOnFailureListener(e -> callback.result(Result.FAILED))
                 ).addOnFailureListener(e ->
                         callback.result(Result.FAILED)

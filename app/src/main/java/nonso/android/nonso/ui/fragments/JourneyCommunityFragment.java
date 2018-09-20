@@ -113,9 +113,8 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
 
         viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
         viewModel.setPostList(mJourneyId);
-        viewModel.getPost().observe(this, this::updateUI);
-
         setCurrentUser();
+        viewModel.getPost().observe(this, this::updateUI);
         return view;
     }
 

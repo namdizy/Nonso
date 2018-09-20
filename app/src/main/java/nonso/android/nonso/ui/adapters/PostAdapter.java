@@ -2,6 +2,7 @@ package nonso.android.nonso.ui.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -80,7 +81,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         DateUtils dateUtils = new DateUtils();
         holder.mPostCreatedTime.setText(dateUtils.getTimeAgo(date, mContext));
 
-        Map<String, Boolean> likedList =  mCurrentUser.getLikedPost();
+        Map<String, Boolean> likedList =  mCurrentUser.getLikedPost();// error point user is null mCurrentuser
         if(!likedList.containsKey(post.getPostId())) {
             holder.mLikedBtn.setVisibility(View.GONE);
             holder.mLikeBtn.setVisibility(View.VISIBLE);
@@ -90,6 +91,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         holder.mCommentBtn.setOnClickListener(view -> onclickHandler.onCommentClick(post));
+        holder.mPostCard.setOnClickListener(view -> onclickHandler.onCommentClick(post));
         holder.mLikeBtn.setOnClickListener(view -> {
                 post.setLikesCount(post.getLikesCount() +1);
                 setCount(post, holder);
@@ -211,6 +213,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+        @BindView(R.id.post_item_card) CardView mPostCard;
         @BindView(R.id.post_item_title) TextView mPostTitle;
         @BindView(R.id.post_item_body) TextView mPostBody;
         @BindView(R.id.post_created_time) TextView mPostCreatedTime;

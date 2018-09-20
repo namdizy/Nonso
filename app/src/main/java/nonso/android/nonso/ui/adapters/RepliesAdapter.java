@@ -58,8 +58,10 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
 
         Date date = reply.getCreatedAt();
         DateUtils dateUtils = new DateUtils();
+        if(date != null){
+            holder.mReplyDate.setText(dateUtils.getTimeAgoShort(date));
+        }
 
-        holder.mReplyDate.setText(dateUtils.getTimeAgoShort(date));
 
 
         for(User user: mUsersList){

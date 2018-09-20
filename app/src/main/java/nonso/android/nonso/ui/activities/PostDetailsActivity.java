@@ -63,8 +63,7 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
     @BindView(R.id.post_details_likes_recyclerview) RecyclerView mLikesRecyclerView;
     @BindView(R.id.post_details_likes_recyclerview_container) LinearLayout mLikesContainer;
     @BindView(R.id.post_details_replies_editor) EditText mReplyComment;
-//    @BindView(R.id.post_details_replies_post)
-//    ImageButton mPostReply;
+    @BindView(R.id.post_details_replies_post) ImageButton mPostReply;
 
 
     private Post mPost;
@@ -138,32 +137,7 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
         DateUtils dateUtils = new DateUtils();
         mTimeCreated.setText(dateUtils.getTimeAgo(date, this));
 
-        if(mPost.getLikesCount() > 0){
-            String size ;
-            if(mPost.getLikesCount() == 1){
-                size = "1 Like";
-            }
-            else{
-                size =  String.valueOf(mPost.getLikesCount()) + " Likes";
-            }
-            mPostLikes.setText(size);
-            mPostLikes.setVisibility(View.VISIBLE);
-        }else{
-            mPostLikes.setVisibility(View.GONE);
-        }
-        if(mPost.getRepliesCount() > 0){
-            String size;
-            if(mPost.getLikesCount() == 1){
-                size = "1 Reply";
-            }
-            else{
-                size =  String.valueOf(mPost.getLikesCount()) + " Reply";
-            }
-            mPostComments.setText(size);
-            mPostComments.setVisibility(View.VISIBLE);
-        }else{
-            mPostComments.setVisibility(View.GONE);
-        }
+        updateCount();
 
         Map<String, Boolean> likedList =  mCurrentUser.getLikedPost();
         if(!likedList.containsKey(mPost.getPostId())) {
@@ -181,6 +155,35 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
 
         Picasso.with(this).load(mPostCreator.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
                 .error(R.drawable.profile_image_placeholder).into(mCreatorImage);
+    }
+
+    private void updateCount(){
+        if(mPost.getLikesCount() > 0){
+            String size ;
+            if(mPost.getLikesCount() == 1){
+                size = "1 Like";
+            }
+            else{
+                size =  String.valueOf(mPost.getLikesCount()) + " Likes";
+            }
+            mPostLikes.setText(size);
+            mPostLikes.setVisibility(View.VISIBLE);
+        }else{
+            mPostLikes.setVisibility(View.GONE);
+        }
+        if(mPost.getRepliesCount() > 0){
+            String size;
+            if(mPost.getRepliesCount() == 1){
+                size = "1 Reply";
+            }
+            else{
+                size =  String.valueOf(mPost.getRepliesCount()) + " Replies";
+            }
+            mPostComments.setText(size);
+            mPostComments.setVisibility(View.VISIBLE);
+        }else{
+            mPostComments.setVisibility(View.GONE);
+        }
     }
 
     private void getUsersFromLikes(ArrayList<Like> likes){
@@ -293,49 +296,64 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
         imm.showSoftInput(mReplyComment, InputMethodManager.SHOW_IMPLICIT);
     }
 
-//    @OnClick(R.id.post_details_replies_post)
-//    public void onReplyClick(View view){
-//        String reply = mReplyComment.getText().toString();
-//        Post post = new Post();
-//        post.setCreatorId(mCurrentUser.getUserId());
-//        post.setJourneyId(mPost.getJourneyId());
-//        post.setBody(reply);
-//
-//        mViewModel.savePostReply(mPost, post, new Callback() {
-//            @Override
-//            public void result(Result result) {
-//                switch (result){
-//                    case FAILED:
-//                        break;
-//                    case SUCCESS:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void imageResult(Uri downloadUrl) {
-//
-//            }
-//
-//            @Override
-//            public void authorizationResult(FirebaseUser user) {
-//
-//            }
-//
-//            @Override
-//            public void journeyResult(Journey journey) {
-//
-//            }
-//
-//            @Override
-//            public void stepResult(Step step) {
-//
-//            }
-//
-//            @Override
-//            public void userResult(User user) {
-//
-//            }
-//        });
-//    }
+    @OnClick(R.id.post_details_replies_post)
+    public void onReplyClick(View view){
+        String reply = mReplyComment.getText().toString();
+        Post post = new Post();
+        post.setCreatorId(mCurrentUser.getUserId());
+        post.setJourneyId(mPost.getJourneyId());
+        post.setBody(reply);
+
+        if(reply.isEmpty()){
+            Toast.makeText(this, "Response cannot be empty!", Toast.LENGTH_LONG).show();
+        }else{
+            reply(post);
+        }
+    }
+
+    public void reply(Post post){
+
+        mReplyComment.setText("");
+        mPost.setRepliesCount(mPost.getRepliesCount() +1);
+        mReplyComment.clearFocus();
+        updateCount();
+
+        mViewModel.savePostReply(mPost, post, new Callback() {
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case FAILED:
+                        break;
+                    case SUCCESS:
+
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+
+            @Override
+            public void userResult(User user) {
+
+            }
+        });
+    }
 }
