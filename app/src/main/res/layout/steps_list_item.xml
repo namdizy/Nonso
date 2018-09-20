@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/circular_view_fill_blue"/>
+            android:src="@drawable/circular_view_fill_primary"/>
         <include
             layout="@layout/vertical_timeline_divider"
             android:layout_width="wrap_content"

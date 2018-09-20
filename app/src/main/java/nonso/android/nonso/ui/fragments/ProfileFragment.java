@@ -6,7 +6,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -26,12 +28,14 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -76,6 +80,8 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     private static final String TAG = ProfileFragment.class.getSimpleName();
     private static final String PROFILE_IMAGE_EXTRA = "profile_image_url";
     private static final String UID_KEY = "user_id";
+    private static final String CURRENT_USER = "nonso_current_user";
+    private static final String NONSO_PREF = "nonso_pref";
 
     private static final int REQUEST_PROFILE_IMAGE_CODE = 101;
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS =201;
@@ -169,6 +175,13 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
         mUser = user;
         mUsername.setText(user.getUserName());
         mUserGoals.setText(user.getGoal());
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences(NONSO_PREF, Context.MODE_PRIVATE).edit();
+        editor.putString(CURRENT_USER, json);
+        editor.apply();
 
         Picasso.with(getContext()).load(mUser.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
                 .error(R.drawable.profile_image_placeholder).into(mUserProfileImage);

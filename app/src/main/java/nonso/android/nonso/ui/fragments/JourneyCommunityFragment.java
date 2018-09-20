@@ -3,6 +3,7 @@ package nonso.android.nonso.ui.fragments;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.functions.HttpsCallableResult;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -63,6 +65,8 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
     private String PARENT_POST = "parent_post";
     private String POST_CREATOR = "post_creator";
     private String POST_EXTRA = "post_extra";
+    private static final String CURRENT_USER = "nonso_current_user";
+    private static final String NONSO_PREF = "nonso_pref";
 
     private String mJourneyId;
     private User mCurrentUser;
@@ -113,44 +117,17 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
 
         viewModel = ViewModelProviders.of(this).get(PostViewModel.class);
         viewModel.setPostList(mJourneyId);
-        setCurrentUser();
+
+        SharedPreferences pref = getActivity().getSharedPreferences(NONSO_PREF, Context.MODE_PRIVATE);
+        String json = pref.getString(CURRENT_USER, null);
+
+        Gson gson = new Gson();
+        mCurrentUser  = gson.fromJson(json, User.class);
+
         viewModel.getPost().observe(this, this::updateUI);
         return view;
     }
 
-    public void setCurrentUser(){
-        viewModel.getCurrentUser(new Callback() {
-            @Override
-            public void result(Result result) {
-
-            }
-
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-                mCurrentUser = user;
-            }
-        });
-    }
 
     public void updateUI(ArrayList<Post> posts){
 
@@ -174,7 +151,6 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
                         case SUCCESS:
                             break;
                         case FAILED:
-
                     }
                 }
 

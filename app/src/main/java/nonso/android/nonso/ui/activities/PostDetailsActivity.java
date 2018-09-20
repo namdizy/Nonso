@@ -3,6 +3,7 @@ package nonso.android.nonso.ui.activities;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -75,6 +77,8 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
     private final String TAB_POSITION_EXTRA = "tab_position_extra";
     private String POST_CREATOR = "post_creator";
+    private static final String CURRENT_USER = "nonso_current_user";
+    private static final String NONSO_PREF = "nonso_pref";
 
 
     @Override
@@ -91,40 +95,13 @@ public class PostDetailsActivity extends AppCompatActivity implements RepliesAda
         mPostCreator = getIntent().getParcelableExtra(POST_CREATOR);
         mViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
-        mViewModel.getCurrentUser(new Callback() {
-            @Override
-            public void result(Result result) {
+        SharedPreferences pref = getSharedPreferences(NONSO_PREF, MODE_PRIVATE);
+        String json = pref.getString(CURRENT_USER, null);
 
-            }
+        Gson gson = new Gson();
+        mCurrentUser  = gson.fromJson(json, User.class);
 
-            @Override
-            public void imageResult(Uri downloadUrl) {
-
-            }
-
-            @Override
-            public void authorizationResult(FirebaseUser user) {
-
-            }
-
-            @Override
-            public void journeyResult(Journey journey) {
-
-            }
-
-            @Override
-            public void stepResult(Step step) {
-
-            }
-
-            @Override
-            public void userResult(User user) {
-                mCurrentUser = user;
-                updateUI();
-            }
-        });
-
-
+        updateUI();
     }
 
     public void updateUI(){
