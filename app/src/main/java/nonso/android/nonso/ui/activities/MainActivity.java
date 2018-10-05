@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
     private String mUserId;
 
-    @BindView(R.id.bottom_navigation_view) BottomNavigationViewEx mBottomNavigationView;
+    @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
 
 
     @Override
@@ -57,8 +57,9 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
 
         mUserId = authDB.getCurrentUserId();
 
-        mBottomNavigationView.enableShiftingMode(false);
-        mBottomNavigationView.setTextVisibility(false);
+
+//        mBottomNavigationView.enableShiftingMode(false);
+//        mBottomNavigationView.setTextVisibility(false);
         //mBottomNavigationView.setItemHeight(R.dimen.margin_5dp);
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(bottomNavigationViewClickListener);
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         int menuItem  =  pref.getInt(ITEM_PREFERENCE_KEY, 0);
 
-        mBottomNavigationView.setCurrentItem(menuItem);
+        mBottomNavigationView.setSelectedItemId(menuItem);
     }
 
     BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationViewClickListener =
@@ -84,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
     private void fragmentSelect(MenuItem item){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         Fragment fragment = null;
-        int index = mBottomNavigationView.getMenuItemPosition(item);
+
+        int index = mBottomNavigationView.getSelectedItemId();
 
         SharedPreferences.Editor prefEditor = pref.edit();
 

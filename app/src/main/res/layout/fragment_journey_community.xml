@@ -11,14 +11,15 @@
         android:id="@+id/journey_profile_community_add_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/grey_border_light">
+        android:layout_marginEnd="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8">
 
         <TextView
             android:id="@+id/journey_profile_community_post"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ms_bottom_navigation_bar_height"
             android:background="@drawable/rounded_corner"
-            android:layout_margin="@dimen/margin_10dp"
             android:gravity="center_vertical"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
@@ -36,7 +37,7 @@
            android:id="@+id/journey_profile_community_post_recyclerview"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:paddingBottom="@dimen/margin_5dp"/>
+           android:paddingBottom="@dimen/dp_5"/>
 
    </android.support.v4.widget.NestedScrollView>
 

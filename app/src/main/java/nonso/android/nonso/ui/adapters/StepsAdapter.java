@@ -142,7 +142,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsViewHol
                            case R.id.step_item_menu_edit:
                                mAdapterOnClickListener.onMenuEditClick(step);
                                return true;
-                           case R.id.step_item_menu_make_last:
+                           case R.id.step_item_add_cheer_text:
                                return true;
                            default:
                                return false;

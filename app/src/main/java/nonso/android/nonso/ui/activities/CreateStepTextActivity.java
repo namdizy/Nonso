@@ -11,9 +11,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ebolo.krichtexteditor.RichEditor;
-import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
-import com.ebolo.krichtexteditor.fragments.Options;
+//import com.ebolo.krichtexteditor.RichEditor;
+//import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
+//import com.ebolo.krichtexteditor.fragments.Options;
 import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
@@ -38,7 +38,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
     private StepsViewModel viewModel;
 
-    private KRichEditorFragment editorFragment;
+    //private KRichEditorFragment editorFragment;
 
     private Step mStep;
     private final  String TAG = getClass().getSimpleName();
@@ -66,19 +66,19 @@ public class CreateStepTextActivity extends AppCompatActivity {
         }
 
 
-        editorFragment = (KRichEditorFragment) getSupportFragmentManager().findFragmentByTag("EDITOR");
+//        editorFragment = (KRichEditorFragment) getSupportFragmentManager().findFragmentByTag("EDITOR");
+//
+//        if (editorFragment == null){
+//            editorFragment = KRichEditorFragment.getInstance(new Options().
+//                    onInitialized(()->
+//                            editorFragment.getEditor().setContents(mStep.getBodyText())
+//                    ));
+//        }
 
-        if (editorFragment == null){
-            editorFragment = KRichEditorFragment.getInstance(new Options().
-                    onInitialized(()->
-                            editorFragment.getEditor().setContents(mStep.getBodyText())
-                    ));
-        }
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.create_step_text_fragment_container, editorFragment, "EDITOR")
-                .commit();
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.create_step_text_fragment_container, editorFragment, "EDITOR")
+//                .commit();
     }
 
     @Override
@@ -156,52 +156,52 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
     public void save(){
         final Context context = this;
-        editorFragment.getEditor().getHtml(s -> {
-                mStep.setTitle(mStepTitle.getText().toString());
-                mStep.setDescription(mStepDescription.getText().toString());
-                mStep.setBodyText(s);
-                mStep.setStepType(StepType.TEXT);
-
-                viewModel.saveStep(mStep, new Callback() {
-                    @Override
-                    public void userResult(User user) {
-
-                    }
-
-                    @Override
-                    public void result(Result result) {
-                        switch (result){
-                            case FAILED:
-                                Toast.makeText(context, "Oops looks like there was a problems saving this step!", Toast.LENGTH_LONG).show();
-                                finish();
-                                break;
-                            case SUCCESS:
-                                finish();
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void imageResult(Uri downloadUrl) {
-
-                    }
-
-                    @Override
-                    public void authorizationResult(FirebaseUser user) {
-
-                    }
-
-                    @Override
-                    public void journeyResult(Journey journey) {
-
-                    }
-
-                    @Override
-                    public void stepResult(Step step) {
-
-                    }
-                });
-        });
+//        editorFragment.getEditor().getHtml(s -> {
+//                mStep.setTitle(mStepTitle.getText().toString());
+//                mStep.setDescription(mStepDescription.getText().toString());
+//                mStep.setBodyText(s);
+//                mStep.setStepType(StepType.TEXT);
+//
+//                viewModel.saveStep(mStep, new Callback() {
+//                    @Override
+//                    public void userResult(User user) {
+//
+//                    }
+//
+//                    @Override
+//                    public void result(Result result) {
+//                        switch (result){
+//                            case FAILED:
+//                                Toast.makeText(context, "Oops looks like there was a problems saving this step!", Toast.LENGTH_LONG).show();
+//                                finish();
+//                                break;
+//                            case SUCCESS:
+//                                finish();
+//                                break;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void imageResult(Uri downloadUrl) {
+//
+//                    }
+//
+//                    @Override
+//                    public void authorizationResult(FirebaseUser user) {
+//
+//                    }
+//
+//                    @Override
+//                    public void journeyResult(Journey journey) {
+//
+//                    }
+//
+//                    @Override
+//                    public void stepResult(Step step) {
+//
+//                    }
+//                });
+//        });
     }
 
     @Override

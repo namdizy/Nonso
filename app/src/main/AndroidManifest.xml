@@ -121,24 +121,31 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-        <activity android:name=".ui.activities.CreatePostActivity"
+        <activity
+            android:name=".ui.activities.CreatePostActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-        <activity android:name=".ui.activities.CreatePostReplyActivity"
+        <activity
+            android:name=".ui.activities.CreatePostReplyActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-        <activity android:name=".ui.activities.PostDetailsActivity"
+        <activity
+            android:name=".ui.activities.PostDetailsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
+        <activity
+            android:name=".ui.activities.CategoriesActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/AppTheme.Chips" />
     </application>
 
 </manifest>

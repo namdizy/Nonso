@@ -10,4 +10,5 @@
     <color name="colorGreyLight">#F5F5F5</color>
     <color name="colorBlue">#1565C0</color>
     <color name="colorBlueLight">#BBDEFB</color>
+    <color name="colorBlack">#000000</color>
 </resources>

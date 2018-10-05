@@ -28,10 +28,10 @@
                     android:layout_height="60dp"
                     android:orientation="vertical"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="@dimen/margin_5dp">
+                    android:layout_marginTop="@dimen/dp_5">
                     <ImageView
-                        android:layout_width="@dimen/_30dp"
-                        android:layout_height="@dimen/_30dp"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
                         android:layout_gravity="center"
                         android:src="@drawable/hot_air_balloon_start" />
 

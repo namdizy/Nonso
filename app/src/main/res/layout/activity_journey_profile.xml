@@ -37,7 +37,7 @@
                     android:layout_gravity="end"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_settings_light"
-                    android:layout_marginEnd="@dimen/margin_5dp"/>
+                    android:layout_marginEnd="@dimen/dp_5"/>
             </android.support.v7.widget.Toolbar>
 
 
@@ -73,7 +73,7 @@
                         android:id="@+id/journey_creator_image"
                         android:layout_width="@dimen/small_image_size"
                         android:layout_height="@dimen/small_image_size"
-                        android:layout_margin="@dimen/margin_5dp"
+                        android:layout_margin="@dimen/dp_5"
                         android:src="@drawable/profile_image_placeholder" />
 
                     <TextView
@@ -81,7 +81,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/margin_5dp" />
+                        android:layout_margin="@dimen/dp_5" />
 
                 </LinearLayout>
 
@@ -98,12 +98,12 @@
                         android:id="@+id/journey_page_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_10dp" />
+                        android:layout_margin="@dimen/dp_10" />
                     <ImageButton
                         android:id="@+id/journey_profile_edit_btn"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="@dimen/_20dp"
+                        android:layout_marginEnd="@dimen/dp_20"
                         android:layout_alignParentEnd="true"
                         android:layout_centerInParent="true"
                         android:background="@android:color/transparent"

@@ -33,8 +33,8 @@
             android:textColor="@color/colorPrimary"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
-            android:paddingStart="@dimen/margin_5dp"
-            android:paddingEnd="@dimen/margin_5dp"
+            android:paddingStart="@dimen/dp_5"
+            android:paddingEnd="@dimen/dp_5"
             android:maxLength="140"/>
 
     </RelativeLayout>
@@ -67,8 +67,8 @@
             android:inputType="textMultiLine"
             android:maxLines ="4"
             android:background="@android:color/transparent"
-            android:paddingStart="@dimen/margin_5dp"
-            android:paddingEnd="@dimen/margin_5dp"
+            android:paddingStart="@dimen/dp_5"
+            android:paddingEnd="@dimen/dp_5"
             android:scrollHorizontally="false"/>
 
     </RelativeLayout>

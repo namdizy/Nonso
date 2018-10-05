@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    app:cardCornerRadius="@dimen/margin_5dp">
+    app:cardCornerRadius="@dimen/dp_5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,16 +21,16 @@
             android:text="@string/dialog_edit_journey_title"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/h3"
-            android:layout_marginStart="@dimen/margin_10dp"
-            android:layout_marginTop="@dimen/margin_10dp"/>
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width ="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="30dp"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:layout_marginStart="@dimen/margin_10dp"
-            android:layout_marginEnd="@dimen/margin_10dp">
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10">
 
             <EditText
                 android:id="@+id/journey_profile_dialog_goals"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:textColorHint="@color/colorWhite"
-                android:textColor="@color/black"
+                android:textColor="@color/colorBlack"
                 android:inputType="textMultiLine"
                 android:maxLines ="4"
                 android:lines="4"
@@ -49,8 +49,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:layout_marginBottom="@dimen/margin_10dp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
             android:gravity="end">
             <Button
                 android:id="@+id/journey_profile_dialog_discard"

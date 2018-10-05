@@ -33,6 +33,8 @@
     <string name="menu_edit">Edit</string>
     <string name="menu_publish">Publish</string>
     <string name="menu_post">Post</string>
+    <string name="menu_show_cheers">Show cheers</string>
+    <string name="menu_hide_cheers">Hide cheers</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

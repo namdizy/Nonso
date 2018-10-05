@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.Journey;
+import nonso.android.nonso.ui.activities.CategoriesActivity;
 import nonso.android.nonso.ui.activities.MainActivity;
 import nonso.android.nonso.utils.ImageUtils;
 import nonso.android.nonso.utils.MultiSelectionSpinner;
@@ -60,7 +62,7 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
 
     @BindView(R.id.edit_create_journeys_input_description) EditText mJourneysDescription;
     @BindView(R.id.edit_create_journeys_input_name) EditText mJourneysName;
-    @BindView(R.id.create_journey_description_spinner) MultiSelectionSpinner mMultiSelectionSpinner;
+    @BindView(R.id.create_journey_description_select_category) Button mSelectCategory;
     @BindView(R.id.create_journey_description_close) ImageButton mCloseButton;
     @BindView(R.id.create_journey_description_profile_image) ImageView mJourneysImage;
     @BindView(R.id.create_journey_description_image_btn) LinearLayout mImageButton;
@@ -72,19 +74,11 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
 
     private static final int REQUEST_ID_MULTIPLE_PERMISSIONS =201;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private static final String DATABASE_COLLECTION_CATEGORIES = "categories";
-    private static final String DATABASE_DOCUMENT_CATEGORIES = "categories";
-    private static final int PERMISSIONS_REQUEST_STORAGE = 13;
 
     private static String TAG = DescriptionStepperFragment.class.getName();
 
     private int mStepPosition;
     private Journey mJourney;
-    private Map<String, Object> mCategories;
-    private String[] mCategoriesList;
-    DocumentReference mCategoriesRef;
 
     private OnDescriptionStepListener mListener;
 
@@ -128,23 +122,9 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
         View view = inflater.inflate(R.layout.fragment_create_journey_description_step, container, false);
         ButterKnife.bind(this, view);
 
-        mCategoriesRef  = db.collection(DATABASE_COLLECTION_CATEGORIES).document(DATABASE_DOCUMENT_CATEGORIES);
-        getCategories();
-        mMultiSelectionSpinner.setListener(this);
         return view;
     }
 
-    public void getCategories(){
-        mCategoriesRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mCategories =  documentSnapshot.getData();
-                mCategoriesList = mCategories.keySet().toArray(new String[mCategories.keySet().size()]);
-                mMultiSelectionSpinner.setItems(mCategoriesList);
-            }
-        });
-
-    }
 
     /**
      * Implements function from MultiSelectionSpinner.OnMultipleItemsSelectedListener
@@ -205,6 +185,12 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
         if(checkAndRequestPermissions()){
             startPicker();
         }
+    }
+
+    @OnClick(R.id.create_journey_description_select_category)
+    public void onSelectCategoriesClick(View view){
+        Intent intent = new Intent(getContext(), CategoriesActivity.class);
+        startActivity(intent);
     }
 
     public boolean checkAndRequestPermissions(){

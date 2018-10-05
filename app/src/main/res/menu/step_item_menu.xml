@@ -10,6 +10,7 @@
         android:title="@string/menu_delete"
         />
     <item
-        android:id="@+id/step_item_menu_make_last"
-        android:title="@string/menu_settings" />
+        android:id="@+id/step_item_menu_show_cheers"
+        android:title="@string/menu_show_cheers"
+        />
 </menu>

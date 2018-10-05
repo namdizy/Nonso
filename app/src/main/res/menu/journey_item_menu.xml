@@ -6,7 +6,10 @@
         android:id="@+id/journey_item_menu_delete"
         android:title="@string/menu_delete"
         />
-
+    <item
+        android:id="@+id/journey_item_menu_show_cheers"
+        android:title="@string/menu_show_cheers"
+        />
     <item
         android:id="@+id/journey_item_menu_settings"
         android:title="@string/menu_settings" />

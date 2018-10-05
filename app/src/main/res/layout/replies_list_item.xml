@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_marginBottom="@dimen/margin_5dp"
+    android:layout_marginBottom="@dimen/dp_5"
     android:layout_marginStart="@dimen/activity_horizontal_margin"
     android:layout_marginEnd="@dimen/activity_horizontal_margin">
 
@@ -12,16 +12,17 @@
         android:id="@+id/reply_creator_image"
         android:layout_width="@dimen/small_image_size"
         android:layout_height="@dimen/small_image_size"
-        android:layout_marginStart="@dimen/margin_5dp"
-        android:layout_marginEnd="@dimen/margin_5dp"/>
+        android:layout_marginStart="@dimen/dp_5"
+        android:layout_marginEnd="@dimen/dp_5"/>
 
     <LinearLayout
+        android:id="@+id/reply_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/grey_border_bottom_light"
-        android:paddingBottom="@dimen/margin_5dp"
-        android:layout_marginEnd="@dimen/margin_5dp">
+        android:paddingBottom="@dimen/dp_5"
+        android:layout_marginEnd="@dimen/dp_5">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +42,7 @@
                     android:id="@+id/reply_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:layout_marginStart="@dimen/dp_5"
                     android:textSize="@dimen/h6"
                     android:textStyle="italic"/>
 
@@ -57,20 +58,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/margin_5dp"
-            android:layout_marginBottom="@dimen/margin_5dp">
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5">
 
             <TextView
                 android:id="@+id/reply_replies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginStart="@dimen/dp_5"
                 android:text="4 Replies"/>
             <TextView
                 android:id="@+id/reply_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_5dp"
+                android:layout_marginStart="@dimen/dp_5"
                 android:text="10 Likes"/>
             <View
                 android:layout_width="0dp"
@@ -81,22 +82,31 @@
 
             <ImageView
                 android:id="@+id/reply_item_like_image"
-                android:layout_width="@dimen/_20dp"
-                android:layout_height="@dimen/_20dp"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
                 android:src="@drawable/ic_like_outline"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:scaleType="centerCrop"
                 />
             <ImageView
+                android:id="@+id/reply_item_liked_image"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:src="@drawable/ic_like_filled"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:scaleType="centerCrop"
+                />
+            <ImageView
                 android:id="@+id/reply_item_reply_image"
-                android:layout_width="@dimen/_20dp"
-                android:layout_height="@dimen/_20dp"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
                 android:src="@drawable/ic_reply_dark"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"/>
             <ImageButton
-                android:id="@+id/reply_more_btn"
+                android:id="@+id/reply_menu_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_20dp"
+                android:layout_height="@dimen/dp_20"
                 android:src="@drawable/ic_more_dark"
                 android:background="@null"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"

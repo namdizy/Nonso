@@ -5,13 +5,14 @@
 
     <dimen name="small_image_size">40dp</dimen>
     <dimen name="small_image_size_small">20dp</dimen>
-    <dimen name="margin_5dp">5dp</dimen>
-    <dimen name="margin_10dp">10dp</dimen>
-    <dimen name="margin_8dp">8dp</dimen>
-    <dimen name="margin_0dp">0dp</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_0">0dp</dimen>
     <dimen name="text_padding">3dp</dimen>
-    <dimen name="_20dp">20dp</dimen>
-    <dimen name="_30dp">30dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
     <dimen name="social_width">25dp</dimen>
 
     <dimen name="h1">32sp</dimen>
