@@ -3,8 +3,8 @@ package nonso.android.nonso.ui.activities;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -38,8 +39,6 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
 
 
     private String PARENT_POST = "parent_post";
-    private static final String CURRENT_USER = "nonso_current_user";
-    private static final String NONSO_PREF = "nonso_pref";
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -65,18 +64,45 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
             mViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
 
-            SharedPreferences pref = getSharedPreferences(NONSO_PREF, Context.MODE_PRIVATE);
-            String json = pref.getString(CURRENT_USER, null);
+            mViewModel.getCurrentUser(new Callback() {
+                @Override
+                public void result(Result result) {
 
-            Gson gson = new Gson();
-            mCurrentUser  = gson.fromJson(json, User.class);
+                }
 
-            fragmentManager.beginTransaction()
-                    .replace(R.id.post_container, new PostFragment().newInstance(mPost, mPostCreator))
-                    .commitNow();
+                @Override
+                public void imageResult(Uri downloadUrl) {
+
+                }
+
+                @Override
+                public void authorizationResult(FirebaseUser user) {
+
+                }
+
+                @Override
+                public void journeyResult(Journey journey) {
+
+                }
+
+                @Override
+                public void stepResult(Step step) {
+
+                }
+
+                @Override
+                public void userResult(User user) {
+                    mCurrentUser = user;
+
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.post_container, new PostFragment().newInstance(mPost, mPostCreator, mCurrentUser)).commitNow();
+                }
+            });
+
+
         }
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.post_item_menu, menu);
@@ -119,7 +145,7 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
             getSupportActionBar().setTitle("Comments");
         }
 
-        PostFragment fragment = new PostFragment().newInstance(post, postCreator);
+        PostFragment fragment = new PostFragment().newInstance(post, postCreator, mCurrentUser);
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.post_container, fragment);
         ft.addToBackStack(null);
@@ -173,6 +199,8 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
 
     @Override
     public void onUnLikedClicked(Post post) {
+
+
         mViewModel.unLikePost(post, mCurrentUser, new Callback() {
             @Override
             public void result(Result result) {

@@ -2,7 +2,6 @@ package nonso.android.nonso.ui.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,12 +39,12 @@ import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.models.interfaces.UserListCallback;
-import nonso.android.nonso.ui.adapters.LikesAdapter;
+import nonso.android.nonso.ui.adapters.LikesImageAdapter;
 import nonso.android.nonso.ui.adapters.RepliesAdapter;
 import nonso.android.nonso.utils.DateUtils;
 import nonso.android.nonso.viewModel.PostViewModel;
 
-public class PostFragment extends Fragment implements LikesAdapter.LikesAdapterClickListener, RepliesAdapter.RepliesAdapterOnClickHandler {
+public class PostFragment extends Fragment implements LikesImageAdapter.LikesAdapterClickListener, RepliesAdapter.RepliesAdapterOnClickHandler {
 
     @BindView(R.id.post_creator_image) CircleImageView mCreatorImage;
     @BindView(R.id.post_body) TextView mBody;
@@ -72,16 +70,16 @@ public class PostFragment extends Fragment implements LikesAdapter.LikesAdapterC
     private User mCreator;
     private OnPostInteractionListener mOnClickListener;
 
-    private static final String CURRENT_USER = "nonso_current_user";
-    private static final String NONSO_PREF = "nonso_pref";
     private static final String  REPLY_PARAM = "reply_param";
     private static final String USER_CREATOR_PARAM = "creator_user_param";
+    private static final String USER_CURRENT_PARAM = "current_user_param";
 
-    public PostFragment newInstance(Post reply, User user) {
+    public PostFragment newInstance(Post reply, User user, User currentUser) {
         PostFragment fragment = new PostFragment();
         Bundle args = new Bundle();
         args.putParcelable(REPLY_PARAM, reply);
         args.putParcelable(USER_CREATOR_PARAM, user);
+        args.putParcelable(USER_CURRENT_PARAM, currentUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -92,6 +90,7 @@ public class PostFragment extends Fragment implements LikesAdapter.LikesAdapterC
         if (getArguments() != null) {
             mReply = getArguments().getParcelable(REPLY_PARAM);
             mCreator = getArguments().getParcelable(USER_CREATOR_PARAM);
+            mCurrentUser = getArguments().getParcelable(USER_CURRENT_PARAM);
         }
     }
 
@@ -105,11 +104,6 @@ public class PostFragment extends Fragment implements LikesAdapter.LikesAdapterC
 
         if(savedInstanceState == null){
             mViewModel = ViewModelProviders.of(getActivity()).get(PostViewModel.class);
-            SharedPreferences pref = getActivity().getSharedPreferences(NONSO_PREF, Context.MODE_PRIVATE);
-            String json = pref.getString(CURRENT_USER, null);
-
-            Gson gson = new Gson();
-            mCurrentUser  = gson.fromJson(json, User.class);
             updateUI();
         }
         return view;
@@ -274,15 +268,15 @@ public class PostFragment extends Fragment implements LikesAdapter.LikesAdapterC
         if(users.size() > 0){
             mLikesContainer.setVisibility(View.VISIBLE);
             RecyclerView.LayoutManager likesLayoutManager;
-            LikesAdapter mLikesAdapter;
+            LikesImageAdapter mLikesImageAdapter;
 
             likesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             mLikesRecyclerView.setLayoutManager(likesLayoutManager);
             mLikesRecyclerView.setHasFixedSize(true);
 
-            mLikesAdapter = new LikesAdapter(getContext(), this);
-            mLikesRecyclerView.setAdapter(mLikesAdapter);
-            mLikesAdapter.setUsers(users);
+            mLikesImageAdapter = new LikesImageAdapter(getContext(), this);
+            mLikesRecyclerView.setAdapter(mLikesImageAdapter);
+            mLikesImageAdapter.setUsers(users);
         }else{
             mLikesContainer.setVisibility(View.GONE);
         }
@@ -323,6 +317,7 @@ public class PostFragment extends Fragment implements LikesAdapter.LikesAdapterC
 
             @Override
             public void userList(ArrayList<User> users) {
+                mRepliesAdapter.setCurrentUser(mCurrentUser);
                 mRepliesAdapter.setReplies(replies);
                 mRepliesAdapter.setUsers(users);
             }
@@ -351,6 +346,8 @@ public class PostFragment extends Fragment implements LikesAdapter.LikesAdapterC
 
     @Override
     public void onReplyReplyClicked(Post reply, User creator) {
+        mRepliesContainer.setVisibility(View.GONE);
+        mLikesContainer.setVisibility(View.GONE);
         mOnClickListener.onReplyClick(reply, creator);
     }
 

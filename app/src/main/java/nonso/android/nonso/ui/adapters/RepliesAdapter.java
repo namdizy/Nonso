@@ -20,6 +20,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +37,7 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
     private RepliesAdapterOnClickHandler mOnclickHandler;
     private List<User> mUsersList;
     private User mReplyCreator;
+    private User mCurrentUser;
 
 
     public interface RepliesAdapterOnClickHandler{
@@ -81,25 +83,38 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
             }
         }
 
+        Set<String> likedPost = mCurrentUser.getLikedPost().keySet();
+
+        if(likedPost.contains(reply.getPostId())){
+            holder.mReplyLikeBtn.setVisibility(View.GONE);
+            holder.mReplyLikedBtn.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.mReplyLikeBtn.setVisibility(View.VISIBLE);
+            holder.mReplyLikedBtn.setVisibility(View.GONE);
+        }
+
 
         updateReplies(holder, reply);
         updateLikes(holder, reply);
 
         holder.mReplyLikedBtn.setOnClickListener(listener -> {
+                mOnclickHandler.onReplyUnLikeClicked(reply);
                 holder.mReplyLikedBtn.setVisibility(View.GONE);
                 holder.mReplyLikeBtn.setVisibility(View.VISIBLE);
-                reply.setLikesCount(reply.getRepliesCount() - 1);
+                reply.setLikesCount(reply.getLikesCount() - 1);
+                mCurrentUser.getLikedPost().remove(reply.getPostId());
                 updateLikes(holder, reply);
-                mOnclickHandler.onReplyUnLikeClicked(reply);
             }
         );
 
         holder.mReplyLikeBtn.setOnClickListener(listener -> {
+                mOnclickHandler.onReplyLikeClicked(reply);
                 holder.mReplyLikedBtn.setVisibility(View.VISIBLE);
                 holder.mReplyLikeBtn.setVisibility(View.GONE);
-                reply.setLikesCount(reply.getRepliesCount() + 1);
+                reply.setLikesCount(reply.getLikesCount() + 1);
+                mCurrentUser.getLikedPost().put(reply.getPostId(), true);
                 updateLikes(holder, reply);
-                mOnclickHandler.onReplyLikeClicked(reply);
             }
         );
 
@@ -137,7 +152,7 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
     private void updateLikes(RepliesViewHolder holder, Post reply){
         if(reply.getLikesCount() > 0){
             String size;
-            if(reply.getRepliesCount() == 1){
+            if(reply.getLikesCount() == 1){
                 size =  "1 Like";
             }
             else{
@@ -145,6 +160,7 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
             }
 
             holder.mReplyLikes.setText(size);
+            holder.mReplyLikes.setVisibility(View.VISIBLE);
         }else{
             holder.mReplyLikes.setVisibility(View.GONE);
         }
@@ -161,6 +177,7 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
             }
 
             holder.mReplyReplies.setText(size);
+            holder.mReplyReplies.setVisibility(View.VISIBLE);
         }else{
             holder.mReplyReplies.setVisibility(View.GONE);
         }
@@ -182,6 +199,10 @@ public class RepliesAdapter extends RecyclerView.Adapter<RepliesAdapter.RepliesV
         notifyDataSetChanged();
     }
 
+    public void setCurrentUser(User user){
+        mCurrentUser = user;
+        notifyDataSetChanged();
+    }
 
     public class RepliesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 

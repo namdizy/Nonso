@@ -158,9 +158,10 @@ public class JourneyCommunityFragment extends Fragment implements PostAdapter.Po
                 public void userList(ArrayList<User> users) {
                     mUserList = users;
                     mRecyclerView.setAdapter(mPostAdapter);
+                    mPostAdapter.setCurrentUser(mCurrentUser);
                     mPostAdapter.setPostList(posts);
                     mPostAdapter.setUser(mUserList);
-                    mPostAdapter.setCurrentUser(mCurrentUser);
+
                 }
             });
         }

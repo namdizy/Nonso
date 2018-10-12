@@ -1,8 +1,6 @@
 package nonso.android.nonso.data;
 
-import android.telecom.Call;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -12,11 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.HttpsCallableResult;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
@@ -27,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import nonso.android.nonso.models.Like;
 import nonso.android.nonso.models.Post;
@@ -35,14 +28,12 @@ import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Shard;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
-import nonso.android.nonso.models.interfaces.UserListCallback;
 
 public class PostDB {
 
     private FirebaseFirestore db = new AuthDB().getDb();
     private final String TAG = this.getClass().getSimpleName();
     private static final int  NUMBER_OF_SHARDS = 10;
-    private AuthDB authDb;
 
     private FirebaseFirestore root = FirebaseFirestore.getInstance();
     private FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
@@ -61,9 +52,9 @@ public class PostDB {
             .collection(DATABASE_COLLECTION_POST)
             .add(post).addOnSuccessListener(documentReference -> {
                 documentReference.update("postId", documentReference.getId(), "documentReference", documentReference.getPath());
-                    this.createLikesCounter(documentReference,NUMBER_OF_SHARDS)
+                    this.createLikesCounter(documentReference)
                         .addOnSuccessListener(aVoid ->
-                               this.createReplyCounter(documentReference, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid1 ->
+                               this.createReplyCounter(documentReference).addOnSuccessListener(aVoid1 ->
                                     callback.result(Result.SUCCESS)
                                ).addOnFailureListener(e ->
                                        callback.result(Result.FAILED)
@@ -86,41 +77,35 @@ public class PostDB {
         DocumentReference ref = root.document(post.getDocumentReference());
         ref.collection(DATABASE_SUB_COLLECTION_LIKES)
                 .add(like)
-                .addOnSuccessListener(documentReference -> {
+                .addOnSuccessListener(documentReference ->
                     documentReference.update("likeId", documentReference.getId())
                         .addOnSuccessListener(aVoid -> {
-                            this.incrementLikesCounter(ref, NUMBER_OF_SHARDS)
+                            this.incrementLikesCounter(ref)
                                     .addOnSuccessListener(aVoidInner ->
-                                            this.updateUserLikes(ref.getId(), user, callback )
+                                            this.updateUserLikes( user, callback )
                                     )
                                     .addOnFailureListener(e ->{
                                             Log.v(TAG, e.getMessage());
                                             callback.result(Result.FAILED);}
                                     );
-                        });
-                })
+                        })
+                )
                 .addOnFailureListener(e ->
                  callback.result(Result.FAILED)
                 );
     }
 
-    private void updateUserLikes(String postId, User user, Callback callback){
+    private void updateUserLikes(User user, Callback callback){
         Map<String, Boolean> list = user.getLikedPost();
-
-        if(list.containsKey(postId)){
-            list.remove(postId);
-        }else{
-            list.put(postId, true);
-        }
 
         db.collection(DATABASE_COLLECTION_USERS).document(user.getUserId())
                 .update("likedPost", list)
-                .addOnSuccessListener(aVoid -> {
-                    callback.result(Result.SUCCESS);
-                })
-                .addOnFailureListener(e -> {
-                    callback.result(Result.FAILED);
-                });
+                .addOnSuccessListener(aVoid ->
+                    callback.result(Result.SUCCESS)
+                )
+                .addOnFailureListener(e ->
+                    callback.result(Result.FAILED)
+                );
 
     }
 
@@ -137,7 +122,7 @@ public class PostDB {
 
     }
 
-    public void deleteLike(String id, DocumentReference ref,User user,  Callback callback){
+    private void deleteLike(String id, DocumentReference ref,User user,  Callback callback){
 
         ref.collection(DATABASE_SUB_COLLECTION_LIKES).document(id)
                 .delete().addOnSuccessListener(aVoid ->
@@ -158,7 +143,7 @@ public class PostDB {
 
                     ref.collection(DATABASE_COLLECTION_LIKES_SHARD).document(snapshot.getId())
                             .update("count", shard.getCount()-1 )
-                            .addOnSuccessListener(aVoid -> this.updateUserLikes(ref.getId(), user, callback ))
+                            .addOnSuccessListener(aVoid -> this.updateUserLikes(user, callback ))
                             .addOnFailureListener(e -> callback.result(Result.FAILED));
 
                 }).addOnFailureListener(e->
@@ -173,10 +158,10 @@ public class PostDB {
             .addOnSuccessListener(documentReference -> {
                 documentReference.update("postId", documentReference.getId(), "documentReference", documentReference.getPath())
                 .addOnSuccessListener(aVoid ->
-                        this.incrementRepliesCounter(ref, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid1 ->
-                                this.createLikesCounter(documentReference, NUMBER_OF_SHARDS)
+                        this.incrementRepliesCounter(ref).addOnSuccessListener(aVoid1 ->
+                                this.createLikesCounter(documentReference)
                                     .addOnSuccessListener(aVoid2 ->
-                                        this.createReplyCounter(documentReference, NUMBER_OF_SHARDS).addOnSuccessListener(aVoid3 ->
+                                        this.createReplyCounter(documentReference).addOnSuccessListener(aVoid3 ->
                                                 callback.result(Result.SUCCESS))
                                         .addOnFailureListener( e -> callback.result(Result.FAILED)))
                                     .addOnFailureListener(e -> callback.result(Result.FAILED))
@@ -190,10 +175,10 @@ public class PostDB {
     }
 
 
-    private Task<Void> createReplyCounter(final DocumentReference ref, final int numShards){
+    private Task<Void> createReplyCounter(final DocumentReference ref){
         List<Task<Void>> tasks = new ArrayList<>();
 
-        for (int i = 0; i < numShards; i++) {
+        for (int i = 0; i < NUMBER_OF_SHARDS; i++) {
             Task<Void> makeShard = ref.collection(DATABASE_COLLECTION_REPLIES_SHARD)
                     .document(String.valueOf(i))
                     .set(new Shard(0));
@@ -203,8 +188,8 @@ public class PostDB {
         return Tasks.whenAll(tasks);
     }
 
-    private Task<Void> incrementRepliesCounter(final DocumentReference ref, final int numShards) {
-        int shardId = (int) Math.floor(Math.random() * numShards);
+    private Task<Void> incrementRepliesCounter(final DocumentReference ref) {
+        int shardId = (int) Math.floor(Math.random() * NUMBER_OF_SHARDS);
         final DocumentReference shardRef = ref.collection(DATABASE_COLLECTION_REPLIES_SHARD).document(String.valueOf(shardId));
 
         return db.runTransaction(new Transaction.Function<Void>() {
@@ -218,11 +203,11 @@ public class PostDB {
         });
     }
 
-    private Task<Void> createLikesCounter(final DocumentReference ref, final int numShards) {
+    private Task<Void> createLikesCounter(final DocumentReference ref) {
         List<Task<Void>> tasks = new ArrayList<>();
 
         // Initialize each shard with count=0
-        for (int i = 0; i < numShards; i++) {
+        for (int i = 0; i < NUMBER_OF_SHARDS; i++) {
             Task<Void> makeShard = ref.collection(DATABASE_COLLECTION_LIKES_SHARD)
                     .document(String.valueOf(i))
                     .set(new Shard(0));
@@ -233,8 +218,8 @@ public class PostDB {
         return Tasks.whenAll(tasks);
     }
 
-    private Task<Void> incrementLikesCounter(final DocumentReference ref, final int numShards) {
-        int shardId = (int) Math.floor(Math.random() * numShards);
+    private Task<Void> incrementLikesCounter(final DocumentReference ref) {
+        int shardId = (int) Math.floor(Math.random() * NUMBER_OF_SHARDS);
         final DocumentReference shardRef = ref.collection(DATABASE_COLLECTION_LIKES_SHARD).document(String.valueOf(shardId));
 
         return db.runTransaction(new Transaction.Function<Void>() {

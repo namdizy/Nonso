@@ -96,7 +96,7 @@ public class PostViewModel extends ViewModel {
 
     public void setLikesList(String postRef){
         DocumentReference ref = root.document(postRef);
-        likesListRef = ref.collection(DATABASE_COLLECTION_LIKES);
+        likesListRef = ref.collection(DATABASE_COLLECTION_LIKES).limit(6);
         likesLiveData = new FirebaseQueryLiveData(likesListRef);
         likesData = Transformations.map(likesLiveData, new LikesDeserializer());
     }
