@@ -17,8 +17,6 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
-import nonso.android.nonso.models.CreatedBy;
-import nonso.android.nonso.models.CreatorType;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Post;
 import nonso.android.nonso.models.Result;
@@ -27,14 +25,14 @@ import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
 import nonso.android.nonso.viewModel.PostViewModel;
 
+import com.nonso.summernote.*;
+
 public class CreatePostReplyActivity extends AppCompatActivity {
 
     @BindView(R.id.create_post_reply_title)
     TextView mPostTitle;
     @BindView(R.id.create_post_reply_body)
     EditText mPostBody;
-
-
 
     private Post mParentPost;
     private String PARENT_POST = "parent_post";

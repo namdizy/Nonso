@@ -11,10 +11,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-//import com.ebolo.krichtexteditor.RichEditor;
-//import com.ebolo.krichtexteditor.fragments.KRichEditorFragment;
-//import com.ebolo.krichtexteditor.fragments.Options;
 import com.google.firebase.auth.FirebaseUser;
+import com.nonso.summernote.Summernote;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +29,8 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
     @BindView(R.id.create_step_text_title) EditText mStepTitle;
     @BindView(R.id.create_step_text_description) EditText mStepDescription;
+    @BindView(R.id.create_step_summernote)
+    Summernote mSummernote;
 
 
     private final String JOURNEY_EXTRA_ID_KEY = "journey_extra";
@@ -66,19 +66,7 @@ public class CreateStepTextActivity extends AppCompatActivity {
         }
 
 
-//        editorFragment = (KRichEditorFragment) getSupportFragmentManager().findFragmentByTag("EDITOR");
-//
-//        if (editorFragment == null){
-//            editorFragment = KRichEditorFragment.getInstance(new Options().
-//                    onInitialized(()->
-//                            editorFragment.getEditor().setContents(mStep.getBodyText())
-//                    ));
-//        }
 
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.create_step_text_fragment_container, editorFragment, "EDITOR")
-//                .commit();
     }
 
     @Override

@@ -73,10 +73,10 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+    <com.nonso.summernote.Summernote
+        android:id="@+id/create_step_summernote"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/create_step_text_fragment_container" />
+        android:layout_height="match_parent"/>
 
 
 </LinearLayout>

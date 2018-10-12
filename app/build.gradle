@@ -98,7 +98,7 @@ dependencies {
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     //credit Startup image By Nikita Golubev from flaticon
-
+    implementation project(':summernote')
 }
 
 apply plugin: 'com.google.gms.google-services'
