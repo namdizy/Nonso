@@ -122,12 +122,13 @@
                 app:tabMode="fixed"
                 app:layout_scrollFlags="scroll"
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-                android:background="@drawable/grey_border_bottom_light"/>
+                app:tabSelectedTextColor="@color/colorGrayDark"
+                app:tabTextColor="@color/colorGray"
+                android:background="@color/white"/>
             <android.support.v4.view.ViewPager
                 android:id="@+id/journey_profile_viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

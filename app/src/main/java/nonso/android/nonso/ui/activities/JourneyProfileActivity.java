@@ -2,15 +2,12 @@ package nonso.android.nonso.ui.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -202,7 +199,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
                     startActivity(intentImage);
                     break;
                 case R.id.fab_menu_add_video:
-                    Intent intentVideo = new Intent(getBaseContext(), CreateVideoActivity.class);
+                    Intent intentVideo = new Intent(getBaseContext(), CreateStepVideoActivity.class);
                     intentVideo.putExtra(STEP_EXTRA_DATA, step);
                     startActivity(intentVideo);
                     break;

@@ -60,7 +60,7 @@ import nonso.android.nonso.utils.StringGenerator;
 import nonso.android.nonso.viewModel.StepsViewModel;
 
 
-public class CreateVideoActivity extends AppCompatActivity {
+public class CreateStepVideoActivity extends AppCompatActivity {
 
     @BindView(R.id.create_step_video_playerView) SimpleExoPlayerView mPlayerView;
     @BindView(R.id.create_step_video_select_container) LinearLayout mSelectVideo;

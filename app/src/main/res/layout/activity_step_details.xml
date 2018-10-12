@@ -72,11 +72,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <io.square1.richtextlib.ui.RichContentView
-            android:padding="10dip"
-            android:id="@+id/step_details_text_content"
+        <WebView
+            android:id="@+id/step_details_webView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="wrap_content"/>
     </ScrollView>
 </LinearLayout>

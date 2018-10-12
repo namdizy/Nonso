@@ -65,8 +65,9 @@ public class CreateStepTextActivity extends AppCompatActivity {
             mStepTitle.setText(mStep.getTitle());
         }
 
-
-
+        if(mStep.getBodyText() != null){
+            mSummernote.setText(mStep.getBodyText());
+        }
     }
 
     @Override
@@ -144,52 +145,68 @@ public class CreateStepTextActivity extends AppCompatActivity {
 
     public void save(){
         final Context context = this;
-//        editorFragment.getEditor().getHtml(s -> {
-//                mStep.setTitle(mStepTitle.getText().toString());
-//                mStep.setDescription(mStepDescription.getText().toString());
-//                mStep.setBodyText(s);
-//                mStep.setStepType(StepType.TEXT);
-//
-//                viewModel.saveStep(mStep, new Callback() {
-//                    @Override
-//                    public void userResult(User user) {
-//
-//                    }
-//
-//                    @Override
-//                    public void result(Result result) {
-//                        switch (result){
-//                            case FAILED:
-//                                Toast.makeText(context, "Oops looks like there was a problems saving this step!", Toast.LENGTH_LONG).show();
-//                                finish();
-//                                break;
-//                            case SUCCESS:
-//                                finish();
-//                                break;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void imageResult(Uri downloadUrl) {
-//
-//                    }
-//
-//                    @Override
-//                    public void authorizationResult(FirebaseUser user) {
-//
-//                    }
-//
-//                    @Override
-//                    public void journeyResult(Journey journey) {
-//
-//                    }
-//
-//                    @Override
-//                    public void stepResult(Step step) {
-//
-//                    }
-//                });
-//        });
+
+        String htmlText = mSummernote.getText();
+        String description = mStepDescription.getText().toString();
+        String title = mStepTitle.getText().toString();
+
+        if(htmlText.isEmpty()){
+           Toast.makeText(this, "Please Enter Some content!", Toast.LENGTH_LONG).show();
+           return;
+        }
+        if(description.isEmpty()){
+            Toast.makeText(this, "Please enter a description!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(title.isEmpty()){
+            Toast.makeText(this, "Please enter a title!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        mStep.setTitle(title);
+        mStep.setDescription(description);
+        mStep.setBodyText(htmlText);
+        mStep.setStepType(StepType.TEXT);
+
+        viewModel.saveStep(mStep, new Callback() {
+            @Override
+            public void userResult(User user) {
+
+            }
+
+            @Override
+            public void result(Result result) {
+                switch (result){
+                    case FAILED:
+                        Toast.makeText(context, "Oops looks like there was a problems saving this step!", Toast.LENGTH_LONG).show();
+                        finish();
+                        break;
+                    case SUCCESS:
+                        finish();
+                        break;
+                }
+            }
+
+            @Override
+            public void imageResult(Uri downloadUrl) {
+
+            }
+
+            @Override
+            public void authorizationResult(FirebaseUser user) {
+
+            }
+
+            @Override
+            public void journeyResult(Journey journey) {
+
+            }
+
+            @Override
+            public void stepResult(Step step) {
+
+            }
+        });
     }
 
     @Override
