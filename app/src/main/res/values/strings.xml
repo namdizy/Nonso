@@ -102,6 +102,9 @@
     <string name="dialog_title">Update goals</string>
     <string name="dialog_update">Update</string>
     <string name="discard">Discard</string>
+    <string name="update_goals_hint">Write your goals..</string>
+    <string name="update_journey_description_hint">Journey description.</string>
+
 
     <string name="dialog_edit_journey_title">Update description</string>
 

@@ -74,6 +74,8 @@ public class PostFragment extends Fragment implements LikesImageAdapter.LikesAda
     private static final String USER_CREATOR_PARAM = "creator_user_param";
     private static final String USER_CURRENT_PARAM = "current_user_param";
 
+
+
     public PostFragment newInstance(Post reply, User user, User currentUser) {
         PostFragment fragment = new PostFragment();
         Bundle args = new Bundle();
@@ -352,6 +354,11 @@ public class PostFragment extends Fragment implements LikesImageAdapter.LikesAda
     }
 
     @Override
+    public void imageItemClick(ArrayList usersList) {
+        mOnClickListener.onLikeImageItemClick(usersList);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnPostInteractionListener) {
@@ -366,6 +373,7 @@ public class PostFragment extends Fragment implements LikesImageAdapter.LikesAda
         void onReplyClick(Post post, User postCreator);
         void onLikedClicked(Post post);
         void onUnLikedClicked(Post post);
+        void onLikeImageItemClick(ArrayList users);
     }
 
 }

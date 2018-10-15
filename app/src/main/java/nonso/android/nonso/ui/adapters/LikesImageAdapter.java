@@ -33,7 +33,7 @@ public class LikesImageAdapter extends RecyclerView.Adapter<LikesImageAdapter.Li
     }
 
     public interface LikesAdapterClickListener{
-
+        void imageItemClick(ArrayList usersList);
     }
 
     @NonNull
@@ -54,6 +54,7 @@ public class LikesImageAdapter extends RecyclerView.Adapter<LikesImageAdapter.Li
     public void onBindViewHolder(@NonNull LikesViewHolder holder, int position) {
 
         if(position == mUsersList.size()) {
+            holder.mMoreBtn.setVisibility(View.VISIBLE);
             holder.mMoreBtn.setOnClickListener(view ->
                     Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_LONG).show()
             );
@@ -62,7 +63,10 @@ public class LikesImageAdapter extends RecyclerView.Adapter<LikesImageAdapter.Li
             User user = mUsersList.get(position);
             Picasso.with(mContext).load(user.getImage().getImageUrl()).placeholder(R.drawable.profile_image_placeholder)
                     .error(R.drawable.profile_image_placeholder).into(holder.mLikesImage);
+            holder.mLikesImage.setOnClickListener(listener -> mClickListener.imageItemClick(mUsersList));
         }
+
+
 
     }
 

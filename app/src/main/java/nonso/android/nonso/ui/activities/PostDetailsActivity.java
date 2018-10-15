@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -27,10 +28,11 @@ import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
 import nonso.android.nonso.models.interfaces.Callback;
+import nonso.android.nonso.ui.fragments.LikesFragment;
 import nonso.android.nonso.ui.fragments.PostFragment;
 import nonso.android.nonso.viewModel.PostViewModel;
 
-public class PostDetailsActivity extends AppCompatActivity implements PostFragment.OnPostInteractionListener {
+public class PostDetailsActivity extends AppCompatActivity implements PostFragment.OnPostInteractionListener, LikesFragment.OnLikesFragmentInteractionListener {
 
     private Post mPost;
     private User mPostCreator;
@@ -239,5 +241,25 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
         });
     }
 
+    @Override
+    public void onLikeImageItemClick(ArrayList users) {
 
+        if(users.size() > 1){
+            getSupportActionBar().setTitle(users.size() + " Likes");
+        }else{
+            getSupportActionBar().setTitle(users.size() + " Like");
+        }
+
+
+        LikesFragment fragment = new LikesFragment().newInstance(users);
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.post_container, fragment);
+        ft.disallowAddToBackStack();
+        ft.commit();
+    }
+
+    @Override
+    public void onLikesFragmentUserPressed(User user) {
+
+    }
 }

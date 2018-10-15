@@ -218,7 +218,7 @@ public class JourneyProfileActivity extends AppCompatActivity implements Journey
     @OnClick(R.id.journey_profile_edit_btn)
     public void onEditClick(View view){
         Intent intent = new Intent(this, DialogEditJourneyDescription.class);
-        intent.putExtra(JOURNEY_EXTRA_ID_KEY, mJourney.getJourneyId());
+        intent.putExtra(JOURNEY_EXTRA_ID_KEY, mJourney);
         startActivity(intent);
     }
 

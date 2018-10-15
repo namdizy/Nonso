@@ -60,7 +60,7 @@
         <activity
             android:name=".ui.activities.CreateJourneyActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Chips">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
@@ -142,10 +142,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.JourneyProfileActivity" />
         </activity>
-        <activity
-            android:name=".ui.activities.CategoriesActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.Chips" />
     </application>
 
 </manifest>

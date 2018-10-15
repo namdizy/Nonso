@@ -43,7 +43,7 @@
         <item name="android:fontFamily">@font/work_sans_regular</item>
     </style>
 
-    <style name="AppTheme.Chips" parent="Theme.MaterialComponents.Dialog">
+    <style name="AppTheme.Chips" parent="Theme.MaterialComponents.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@android:color/transparent</item>

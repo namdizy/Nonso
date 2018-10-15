@@ -2,6 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
 
     <!-- GENERAL-->
+    <dimen name="image_size">72dp</dimen>
 
     <dimen name="small_image_size">40dp</dimen>
     <dimen name="small_image_size_small">20dp</dimen>

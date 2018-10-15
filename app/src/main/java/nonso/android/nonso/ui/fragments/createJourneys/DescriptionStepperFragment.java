@@ -2,6 +2,7 @@ package nonso.android.nonso.ui.fragments.createJourneys;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,10 +10,13 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +25,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 import com.zhihu.matisse.Matisse;
@@ -33,6 +34,7 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +46,13 @@ import butterknife.OnTextChanged;
 import nonso.android.nonso.R;
 import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.Journey;
-import nonso.android.nonso.ui.activities.CategoriesActivity;
+import nonso.android.nonso.models.Result;
+import nonso.android.nonso.models.interfaces.CategoriesCallback;
 import nonso.android.nonso.ui.activities.MainActivity;
 import nonso.android.nonso.utils.ImageUtils;
 import nonso.android.nonso.utils.MultiSelectionSpinner;
 import nonso.android.nonso.utils.StringGenerator;
+import nonso.android.nonso.viewModel.CategoriesViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,14 +62,16 @@ import nonso.android.nonso.utils.StringGenerator;
  * Use the {@link DescriptionStepperFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DescriptionStepperFragment extends Fragment implements Step, MultiSelectionSpinner.OnMultipleItemsSelectedListener {
+public class DescriptionStepperFragment extends Fragment implements Step{
 
     @BindView(R.id.edit_create_journeys_input_description) EditText mJourneysDescription;
     @BindView(R.id.edit_create_journeys_input_name) EditText mJourneysName;
-    @BindView(R.id.create_journey_description_select_category) Button mSelectCategory;
     @BindView(R.id.create_journey_description_close) ImageButton mCloseButton;
     @BindView(R.id.create_journey_description_profile_image) ImageView mJourneysImage;
     @BindView(R.id.create_journey_description_image_btn) LinearLayout mImageButton;
+    @BindView(R.id.create_journey_description_tag_search) EditText mSearchTags;
+    @BindView(R.id.create_journey_description_chip_group) ChipGroup mChipGroup;
+    @BindView(R.id.create_journey_description_tags_chip_group) ChipGroup mTagChipGroup;
 
 
     private static final String ARG_STEP_POSITION_KEY = "messageResourceId";
@@ -79,6 +85,9 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
 
     private int mStepPosition;
     private Journey mJourney;
+    private CategoriesViewModel mViewModel;
+    private List<String> mTags;
+    private List<String> mCategories;
 
     private OnDescriptionStepListener mListener;
 
@@ -122,37 +131,75 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
         View view = inflater.inflate(R.layout.fragment_create_journey_description_step, container, false);
         ButterKnife.bind(this, view);
 
+        mViewModel = ViewModelProviders.of(getActivity()).get(CategoriesViewModel.class);
+        mCategories = new ArrayList<>();
+        mChipGroup.setSingleSelection(true);
+
+        mViewModel.getCategories(new CategoriesCallback() {
+            @Override
+            public void result(Result result) {
+
+            }
+
+            @Override
+            public void categories(String[] categories) {
+
+                for(int i=0; i<categories.length; ++i){
+                    mCategories = Arrays.asList(categories);
+                }
+            }
+        });
+
+        mChipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup chipGroup, int i) {
+                mChipGroup.check(i);
+                chipTagOnSelect(chipGroup, i);
+            }
+        });
+
         return view;
     }
 
 
-    /**
-     * Implements function from MultiSelectionSpinner.OnMultipleItemsSelectedListener
-     * @param indices the indexes of selected items
-     */
-    @Override
-    public void selectedIndices(List<Integer> indices) {
+    public void chipTagOnSelect(ChipGroup chipGroup, int i){
 
-    }
+        Chip chip = chipGroup.findViewById(i);
+        chipGroup.removeView(chip);
 
-    /**
-     *  Implements function from MultiSelectionSpinner.OnMultipleItemsSelectedListener
-     * @param strings Strings object of selected items
-     */
-
-    @Override
-    public void selectedStrings(List<String> strings) {
-
-        Map<String, Boolean> map= new HashMap<>();
-        for(String st: strings){
-            map.put(st, true);
+        if(mJourney.getCategories() != null){
+            if(mJourney.getCategories().size() >= 3){
+                Toast.makeText(getContext(), "You can obly select four Tags!", Toast.LENGTH_LONG).show();
+                return;
+            }
         }
-        mJourney.setCategories(map);
+
+        Map<String, Boolean> temp = new HashMap<>();
+        temp.put(chip.getText().toString(), true);
+        mJourney.setCategories(temp);
+        mTags.remove(chip.getText().toString());
         if(mListener != null){
             mListener.OnDescriptionStepListener(mJourney);
         }
-    }
 
+        Chip tagChip = new Chip(getContext());
+        tagChip.setText(chip.getText().toString());
+        tagChip.setElevation(1);
+        tagChip.setCloseIconVisible(true);
+        tagChip.setChipBackgroundColorResource(R.color.colorGreyLight);
+        tagChip.setTextAppearance(R.style.ChipTextStyle);
+        tagChip.setTextAppearanceResource(R.style.Widget_MaterialComponents_Chip_Filter);
+
+        tagChip.setOnCloseIconClickListener(view -> {
+                mTagChipGroup.removeView(view);
+                Map<String, Boolean> cat = mJourney.getCategories();
+                cat.remove(tagChip.getText());
+                mJourney.setCategories(cat);
+            }
+        );
+        mTagChipGroup.addView(tagChip);
+
+    }
 
     @OnTextChanged(value = R.id.edit_create_journeys_input_name,
             callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -187,10 +234,31 @@ public class DescriptionStepperFragment extends Fragment implements Step, MultiS
         }
     }
 
-    @OnClick(R.id.create_journey_description_select_category)
-    public void onSelectCategoriesClick(View view){
-        Intent intent = new Intent(getContext(), CategoriesActivity.class);
-        startActivity(intent);
+    @OnTextChanged(value = R.id.create_journey_description_tag_search,
+            callback = OnTextChanged.Callback.TEXT_CHANGED)
+    public void onTagSearchTextChange(Editable editable){
+        String queryString = editable.toString();
+        mChipGroup.removeAllViews();
+
+        mTags = new ArrayList<>();
+        for(String s: mCategories){
+            if(s.contains(queryString) && !queryString.isEmpty()){
+
+                if(!mJourney.getCategories().containsKey(s)) mTags.add(s);
+            }
+        }
+        if(mTags != null){
+            for(String st: mTags){
+                Chip chip = new Chip(getContext());
+                chip.setText(st);
+                chip.setElevation(1);
+                chip.setChipBackgroundColorResource(R.color.colorGreyLight);
+                chip.setTextAppearance(R.style.ChipTextStyle);
+                chip.setTextAppearanceResource(R.style.Widget_MaterialComponents_Chip_Filter);
+                chip.setCheckable(true);
+                mChipGroup.addView(chip);
+            }
+        }
     }
 
     public boolean checkAndRequestPermissions(){

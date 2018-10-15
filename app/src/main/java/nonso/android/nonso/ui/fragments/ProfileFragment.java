@@ -79,6 +79,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
     private static final String PROFILE_IMAGE_EXTRA = "profile_image_url";
+    private static final String USER_EXTRA = "user_extra";
     private static final String UID_KEY = "user_id";
     private static final String CURRENT_USER = "nonso_current_user";
     private static final String NONSO_PREF = "nonso_pref";
@@ -303,7 +304,7 @@ public class ProfileFragment extends Fragment implements ViewTreeObserver.OnGlob
     public void onEditGoalsClick(View view){
 
         Intent intent = new Intent(getContext(), DialogEditUserGoalsActivity.class);
-        intent.putExtra(UID_KEY, mUserId);
+        intent.putExtra(USER_EXTRA, mUser);
         startActivity(intent);
     }
 

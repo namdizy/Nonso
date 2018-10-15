@@ -1,16 +1,21 @@
 package nonso.android.nonso.ui.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import nonso.android.nonso.R;
-import nonso.android.nonso.models.Post;
 import nonso.android.nonso.models.User;
+import nonso.android.nonso.ui.adapters.LikesListAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,8 +26,10 @@ import nonso.android.nonso.models.User;
  * create an instance of this fragment.
  */
 public class LikesFragment extends Fragment {
-    private static final String ARG_POST = "post_param";
-    private String mPost;
+    private static final String ARG_LIKES_LIST = "likes_list";
+    private ArrayList mLikes;
+
+    @BindView(R.id.likes_list_recyclerView) RecyclerView mRecyclerView;
 
     private OnLikesFragmentInteractionListener mListener;
 
@@ -33,15 +40,14 @@ public class LikesFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param post POST.
-     * @param param2 Parameter 2.
+     * @param users POST.
      * @return A new instance of fragment LikesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static LikesFragment newInstance(Post post, String param2) {
+    public  LikesFragment newInstance(ArrayList users) {
         LikesFragment fragment = new LikesFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_POST, post);
+        args.putParcelableArrayList(ARG_LIKES_LIST, users);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +56,7 @@ public class LikesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mPost = getArguments().getString(ARG_POST);
+            mLikes = getArguments().getParcelableArrayList(ARG_LIKES_LIST);
         }
     }
 
@@ -58,7 +64,17 @@ public class LikesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_likes, container, false);
+        View view = inflater.inflate(R.layout.fragment_likes, container, false);
+        ButterKnife.bind(this, view);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+        LikesListAdapter = new StepsArchiveAdapter(getContext(), this);
+        mRecyclerView.setAdapter(stepsArchiveAdapter);
+
+        return view;
     }
 
 
