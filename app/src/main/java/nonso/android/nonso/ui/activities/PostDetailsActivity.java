@@ -15,8 +15,6 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.ButterKnife;
 
 import nonso.android.nonso.R;

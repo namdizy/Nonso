@@ -13,7 +13,7 @@
             <stroke
                 android:width="@dimen/border_width"
                 android:color="@color/colorPrimary"/>
-            <solid android:color="@color/white"/>
+            <solid android:color="@color/colorWhite"/>
         </shape>
     </item>
 </layer-list>

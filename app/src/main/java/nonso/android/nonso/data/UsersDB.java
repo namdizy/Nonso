@@ -9,16 +9,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import nonso.android.nonso.models.Image;
 import nonso.android.nonso.models.Journey;
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.Step;
 import nonso.android.nonso.models.User;
+import nonso.android.nonso.models.elasticSearch.UserHitsPOJO;
 import nonso.android.nonso.models.interfaces.Callback;
+import nonso.android.nonso.models.interfaces.ElasticSearchApi;
+import nonso.android.nonso.models.interfaces.ElasticSearchCallback;
 import nonso.android.nonso.utils.ImageUtils;
+import nonso.android.nonso.utils.RetrofitClientInstance;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class UsersDB {
 
@@ -129,9 +136,26 @@ public class UsersDB {
     }
 
 
-    public void getUsers(ArrayList<String> userid){
+   public void searchForUsers(String query, ElasticSearchCallback callback){
 
+       ElasticSearchApi elasticSearch = RetrofitClientInstance.getRetrofitInstance().create(ElasticSearchApi.class);
+       Map<String, String> headers = new HashMap<>();
+       headers.put("Authorization", "Basic dXNlcjpkVXNEelh5WTFSNVY=");
+       headers.put("Content-Type", "application/json");
 
-    }
+       Call<UserHitsPOJO> call = elasticSearch.search(headers, "AND", query);
+
+       call.enqueue(new retrofit2.Callback<UserHitsPOJO>() {
+           @Override
+           public void onResponse(Call<UserHitsPOJO> call, Response<UserHitsPOJO> response) {
+               callback.users(response.body());
+           }
+
+           @Override
+           public void onFailure(Call<UserHitsPOJO> call, Throwable t) {
+                callback.result(Result.FAILED);
+           }
+       });
+   }
 
 }

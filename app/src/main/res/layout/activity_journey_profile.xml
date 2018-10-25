@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/white">
+                android:background="@color/colorWhite">
 
                 <LinearLayout
                     android:id="@+id/journey_creator_container"
@@ -124,7 +124,7 @@
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabSelectedTextColor="@color/colorGrayDark"
                 app:tabTextColor="@color/colorGray"
-                android:background="@color/white"/>
+                android:background="@color/colorWhite"/>
             <android.support.v4.view.ViewPager
                 android:id="@+id/journey_profile_viewPager"
                 android:layout_width="match_parent"

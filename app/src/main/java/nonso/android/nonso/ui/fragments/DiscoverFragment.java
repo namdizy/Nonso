@@ -1,6 +1,7 @@
 package nonso.android.nonso.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +11,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import nonso.android.nonso.R;
+import nonso.android.nonso.ui.activities.SearchActivity;
 import nonso.android.nonso.ui.adapters.DiscoverPagerAdapter;
 import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
 
@@ -28,10 +32,9 @@ import nonso.android.nonso.ui.adapters.JourneyProfilePagerAdapter;
  */
 public class DiscoverFragment extends Fragment {
 
-    @BindView(R.id.discover_tabs)
-    TabLayout mTabLayout;
-    @BindView(R.id.discover_viewPager)
-    ViewPager mViewPager;
+    @BindView(R.id.discover_tabs) TabLayout mTabLayout;
+    @BindView(R.id.discover_viewPager) ViewPager mViewPager;
+    @BindView(R.id.discover_search_btn) Button mSearchBtn;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,6 +96,13 @@ public class DiscoverFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @OnClick(R.id.discover_search_btn)
+    public void onSearchClick(View view){
+        Intent intent = new Intent(getContext(), SearchActivity.class);
+        startActivity(intent);
+
     }
 
     @Override

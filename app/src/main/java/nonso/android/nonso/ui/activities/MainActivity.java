@@ -13,8 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nonso.android.nonso.R;
@@ -25,7 +23,6 @@ import nonso.android.nonso.ui.fragments.NotificationsFragment;
 import nonso.android.nonso.ui.fragments.ProfileFollowingJourneysListFragment;
 import nonso.android.nonso.ui.fragments.ProfileFragment;
 import nonso.android.nonso.ui.fragments.ProfileJourneysListFragment;
-import nonso.android.nonso.data.FirebaseUtils;
 
 public class MainActivity extends AppCompatActivity implements DiscoverFragment.OnFragmentInteractionListener,
         JourneysFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener
@@ -56,11 +53,6 @@ public class MainActivity extends AppCompatActivity implements DiscoverFragment.
         AuthDB authDB = new AuthDB();
 
         mUserId = authDB.getCurrentUserId();
-
-
-//        mBottomNavigationView.enableShiftingMode(false);
-//        mBottomNavigationView.setTextVisibility(false);
-        //mBottomNavigationView.setItemHeight(R.dimen.margin_5dp);
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(bottomNavigationViewClickListener);
 

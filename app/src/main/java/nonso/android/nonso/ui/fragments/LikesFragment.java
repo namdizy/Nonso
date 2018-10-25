@@ -71,8 +71,8 @@ public class LikesFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        LikesListAdapter = new StepsArchiveAdapter(getContext(), this);
-        mRecyclerView.setAdapter(stepsArchiveAdapter);
+//        LikesListAdapter = new StepsArchiveAdapter(getContext(), this);
+//        mRecyclerView.setAdapter(stepsArchiveAdapter);
 
         return view;
     }

@@ -28,6 +28,7 @@ ext {
     butterKnifeVersion = '8.8.1'
     schematicVersion = '0.7.0'
     lifecycleVersion = "1.1.1"
+    retrofitVersion = "2.4.0"
 }
 
 
@@ -62,13 +63,14 @@ dependencies {
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
     testImplementation 'junit:junit:4.12'
 
     implementation 'com.google.code.gson:gson:2.8.2'
 
     implementation 'com.google.android.exoplayer:exoplayer:2.6.1'
-
-    implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
 
     // Image Libraries
     implementation 'de.hdodenhof:circleimageview:2.2.0'
@@ -87,14 +89,9 @@ dependencies {
     //expandable fab button
     implementation 'io.github.yavski:fab-speed-dial:1.0.6'
 
-    //text editor KRichEditor
-    implementation 'io.square1:richtext:6.0.25'
-
     implementation "io.reactivex.rxjava2:rxjava:2.2.0"
 
-    implementation 'com.github.irshulx:laser-native-editor:2.1.0'
-
-
+    //image circle indicator
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     //credit Startup image By Nikita Golubev from flaticon
