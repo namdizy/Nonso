@@ -82,7 +82,8 @@
         </activity>
         <activity
             android:name=".ui.activities.SearchActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activities.CreateStepImageActivity"
             android:screenOrientation="portrait">

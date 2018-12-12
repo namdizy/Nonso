@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.SearchActivity"
-    android:background="">
+    tools:context=".ui.activities.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/my_appbar_container"
@@ -27,7 +26,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_back"
                 android:layout_marginEnd="@dimen/dp_10"
-                android:background="@null"/>
+                android:background="@null"
+                android:contentDescription="@string/search_btn_description"/>
 
             <LinearLayout
                 android:id="@+id/post_add_post"
@@ -49,11 +49,34 @@
                     android:padding="@dimen/dp_10"
                     android:textSize="@dimen/h4"
                     android:layout_weight="6"
-                    android:hint="@string/add_comment"
+                    android:hint="@string/search"
+                    android:inputType="textAutoComplete"
+                    android:textColorHint="@color/colorGrayDark"
                     />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/search_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
     </android.support.design.widget.AppBarLayout>
 
-</android.support.constraint.ConstraintLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/discover_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@android:color/white" />
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

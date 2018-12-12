@@ -10,7 +10,6 @@ import retrofit2.http.Query;
 
 public interface ElasticSearchApi {
 
-
     @GET("_search/")
     Call<UserHitsPOJO> search(
             @HeaderMap Map<String, String> headers,

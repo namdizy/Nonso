@@ -10,7 +10,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import nonso.android.nonso.models.Image;
@@ -32,6 +31,7 @@ public class UsersDB {
     private FirebaseAuth mAuth = new AuthDB().getmAuth();
     private FirebaseFirestore db = new AuthDB().getDb();
     private final String TAG = this.getClass().getSimpleName();
+    private AuthDB authDB = new AuthDB();
 
 
     private static final String DATABASE_COLLECTION_USERS = "users/";
@@ -138,12 +138,40 @@ public class UsersDB {
 
    public void searchForUsers(String query, ElasticSearchCallback callback){
 
+
+        authDB.getElasticSearchAuthorization(new ElasticSearchCallback() {
+            @Override
+            public void result(Result result) {
+                callback.result(Result.FAILED);
+            }
+
+            @Override
+            public void users(UserHitsPOJO userHits) {
+
+            }
+
+            @Override
+            public void password(String password) {
+
+            }
+
+            @Override
+            public void authorization(String authorization) {
+                searchUsers(query, callback, authorization);
+            }
+        });
+   }
+
+   public void searchUsers(String query, ElasticSearchCallback callback, String auth){
+
        ElasticSearchApi elasticSearch = RetrofitClientInstance.getRetrofitInstance().create(ElasticSearchApi.class);
        Map<String, String> headers = new HashMap<>();
-       headers.put("Authorization", "Basic dXNlcjpkVXNEelh5WTFSNVY=");
+       headers.put("Authorization", auth);
        headers.put("Content-Type", "application/json");
 
-       Call<UserHitsPOJO> call = elasticSearch.search(headers, "AND", query);
+       String queryString = "userName:" + query + "*";
+
+       Call<UserHitsPOJO> call = elasticSearch.search(headers, "AND", queryString);
 
        call.enqueue(new retrofit2.Callback<UserHitsPOJO>() {
            @Override
@@ -153,7 +181,7 @@ public class UsersDB {
 
            @Override
            public void onFailure(Call<UserHitsPOJO> call, Throwable t) {
-                callback.result(Result.FAILED);
+               callback.result(Result.FAILED);
            }
        });
    }

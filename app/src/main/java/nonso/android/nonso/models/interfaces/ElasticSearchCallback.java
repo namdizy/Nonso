@@ -7,4 +7,6 @@ public interface ElasticSearchCallback {
 
     void result(Result result);
     void users(UserHitsPOJO userHits);
+    void password(String password);
+    void authorization(String authorization);
 }

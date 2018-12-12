@@ -1,5 +1,6 @@
 package nonso.android.nonso.data;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,7 +11,9 @@ import com.google.firebase.storage.StorageReference;
 
 import nonso.android.nonso.models.Result;
 import nonso.android.nonso.models.User;
+import nonso.android.nonso.models.elasticSearch.ElasticSearch;
 import nonso.android.nonso.models.interfaces.Callback;
+import nonso.android.nonso.models.interfaces.ElasticSearchCallback;
 
 public class AuthDB {
 
@@ -21,6 +24,7 @@ public class AuthDB {
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
     private static final String DATABASE_COLLECTION_USERS = "users/";
+    private static final String DATABASE_ELASTIC_SEARCH = "elasticsearch/";
     private final String TAG = this.getClass().getSimpleName();
 
     public AuthDB(){
@@ -80,6 +84,14 @@ public class AuthDB {
                         callback.authorizationResult(mAuth.getCurrentUser());
                     }
                 });
+    }
+
+
+    public void getElasticSearchAuthorization(ElasticSearchCallback callback){
+        db.collection(DATABASE_ELASTIC_SEARCH).document("authorization").get()
+                .addOnSuccessListener(documentSnapshot ->
+                    callback.authorization(documentSnapshot.toObject(ElasticSearch.class).getAuthorization())
+                ).addOnFailureListener(e -> callback.result(Result.FAILED));
     }
 
 }

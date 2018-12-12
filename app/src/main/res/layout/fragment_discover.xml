@@ -12,7 +12,8 @@
         android:id="@+id/my_appbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="@color/colorWhite">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/discover_toolbar"
@@ -25,11 +26,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Search"
+                android:textColor="@color/colorGray"
                 android:drawablePadding="10dp"
                 android:textAllCaps="false"
                 android:gravity="center"
                 android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_search_light"
+                android:drawableStart="@drawable/ic_search_dark"
                 android:textSize="@dimen/h2"/>
         </android.support.v7.widget.Toolbar>
 
@@ -37,6 +39,9 @@
             android:id="@+id/discover_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabSelectedTextColor="@color/colorGrayDark"
+            app:tabTextColor="@color/colorGray"
             />
 
     </android.support.design.widget.AppBarLayout>
@@ -52,7 +57,8 @@
             android:id="@+id/discover_viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white" />
+            android:background="@android:color/white"
+            />
     </android.support.v4.widget.NestedScrollView>
 
 
